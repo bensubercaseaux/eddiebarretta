@@ -2,9 +2,8 @@ import { Reveal } from "./Reveal";
 import { site } from "@/lib/site";
 
 const facts = [
-  { label: "Residency", value: "SIP Cocktail Bar · Decca Live" },
   { label: "Sound", value: "House · Trance" },
-  { label: "Based in", value: "Jacksonville, FL" },
+  { label: "Based in", value: "Jacksonville Beach, FL" },
   { label: "Podcast", value: "Transcend" },
 ];
 
@@ -43,6 +42,24 @@ export function About() {
               ))}
             </ul>
           </div>
+        </Reveal>
+      </div>
+
+      <div className="mx-auto mt-16 max-w-6xl border-t border-line pt-10">
+        <Reveal>
+          <h3 className="font-display text-2xl font-bold tracking-tight">
+            Played around town
+          </h3>
+          <ul className="mt-6 flex flex-wrap gap-2.5">
+            {site.venues.map((v) => (
+              <li
+                key={v}
+                className="rounded-full border border-line bg-surface/40 px-4 py-2 text-sm text-muted transition-colors duration-200 hover:border-accent/60 hover:text-fg"
+              >
+                {v}
+              </li>
+            ))}
+          </ul>
         </Reveal>
       </div>
     </section>

@@ -91,8 +91,8 @@ export function Hero() {
             variants={item}
             className="mt-6 max-w-md text-pretty text-lg leading-relaxed text-muted"
           >
-            Euphoric house and trance sets that keep the floor moving. Resident
-            at SIP Cocktail Bar.
+            Euphoric house and trance sets that keep the floor moving, from
+            beach bars to late-night lounges.
           </motion.p>
 
           <motion.div variants={item} className="mt-9 flex flex-wrap gap-3">

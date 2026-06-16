@@ -1,5 +1,6 @@
 import {
   InstagramLogo,
+  TiktokLogo,
   SoundcloudLogo,
   YoutubeLogo,
 } from "@phosphor-icons/react/dist/ssr";
@@ -7,6 +8,7 @@ import { site } from "@/lib/site";
 
 const links = [
   { href: site.socials.instagram, label: "Instagram", Icon: InstagramLogo },
+  { href: site.socials.tiktok, label: "TikTok", Icon: TiktokLogo },
   { href: site.socials.soundcloud, label: "SoundCloud", Icon: SoundcloudLogo },
   { href: site.socials.youtube, label: "YouTube", Icon: YoutubeLogo },
 ];

@@ -17,8 +17,13 @@ const jsonLd = {
   image: "https://eddiebarretta.com/hero.png",
   description: site.bioShort,
   areaServed: site.serviceArea,
-  location: { "@type": "Place", name: "Jacksonville, FL" },
-  sameAs: [site.socials.instagram, site.socials.soundcloud, site.socials.youtube],
+  location: { "@type": "Place", name: "Jacksonville Beach, FL" },
+  sameAs: [
+    site.socials.instagram,
+    site.socials.tiktok,
+    site.socials.soundcloud,
+    site.socials.youtube,
+  ],
 };
 
 export default function Home() {

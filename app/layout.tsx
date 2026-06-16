@@ -15,12 +15,12 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 const description =
-  "Eddie Barretta is a house and trance DJ in Jacksonville, FL, and host of the Transcend podcast. Resident at SIP Cocktail Bar. Book euphoric, dancefloor-driven sets.";
+  "Eddie Barretta is a house and trance DJ in the Jacksonville Beach, FL area and host of the Transcend podcast. Book euphoric, dancefloor-driven sets across Northeast Florida.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://eddiebarretta.com"),
   title: {
-    default: "Eddie Barretta | House & Trance DJ in Jacksonville, FL",
+    default: "Eddie Barretta | House & Trance DJ in Jacksonville Beach, FL",
     template: "%s | Eddie Barretta",
   },
   description,
@@ -38,14 +38,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "https://eddiebarretta.com",
-    title: "Eddie Barretta | House & Trance DJ in Jacksonville, FL",
+    title: "Eddie Barretta | House & Trance DJ in Jacksonville Beach, FL",
     description,
     siteName: "Eddie Barretta",
     images: [{ url: "/hero.png", width: 1024, height: 1024, alt: "Eddie Barretta" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Eddie Barretta | House & Trance DJ in Jacksonville, FL",
+    title: "Eddie Barretta | House & Trance DJ in Jacksonville Beach, FL",
     description,
     images: ["/hero.png"],
   },
