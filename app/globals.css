@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Eddie Barretta — design tokens
+   Dark, club aesthetic. One accent: electric violet (brand #6900ff).
+   --------------------------------------------------------------------------- */
+:root {
+  --ink: #09080f;
+  --surface: #131120;
+  --surface-2: #1b1830;
+  --fg: #efedf6;
+  --muted: #a6a2bc;
+  --faint: #726d89;
+  --line: #221f33;
+  --accent: #7c2bff;
+  --accent-bright: #9a64ff;
+  --brand: #6900ff; /* used by SoundCloud embed for visual continuity */
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-bright: var(--accent-bright);
+
+  --font-display: var(--font-syne);
+  --font-sans: var(--font-space-grotesk);
+
+  --radius-card: 16px;
+}
+
+* {
+  border-color: var(--line);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* offset anchored scroll so the sticky nav doesn't cover headings */
+  scroll-padding-top: 96px;
+}
+
+body {
+  background: var(--ink);
+  color: var(--fg);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 45%, transparent);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Film grain — fixed, non-interactive, never on a scrolling container */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Soft radial violet glow used behind the hero + section accents */
+.glow {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklab, var(--accent) 55%, transparent),
+    transparent
+  );
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Equalizer bars — communicates "live music / energy", gated by reduced motion */
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.25);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.06);
+  }
+}
+
+.animate-glow {
+  animation: glow-pulse 7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-glow,
+  .eq-bar {
+    animation: none !important;
+  }
+}
