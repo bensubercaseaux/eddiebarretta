@@ -26,6 +26,11 @@ export const site = {
     youtube: "https://www.youtube.com/channel/UCoNhqZqV16sOxdxROqUMPHw",
   },
 
+  // Google Business Profile / Knowledge Panel. Ties the site to the verified
+  // Google listing — important for local SEO and entity reconciliation.
+  googleBusiness:
+    "https://www.google.com/search?kgmid=/g/11yzw30vry&q=Eddie+Barretta",
+
   // Venues Eddie has played around the Jacksonville area.
   venues: [
     "Living Room Lounge",

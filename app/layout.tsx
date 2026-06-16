@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Syne, Space_Grotesk } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 
 const syne = Syne({
@@ -54,12 +55,17 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  // GA4 measurement ID. Public by design, so it uses the NEXT_PUBLIC_ prefix.
+  // Leave unset locally — analytics only loads where the var is configured.
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
+
   return (
     <html
       lang="en"
       className={`${syne.variable} ${spaceGrotesk.variable} antialiased`}
     >
       <body className="grain min-h-[100dvh] bg-ink text-fg">{children}</body>
+      {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
     </html>
   );
 }

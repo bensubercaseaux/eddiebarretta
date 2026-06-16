@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Reveal } from "./Reveal";
 import { site } from "@/lib/site";
 
@@ -25,22 +26,33 @@ export function About() {
         </Reveal>
 
         <Reveal delay={0.1} className="lg:pt-4">
-          <div className="overflow-hidden rounded-[16px] border border-line bg-surface/40">
-            <ul className="divide-y divide-line">
-              {facts.map((f) => (
-                <li
-                  key={f.label}
-                  className="flex items-center justify-between gap-6 px-6 py-5"
-                >
-                  <span className="text-sm uppercase tracking-[0.16em] text-faint">
-                    {f.label}
-                  </span>
-                  <span className="text-right font-medium text-fg">
-                    {f.value}
-                  </span>
-                </li>
-              ))}
-            </ul>
+          <div className="space-y-5">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[16px] border border-line bg-surface/40">
+              <Image
+                src="/eddieb_profile_pic.webp"
+                alt="Eddie Barretta DJing"
+                fill
+                sizes="(min-width: 1024px) 480px, 90vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="overflow-hidden rounded-[16px] border border-line bg-surface/40">
+              <ul className="divide-y divide-line">
+                {facts.map((f) => (
+                  <li
+                    key={f.label}
+                    className="flex items-center justify-between gap-6 px-6 py-5"
+                  >
+                    <span className="text-sm uppercase tracking-[0.16em] text-faint">
+                      {f.label}
+                    </span>
+                    <span className="text-right font-medium text-fg">
+                      {f.value}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </Reveal>
       </div>
