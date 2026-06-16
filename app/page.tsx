@@ -7,13 +7,14 @@ import { Shows } from "@/components/Shows";
 import { Booking } from "@/components/Booking";
 import { Footer } from "@/components/Footer";
 import { site } from "@/lib/site";
-import { splitShows } from "@/lib/shows";
+import { splitShows, type Show } from "@/lib/shows";
+import { getPublicShows } from "@/lib/shows-store";
 
 const ORIGIN = "https://eddiebarretta.com";
 const ACT_ID = `${ORIGIN}/#eddie`;
 
-function buildJsonLd() {
-  const { upcoming } = splitShows(new Date());
+function buildJsonLd(shows: Show[]) {
+  const { upcoming } = splitShows(new Date(), shows);
 
   return {
     "@context": "https://schema.org",
@@ -126,8 +127,8 @@ function buildJsonLd() {
   };
 }
 
-export default function Home() {
-  const jsonLd = buildJsonLd();
+export default async function Home() {
+  const jsonLd = buildJsonLd(await getPublicShows());
 
   return (
     <>

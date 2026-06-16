@@ -10,6 +10,9 @@ nothing here is committed.
 | `CONTACT_TO_EMAIL` | No | Server only | Where booking inquiries land. Defaults to `ben.subercaseaux@gmail.com`. |
 | `CONTACT_FROM_EMAIL` | No | Server only | Defaults to Resend's onboarding sender (zero setup). Switch to `Eddie Barretta <bookings@eddiebarretta.com>` once Resend verifies the domain — see [05-resend-email.md](05-resend-email.md). |
 | `NEXT_PUBLIC_GA_ID` | No | **Browser** | GA4 Measurement ID (`G-XXXXXXXXXX`), from GA Admin → Data Streams → your web stream. Analytics only loads when this is set, so local dev stays out of your reports. |
+| `ADMIN_USERNAME` / `ADMIN_PASSWORD` | Yes (for `/admin`) | Server only | Login for the shows dashboard. Without them you can't sign in. |
+| `AUTH_SECRET` | Yes (prod, for `/admin`) | Server only | Signs the admin session cookie. Generate: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`. Dev falls back to an insecure default. |
+| `BLOB_READ_WRITE_TOKEN` | Yes (to edit shows) | Server only | Vercel Blob token, auto-injected once you create a Blob store. Without it, the site shows seed data and editing is disabled. See [06-admin-events.md](06-admin-events.md). |
 
 ## Tips
 

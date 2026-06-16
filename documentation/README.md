@@ -13,6 +13,7 @@ Work the guides in order — each is a self-contained checklist.
 | 3 | Transfer the domain off Bandzoogle | [03-domain-transfer.md](03-domain-transfer.md) | ☐ |
 | 4 | Point the domain at Vercel (DNS cutover) | [04-vercel-domain-and-dns.md](04-vercel-domain-and-dns.md) | ☐ |
 | 5 | Send booking email from your domain (Resend) | [05-resend-email.md](05-resend-email.md) | ☐ |
+| 6 | Set up the shows admin (`/admin`) | [06-admin-events.md](06-admin-events.md) | ☐ |
 
 ## The short version
 

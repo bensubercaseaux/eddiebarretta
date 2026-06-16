@@ -1,5 +1,6 @@
 import { Reveal } from "./Reveal";
 import { splitShows, formatShowDate, type Show } from "@/lib/shows";
+import { getPublicShows } from "@/lib/shows-store";
 
 function ShowCard({ show }: { show: Show }) {
   const { weekday, month, day } = formatShowDate(show.date);
@@ -21,8 +22,8 @@ function ShowCard({ show }: { show: Show }) {
   );
 }
 
-export function Shows() {
-  const { upcoming, past } = splitShows(new Date());
+export async function Shows() {
+  const { upcoming, past } = splitShows(new Date(), await getPublicShows());
 
   return (
     <section

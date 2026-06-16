@@ -4,7 +4,7 @@ import type { MetadataRoute } from "next";
 // PerplexityBot, etc.) — we want this site cited by answer engines.
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: "*", allow: "/" },
+    rules: { userAgent: "*", allow: "/", disallow: "/admin" },
     sitemap: "https://eddiebarretta.com/sitemap.xml",
     host: "https://eddiebarretta.com",
   };
