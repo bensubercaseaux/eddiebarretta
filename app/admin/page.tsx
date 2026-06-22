@@ -74,14 +74,22 @@ export default async function AdminPage() {
           <p className="text-sm uppercase tracking-[0.2em] text-faint">Eddie Barretta</p>
           <h1 className="mt-1 font-display text-3xl font-bold tracking-tight">Shows</h1>
         </div>
-        <form action={logout}>
-          <button
-            type="submit"
-            className="rounded-full border border-line px-4 py-2 text-sm text-muted transition-colors hover:border-accent hover:text-fg"
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin/tracklist"
+            className="rounded-full border border-line px-4 py-2 text-sm text-fg transition-colors hover:border-accent hover:text-accent-bright"
           >
-            Log out
-          </button>
-        </form>
+            Tracklist tool
+          </Link>
+          <form action={logout}>
+            <button
+              type="submit"
+              className="rounded-full border border-line px-4 py-2 text-sm text-muted transition-colors hover:border-accent hover:text-fg"
+            >
+              Log out
+            </button>
+          </form>
+        </div>
       </header>
 
       {!storeReady && (

@@ -17,9 +17,15 @@ it can move. **The live site stays up for the entire transfer.**
 
 Pick one:
 
-**Cloudflare Registrar** — recommended (at-cost pricing, and you manage DNS there):
-- [ ] Add the domain in Cloudflare and choose **Transfer**.
-- [ ] Paste the auth code and start the transfer.
+**Cloudflare Registrar** — at-cost pricing, you manage DNS there. The catch that
+trips everyone up: **Cloudflare won't accept the auth/EPP code until the domain
+is added to Cloudflare AND "Active" on Cloudflare's nameservers.** There is no
+EPP box before that. Order:
+- [ ] Cloudflare dashboard → **Add a domain** → `eddiebarretta.com` (Free plan is fine). Cloudflare scans and imports the existing DNS records.
+- [ ] **Check the imported records** — the domain is about to leave Bandzoogle's nameservers, so whatever keeps the site live must exist in Cloudflare. If Vercel is ready, add the Vercel records now (see [04-vercel-domain-and-dns.md](04-vercel-domain-and-dns.md)); if not, keep the records that point at Bandzoogle so the current site stays up.
+- [ ] At **Bandzoogle / eNom**, change the nameservers from `*.sitezoogle.com` to the two Cloudflare nameservers Cloudflare gives you. ⚠️ This is the moment DNS control moves to Cloudflare — on this path the registrar transfer and the DNS cutover (step 4) happen together, not separately.
+- [ ] Wait until Cloudflare marks the domain **Active** (minutes to a few hours).
+- [ ] **Now** the EPP box appears: domain → **Domain Registration → Transfer Domains** → select `eddiebarretta.com` → paste the **EPP/auth code** exactly (no stray spaces) → confirm contacts → pay the 1-year transfer fee.
 
 **Vercel Domains** — simplest (DNS becomes automatic, no records to set in step 4):
 - [ ] Transfer the domain inside the Vercel dashboard and paste the auth code.
