@@ -4,8 +4,21 @@ import { useMemo, useState, useTransition } from "react";
 import { validateHandlesAction, autoResolveAction } from "./actions";
 
 type Status = "idle" | "checking" | "valid" | "invalid";
-type Artist = { name: string; handle: string; status: Status; displayName?: string };
+type Artist = {
+  name: string;
+  handle: string;
+  status: Status;
+  displayName?: string;
+  followers?: number | null;
+};
 type Track = { title: string; artists: Artist[] };
+
+function fmtFollowers(n: number | null | undefined): string {
+  if (n == null) return "";
+  if (n >= 1e6) return `${(n / 1e6).toFixed(1).replace(/\.0$/, "")}M`;
+  if (n >= 1e3) return `${(n / 1e3).toFixed(n >= 1e4 ? 0 : 1).replace(/\.0$/, "")}k`;
+  return String(n);
+}
 
 const field =
   "w-full rounded-lg border border-line bg-ink px-3 py-2 text-sm text-fg placeholder:text-faint transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40";
@@ -46,6 +59,7 @@ function buildOutput(tracks: Track[]): string {
 export function TracklistTool() {
   const [raw, setRaw] = useState("");
   const [tracks, setTracks] = useState<Track[]>([]);
+  const [minFollowers, setMinFollowers] = useState(500);
   const [pending, startTransition] = useTransition();
   const [copied, setCopied] = useState(false);
 
@@ -111,7 +125,7 @@ export function TracklistTool() {
     );
     if (!names.length) return;
     startTransition(async () => {
-      const results = await autoResolveAction(names);
+      const results = await autoResolveAction(names, minFollowers);
       const map = new Map(names.map((n, i) => [n, results[i]]));
       setTracks((prev) =>
         prev.map((t) => ({
@@ -119,7 +133,13 @@ export function TracklistTool() {
           artists: t.artists.map((a) => {
             const r = map.get(a.name.trim());
             return r && r.status === "valid"
-              ? { ...a, handle: r.handle, status: "valid", displayName: r.name }
+              ? {
+                  ...a,
+                  handle: r.handle,
+                  status: "valid",
+                  displayName: r.name,
+                  followers: r.followers,
+                }
               : a;
           }),
         })),
@@ -154,9 +174,11 @@ export function TracklistTool() {
             a.status = "valid";
             a.handle = r.handle;
             a.displayName = r.name;
+            a.followers = r.followers;
           } else {
             a.status = "invalid";
             a.displayName = undefined;
+            a.followers = undefined;
           }
         });
         return next;
@@ -222,7 +244,18 @@ export function TracklistTool() {
             >
               {pending ? "Working…" : "Validate all handles"}
             </button>
-            <span className="text-sm text-faint">
+            <label className="flex items-center gap-2 text-sm text-faint">
+              Min followers
+              <input
+                type="number"
+                min={0}
+                step={50}
+                value={minFollowers}
+                onChange={(e) => setMinFollowers(Math.max(0, Number(e.target.value) || 0))}
+                className="w-24 rounded-lg border border-line bg-ink px-2 py-1 text-fg focus:border-accent focus:outline-none"
+              />
+            </label>
+            <span className="ml-auto text-sm text-faint">
               {validCount}/{totalArtists} artists linked
             </span>
           </section>
@@ -331,6 +364,9 @@ function StatusBadge({ artist }: { artist: Artist }) {
     return (
       <span className="text-xs text-emerald-400">
         ✓ {artist.displayName || "found"}
+        {artist.followers != null && (
+          <span className="text-faint"> · {fmtFollowers(artist.followers)}</span>
+        )}
       </span>
     );
   if (artist.status === "invalid")
