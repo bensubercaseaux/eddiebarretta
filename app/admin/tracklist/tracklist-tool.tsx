@@ -23,24 +23,36 @@ function fmtFollowers(n: number | null | undefined): string {
 const field =
   "w-full rounded-lg border border-line bg-ink px-3 py-2 text-sm text-fg placeholder:text-faint transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40";
 
-// Best-effort split: artists are the trailing segment after the last ) or ] in
-// the line. No bracket → whole line is the title (artists left for you to fill).
-function parseLine(line: string): Track {
+// Split a line into its title column and artist column. Most exports separate
+// the two with a tab (or a wide space gap), which is reliable even when an
+// artist name itself ends in parens — e.g. "Kide (IT)", "REVOL(ofc)". Fall back
+// to "after the last ) or ]" for single-space-separated lines.
+function splitTitleArtists(line: string): { title: string; artistStr: string } {
+  const tab = line.indexOf("\t");
+  if (tab >= 0) return { title: line.slice(0, tab), artistStr: line.slice(tab + 1) };
+
+  const gap = line.match(/\s{3,}/);
+  if (gap && gap.index !== undefined)
+    return {
+      title: line.slice(0, gap.index),
+      artistStr: line.slice(gap.index + gap[0].length),
+    };
+
   const close = Math.max(line.lastIndexOf(")"), line.lastIndexOf("]"));
-  let title = line;
-  let rest = "";
-  if (close >= 0 && close < line.length - 1) {
-    title = line.slice(0, close + 1).trim();
-    rest = line.slice(close + 1).trim();
-  }
-  const artists = rest
-    ? rest
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean)
-        .map((name) => ({ name, handle: "", status: "idle" as Status }))
-    : [];
-  return { title, artists };
+  if (close >= 0 && close < line.length - 1)
+    return { title: line.slice(0, close + 1), artistStr: line.slice(close + 1) };
+
+  return { title: line, artistStr: "" };
+}
+
+function parseLine(line: string): Track {
+  const { title, artistStr } = splitTitleArtists(line);
+  const artists = artistStr
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((name) => ({ name, handle: "", status: "idle" as Status }));
+  return { title: title.trim().replace(/\s{2,}/g, " "), artists };
 }
 
 function buildOutput(tracks: Track[]): string {
@@ -62,6 +74,7 @@ export function TracklistTool() {
   const [minFollowers, setMinFollowers] = useState(500);
   const [pending, startTransition] = useTransition();
   const [copied, setCopied] = useState(false);
+  const [copiedLinks, setCopiedLinks] = useState(false);
 
   const output = useMemo(() => buildOutput(tracks), [tracks]);
   const validCount = useMemo(
@@ -72,6 +85,21 @@ export function TracklistTool() {
     () => tracks.flatMap((t) => t.artists).length,
     [tracks],
   );
+  const followList = useMemo(() => {
+    const map = new Map<
+      string,
+      { handle: string; name: string; followers?: number | null }
+    >();
+    for (const t of tracks)
+      for (const a of t.artists)
+        if (a.status === "valid" && a.handle && !map.has(a.handle))
+          map.set(a.handle, {
+            handle: a.handle,
+            name: a.displayName || a.name,
+            followers: a.followers,
+          });
+    return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name));
+  }, [tracks]);
 
   function parse() {
     const next = raw
@@ -193,6 +221,18 @@ export function TracklistTool() {
       setTimeout(() => setCopied(false), 1500);
     } catch {
       /* clipboard blocked — the textarea is selectable as a fallback */
+    }
+  }
+
+  async function copyLinks() {
+    try {
+      await navigator.clipboard.writeText(
+        followList.map((f) => `https://soundcloud.com/${f.handle}`).join("\n"),
+      );
+      setCopiedLinks(true);
+      setTimeout(() => setCopiedLinks(false), 1500);
+    } catch {
+      /* clipboard blocked — links are still clickable below */
     }
   }
 
@@ -351,6 +391,50 @@ export function TracklistTool() {
               className={`${field} mt-3 font-mono`}
             />
           </section>
+
+          {/* Follow checklist */}
+          {followList.length > 0 && (
+            <section>
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-sm font-medium text-fg">
+                  Follow checklist · {followList.length}
+                </h2>
+                <button
+                  type="button"
+                  onClick={copyLinks}
+                  className="rounded-full border border-line px-5 py-2 text-sm font-medium text-fg transition-colors hover:border-accent hover:text-accent-bright"
+                >
+                  {copiedLinks ? "Copied ✓" : "Copy links"}
+                </button>
+              </div>
+              <p className="mt-1 text-sm text-faint">
+                Every linked artist in this mix — open each and follow any you
+                don&rsquo;t already. SoundCloud doesn&rsquo;t expose your full follow
+                list publicly, so this can&rsquo;t pre-filter the ones you have.
+              </p>
+              <ul className="mt-3 grid gap-1.5">
+                {followList.map((f) => (
+                  <li key={f.handle}>
+                    <a
+                      href={`https://soundcloud.com/${f.handle}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex flex-wrap items-center gap-2 text-sm text-fg transition-colors hover:text-accent-bright"
+                    >
+                      <span className="font-medium">{f.name}</span>
+                      <span className="text-faint">@{f.handle}</span>
+                      {f.followers != null && (
+                        <span className="text-faint">· {fmtFollowers(f.followers)}</span>
+                      )}
+                      <span className="text-faint transition-transform group-hover:translate-x-0.5">
+                        ↗
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </>
       )}
     </div>

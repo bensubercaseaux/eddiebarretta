@@ -13,6 +13,13 @@ const UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
 const COMBINING = /[̀-ͯ]/g;
 
+// Latin letters NFD can't decompose (the diacritic is fused into the glyph), so
+// they'd otherwise be stripped — e.g. "ZENØN" → "zenn" instead of "zenon".
+const FOLD: Record<string, string> = {
+  ø: "o", æ: "ae", œ: "oe", ł: "l", đ: "d", ð: "d", þ: "th", ß: "ss",
+  ı: "i", ŋ: "n", ħ: "h", ŧ: "t", ĸ: "k",
+};
+
 export const DEFAULT_MIN_FOLLOWERS = 500;
 
 export type HandleLookup =
@@ -29,7 +36,21 @@ export function normalizeHandle(input: string): string {
 
 /** Strip accents + punctuation for forgiving name comparison. */
 function normalizeName(s: string): string {
-  return s.normalize("NFD").replace(COMBINING, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  return s
+    .normalize("NFD")
+    .replace(COMBINING, "")
+    .toLowerCase()
+    .replace(/[øæœłđðþßıŋħŧĸ]/g, (c) => FOLD[c] ?? c)
+    .replace(/[^a-z0-9]/g, "");
+}
+
+/** ASCII-fold a name for the search query — SoundCloud matches "ZENON", not "ZENØN". */
+function searchQuery(s: string): string {
+  return s
+    .normalize("NFD")
+    .replace(COMBINING, "")
+    .replace(/[øæœłđðþßıŋħŧĸ]/gi, (c) => FOLD[c.toLowerCase()] ?? c)
+    .trim();
 }
 
 function decodeEntities(s: string): string {
@@ -123,7 +144,7 @@ export async function resolveArtist(
   const target = normalizeName(name);
   if (!target) return { status: "notfound", handle: "" };
 
-  const results = await searchPeople(name);
+  const results = await searchPeople(searchQuery(name));
   const matches = results.filter((r) => normalizeName(r.name) === target).slice(0, 4);
   if (!matches.length) return { status: "notfound", handle: "" };
 
