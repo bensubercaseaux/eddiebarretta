@@ -145,12 +145,16 @@ export async function resolveArtist(
   if (!target) return { status: "notfound", handle: "" };
 
   const results = await searchPeople(searchQuery(name));
-  const matches = results.filter((r) => normalizeName(r.name) === target).slice(0, 4);
+  // Top 2 name-matches (search is relevance-ordered) is enough to disambiguate
+  // the common same-name case, and halves the profile fetches.
+  const matches = results.filter((r) => normalizeName(r.name) === target).slice(0, 2);
   if (!matches.length) return { status: "notfound", handle: "" };
 
-  const enriched = await Promise.all(
-    matches.map(async (c) => ({ ...c, followers: (await fetchFollowers(c.handle)) ?? 0 })),
-  );
+  // Sequential, not parallel — avoid bursting requests at SoundCloud.
+  const enriched: { handle: string; name: string; followers: number }[] = [];
+  for (const c of matches) {
+    enriched.push({ ...c, followers: (await fetchFollowers(c.handle)) ?? 0 });
+  }
   enriched.sort((a, b) => b.followers - a.followers);
   const best = enriched[0];
 

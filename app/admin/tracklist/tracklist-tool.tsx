@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
-import { validateHandlesAction, autoResolveAction } from "./actions";
+import { useMemo, useRef, useState } from "react";
+import { resolveArtistAction, validateHandleAction } from "./actions";
 
 type Status = "idle" | "checking" | "valid" | "invalid";
 type Artist = {
@@ -72,7 +72,12 @@ export function TracklistTool() {
   const [raw, setRaw] = useState("");
   const [tracks, setTracks] = useState<Track[]>([]);
   const [minFollowers, setMinFollowers] = useState(500);
-  const [pending, startTransition] = useTransition();
+  const [delaySec, setDelaySec] = useState(3);
+  const [running, setRunning] = useState(false);
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(
+    null,
+  );
+  const cancelRef = useRef(false);
   const [copied, setCopied] = useState(false);
   const [copiedLinks, setCopiedLinks] = useState(false);
 
@@ -145,37 +150,69 @@ export function TracklistTool() {
     );
   }
 
-  function autoResolve() {
+  function stop() {
+    cancelRef.current = true;
+  }
+
+  // Jittered wait so the cadence isn't perfectly regular.
+  function sleep(ms: number) {
+    return new Promise((r) => setTimeout(r, ms + Math.random() * ms * 0.3));
+  }
+
+  function patchByName(name: string, patch: Partial<Artist>) {
+    setTracks((prev) =>
+      prev.map((t) => ({
+        ...t,
+        artists: t.artists.map((a) =>
+          a.name.trim() === name ? { ...a, ...patch } : a,
+        ),
+      })),
+    );
+  }
+
+  // Resolve one unique artist name at a time, pausing `delaySec` between calls
+  // so we never burst requests at SoundCloud.
+  async function autoResolve() {
+    if (running) return;
     const names = Array.from(
       new Set(
         tracks.flatMap((t) => t.artists.map((a) => a.name.trim())).filter(Boolean),
       ),
     );
     if (!names.length) return;
-    startTransition(async () => {
-      const results = await autoResolveAction(names, minFollowers);
-      const map = new Map(names.map((n, i) => [n, results[i]]));
-      setTracks((prev) =>
-        prev.map((t) => ({
-          ...t,
-          artists: t.artists.map((a) => {
-            const r = map.get(a.name.trim());
-            return r && r.status === "valid"
-              ? {
-                  ...a,
-                  handle: r.handle,
-                  status: "valid",
-                  displayName: r.name,
-                  followers: r.followers,
-                }
-              : a;
-          }),
-        })),
-      );
-    });
+
+    setRunning(true);
+    cancelRef.current = false;
+    const gap = Math.max(0, delaySec) * 1000;
+    try {
+      for (let i = 0; i < names.length; i++) {
+        if (cancelRef.current) break;
+        setProgress({ done: i, total: names.length });
+        const name = names[i];
+        patchByName(name, { status: "checking" });
+        const r = await resolveArtistAction(name, minFollowers);
+        patchByName(
+          name,
+          r.status === "valid"
+            ? {
+                status: "valid",
+                handle: r.handle,
+                displayName: r.name,
+                followers: r.followers,
+              }
+            : { status: "idle" }, // leave blank for manual entry
+        );
+        if (gap && i < names.length - 1 && !cancelRef.current) await sleep(gap);
+      }
+    } finally {
+      setRunning(false);
+      setProgress(null);
+    }
   }
 
-  function validateAll() {
+  // Validate the handles you typed/pasted, one at a time with the same pacing.
+  async function validateAll() {
+    if (running) return;
     const jobs: { ti: number; ai: number; handle: string }[] = [];
     tracks.forEach((t, ti) =>
       t.artists.forEach((a, ai) => {
@@ -183,35 +220,35 @@ export function TracklistTool() {
       }),
     );
     if (!jobs.length) return;
-    setTracks((prev) =>
-      prev.map((t, ti) => ({
-        ...t,
-        artists: t.artists.map((a, ai) =>
-          jobs.some((j) => j.ti === ti && j.ai === ai) ? { ...a, status: "checking" } : a,
-        ),
-      })),
-    );
-    startTransition(async () => {
-      const results = await validateHandlesAction(jobs.map((j) => j.handle));
-      setTracks((prev) => {
-        const next = prev.map((t) => ({ ...t, artists: t.artists.map((a) => ({ ...a })) }));
-        jobs.forEach((j, k) => {
-          const r = results[k];
-          const a = next[j.ti].artists[j.ai];
-          if (r.status === "valid") {
-            a.status = "valid";
-            a.handle = r.handle;
-            a.displayName = r.name;
-            a.followers = r.followers;
-          } else {
-            a.status = "invalid";
-            a.displayName = undefined;
-            a.followers = undefined;
-          }
-        });
-        return next;
-      });
-    });
+
+    setRunning(true);
+    cancelRef.current = false;
+    const gap = Math.max(0, delaySec) * 1000;
+    try {
+      for (let i = 0; i < jobs.length; i++) {
+        if (cancelRef.current) break;
+        setProgress({ done: i, total: jobs.length });
+        const j = jobs[i];
+        setArtist(j.ti, j.ai, { status: "checking" });
+        const r = await validateHandleAction(j.handle);
+        setArtist(
+          j.ti,
+          j.ai,
+          r.status === "valid"
+            ? {
+                status: "valid",
+                handle: r.handle,
+                displayName: r.name,
+                followers: r.followers,
+              }
+            : { status: "invalid", displayName: undefined, followers: undefined },
+        );
+        if (gap && i < jobs.length - 1 && !cancelRef.current) await sleep(gap);
+      }
+    } finally {
+      setRunning(false);
+      setProgress(null);
+    }
   }
 
   async function copyOutput() {
@@ -271,19 +308,28 @@ export function TracklistTool() {
             <button
               type="button"
               onClick={autoResolve}
-              disabled={pending}
+              disabled={running}
               className="rounded-full border border-line px-4 py-2 text-sm font-medium text-fg transition-colors hover:border-accent hover:text-accent-bright disabled:opacity-60"
             >
-              {pending ? "Working…" : "Auto-resolve handles"}
+              Auto-resolve handles
             </button>
             <button
               type="button"
               onClick={validateAll}
-              disabled={pending}
+              disabled={running}
               className="rounded-full border border-line px-4 py-2 text-sm font-medium text-fg transition-colors hover:border-accent hover:text-accent-bright disabled:opacity-60"
             >
-              {pending ? "Working…" : "Validate all handles"}
+              Validate all handles
             </button>
+            {running && (
+              <button
+                type="button"
+                onClick={stop}
+                className="rounded-full border border-red-500/50 px-4 py-2 text-sm font-medium text-red-300 transition-colors hover:bg-red-500/10"
+              >
+                Stop
+              </button>
+            )}
             <label className="flex items-center gap-2 text-sm text-faint">
               Min followers
               <input
@@ -291,12 +337,27 @@ export function TracklistTool() {
                 min={0}
                 step={50}
                 value={minFollowers}
+                disabled={running}
                 onChange={(e) => setMinFollowers(Math.max(0, Number(e.target.value) || 0))}
-                className="w-24 rounded-lg border border-line bg-ink px-2 py-1 text-fg focus:border-accent focus:outline-none"
+                className="w-20 rounded-lg border border-line bg-ink px-2 py-1 text-fg focus:border-accent focus:outline-none disabled:opacity-60"
+              />
+            </label>
+            <label className="flex items-center gap-2 text-sm text-faint">
+              Delay (s)
+              <input
+                type="number"
+                min={0}
+                step={1}
+                value={delaySec}
+                disabled={running}
+                onChange={(e) => setDelaySec(Math.max(0, Number(e.target.value) || 0))}
+                className="w-16 rounded-lg border border-line bg-ink px-2 py-1 text-fg focus:border-accent focus:outline-none disabled:opacity-60"
               />
             </label>
             <span className="ml-auto text-sm text-faint">
-              {validCount}/{totalArtists} artists linked
+              {running && progress
+                ? `Working ${progress.done}/${progress.total}…`
+                : `${validCount}/${totalArtists} artists linked`}
             </span>
           </section>
 
