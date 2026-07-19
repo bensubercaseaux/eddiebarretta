@@ -115,11 +115,53 @@ body {
   animation: glow-pulse 7s ease-in-out infinite;
 }
 
+/* Now-playing bar slides up when a mix starts */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.28s ease-out;
+}
+
+/* Native range styled as the player scrubber (fill is set inline per progress) */
+.player-range {
+  outline-offset: 4px;
+}
+.player-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 14px;
+  width: 14px;
+  border-radius: 9999px;
+  background: var(--fg);
+  cursor: pointer;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 45%, transparent);
+}
+.player-range::-moz-range-thumb {
+  height: 14px;
+  width: 14px;
+  border: none;
+  border-radius: 9999px;
+  background: var(--fg);
+  cursor: pointer;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 45%, transparent);
+}
+.player-range::-moz-range-track {
+  background: transparent;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
   .animate-glow,
+  .animate-slide-up,
   .eq-bar {
     animation: none !important;
   }

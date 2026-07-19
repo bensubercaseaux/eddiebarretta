@@ -55,7 +55,7 @@ function parseLine(line: string): Track {
   return { title: title.trim().replace(/\s{2,}/g, " "), artists };
 }
 
-function buildOutput(tracks: Track[]): string {
+function buildOutput(tracks: Track[], bullets: boolean): string {
   return tracks
     .map((t) => {
       const seg = t.artists
@@ -63,7 +63,10 @@ function buildOutput(tracks: Track[]): string {
           a.status === "valid" && a.handle ? `${a.name} [@${a.handle}]` : a.name,
         )
         .join(", ");
-      return seg ? `${t.title} ${seg}` : t.title;
+      const line = seg ? `${t.title} ${seg}` : t.title;
+      // A leading "• " keeps each track on its own visual line on Apple/Amazon/
+      // YouTube, which collapse plain newlines. The site strips it back out.
+      return bullets ? `• ${line}` : line;
     })
     .join("\n");
 }
@@ -80,8 +83,9 @@ export function TracklistTool() {
   const cancelRef = useRef(false);
   const [copied, setCopied] = useState(false);
   const [copiedLinks, setCopiedLinks] = useState(false);
+  const [bullets, setBullets] = useState(true);
 
-  const output = useMemo(() => buildOutput(tracks), [tracks]);
+  const output = useMemo(() => buildOutput(tracks, bullets), [tracks, bullets]);
   const validCount = useMemo(
     () => tracks.flatMap((t) => t.artists).filter((a) => a.status === "valid").length,
     [tracks],
@@ -433,17 +437,29 @@ export function TracklistTool() {
           <section>
             <div className="flex items-center justify-between gap-3">
               <h2 className="text-sm font-medium text-fg">Annotated tracklist</h2>
-              <button
-                type="button"
-                onClick={copyOutput}
-                className="rounded-full bg-accent px-5 py-2 text-sm font-medium text-white transition-transform hover:bg-accent-bright active:scale-[0.98]"
-              >
-                {copied ? "Copied ✓" : "Copy"}
-              </button>
+              <div className="flex items-center gap-4">
+                <label className="flex items-center gap-1.5 text-sm text-muted">
+                  <input
+                    type="checkbox"
+                    checked={bullets}
+                    onChange={(e) => setBullets(e.target.checked)}
+                    className="h-4 w-4 accent-[var(--accent)]"
+                  />
+                  Bullets
+                </label>
+                <button
+                  type="button"
+                  onClick={copyOutput}
+                  className="rounded-full bg-accent px-5 py-2 text-sm font-medium text-white transition-transform hover:bg-accent-bright active:scale-[0.98]"
+                >
+                  {copied ? "Copied ✓" : "Copy"}
+                </button>
+              </div>
             </div>
             <p className="mt-1 text-sm text-faint">
               Only validated handles are appended — unconfirmed artists stay as plain
-              text, so you never paste a dead link.
+              text, so you never paste a dead link. Bullets keep the tracklist
+              readable on Apple/Amazon/YouTube (paste under your intro line).
             </p>
             <textarea
               readOnly

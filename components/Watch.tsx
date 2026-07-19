@@ -1,21 +1,7 @@
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./Reveal";
+import { LiteYouTube } from "./LiteYouTube";
 import { site } from "@/lib/site";
-
-function Video({ id, title }: { id: string; title: string }) {
-  return (
-    <div className="aspect-video overflow-hidden rounded-[16px] border border-line bg-surface">
-      <iframe
-        title={title}
-        src={`https://www.youtube-nocookie.com/embed/${id}?rel=0`}
-        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        loading="lazy"
-        className="h-full w-full"
-      />
-    </div>
-  );
-}
 
 export function Watch() {
   const [featured, ...rest] = site.youtubeVideos;
@@ -44,13 +30,13 @@ export function Watch() {
         </Reveal>
 
         <Reveal delay={0.1} className="mt-10">
-          <Video id={featured} title="Eddie Barretta — featured set" />
+          <LiteYouTube id={featured} title="Eddie Barretta — featured set" />
         </Reveal>
 
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           {rest.map((id, i) => (
             <Reveal key={id} delay={0.15 + i * 0.08}>
-              <Video id={id} title={`Eddie Barretta — set ${i + 2}`} />
+              <LiteYouTube id={id} title={`Eddie Barretta — set ${i + 2}`} />
             </Reveal>
           ))}
         </div>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Social } from "./Social";
 import { nav, site } from "@/lib/site";
 
@@ -8,9 +9,9 @@ export function Footer() {
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div className="max-w-xs">
-            <a href="#top" className="font-display text-xl font-bold tracking-tight">
+            <Link href="/#top" className="font-display text-xl font-bold tracking-tight">
               Eddie Barretta
-            </a>
+            </Link>
             <p className="mt-3 text-sm leading-relaxed text-muted">
               {site.role} · {site.location}. {site.serviceArea}.
             </p>
@@ -19,13 +20,13 @@ export function Footer() {
 
           <nav className="flex flex-col gap-3">
             {nav.map((item) => (
-              <a
+              <Link
                 key={item.href}
                 href={item.href}
                 className="text-sm text-muted transition-colors hover:text-fg"
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
           </nav>
         </div>

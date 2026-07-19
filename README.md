@@ -20,10 +20,15 @@ Other scripts: `npm run build` (production build), `npm run start` (serve the bu
 
 Almost everything lives in two files:
 
-- **`lib/site.ts`** — name, bio, residency, social links, booking email, the SoundCloud
-  playlist embed, and the list of YouTube video IDs.
+- **`lib/site.ts`** — name, bio, residency, social links, booking email, and the list of
+  YouTube video IDs.
 - **`lib/shows.ts`** — gig list. Add new gigs to the `shows` array. Anything dated in the
   future shows under **Upcoming**; past dates roll into **Recent sets** automatically.
+
+**Mixes are fully automatic.** The Listen section and the `/mixes` pages are built live
+from your SoundCloud RSS feed (`lib/mixes-store.ts`) — upload a mix to SoundCloud with a
+description/tracklist and it appears on the site within the hour, no code change or
+redeploy. The site caches the feed for an hour (`unstable_cache`, tag `mixes`).
 
 Images live in `public/`. `public/hero.png` is the EB vinyl logo (also used as the
 favicon `app/icon.png` and the social-share image). Drop in real performance photos and

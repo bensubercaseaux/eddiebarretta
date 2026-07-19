@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Syne, Space_Grotesk } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { PlayerProvider } from "@/components/player/PlayerProvider";
 import "./globals.css";
 
 const syne = Syne({
@@ -64,7 +65,9 @@ export default function RootLayout({
       lang="en"
       className={`${syne.variable} ${spaceGrotesk.variable} antialiased`}
     >
-      <body className="grain min-h-[100dvh] bg-ink text-fg">{children}</body>
+      <body className="grain min-h-[100dvh] bg-ink text-fg">
+        <PlayerProvider>{children}</PlayerProvider>
+      </body>
       {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
     </html>
   );

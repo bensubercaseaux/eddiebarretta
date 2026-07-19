@@ -26,6 +26,18 @@ export const site = {
     youtube: "https://www.youtube.com/channel/UCoNhqZqV16sOxdxROqUMPHw",
   },
 
+  // Where the Transcend podcast (the SoundCloud RSS feed) is distributed.
+  // Listeners can subscribe on any of these; new mixes appear automatically.
+  podcast: {
+    apple:
+      "https://podcasts.apple.com/us/podcast/transcend/id1678351064",
+    amazon:
+      "https://music.amazon.com/podcasts/3ac70ad2-8a98-4d09-8f00-3cf99cde7350/transcend",
+    youtube:
+      "https://www.youtube.com/playlist?list=PLjisbdyvOZPD3tiXrQ2rJeBAoGfqjl2GI",
+    soundcloud: "https://soundcloud.com/eddie-barretta",
+  },
+
   // Google Business Profile / Knowledge Panel. Ties the site to the verified
   // Google listing — important for local SEO and entity reconciliation.
   googleBusiness:
@@ -43,16 +55,14 @@ export const site = {
     "Myth",
   ],
 
-  // SoundCloud "Transcend Mixes" playlist (id 2188375376), brand violet.
-  soundcloudPlaylistEmbed:
-    "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/2188375376&color=%236900ff&auto_play=false&hide_related=false&show_comments=true&show_user=false&show_reposts=false&show_teaser=true",
-
   youtubeVideos: ["2TjrdaVfZ-4", "IjrgRdo6O-Y", "rhO2JklK0sQ"],
 } as const;
 
+// Root-relative anchors so the nav works from subpages (e.g. /mixes) too, not
+// just the home page.
 export const nav = [
-  { label: "About", href: "#about" },
-  { label: "Music", href: "#music" },
-  { label: "Watch", href: "#watch" },
-  { label: "Shows", href: "#shows" },
+  { label: "About", href: "/#about" },
+  { label: "Music", href: "/#music" },
+  { label: "Watch", href: "/#watch" },
+  { label: "Shows", href: "/#shows" },
 ] as const;
