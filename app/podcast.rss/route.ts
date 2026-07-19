@@ -20,6 +20,10 @@ const SELF_URL = "https://eddiebarretta.com/podcast.rss";
 // Show cover art — 1400×1400 JPG (<500KB) served from /public.
 const PODCAST_IMAGE = "https://eddiebarretta.com/transcend.jpg";
 const SITE = "https://eddiebarretta.com";
+// Stable Podcasting 2.0 identity for the show. UUIDv5 of the feed URL
+// ("eddiebarretta.com/podcast.rss", protocol stripped) under the Podcast Index
+// namespace ead4c236-bf58-58c6-a2c6-a6b28d128cb6. Assign once — NEVER change it.
+const PODCAST_GUID = "624c3722-aa94-5e43-95ce-de389eff7957";
 
 // The source feed's ttl is 60m; match it.
 export const revalidate = 3600;
@@ -67,12 +71,16 @@ function cdata(html: string): string {
 }
 
 function rewriteFeed(xml: string): string {
-  // Declare the content namespace so <content:encoded> is valid.
-  let out = xml.replace(/<rss\b([^>]*)>/, (m, attrs: string) =>
-    attrs.includes("xmlns:content")
-      ? m
-      : `<rss${attrs} xmlns:content="http://purl.org/rss/1.0/modules/content/">`,
-  );
+  // Declare the content + podcast namespaces (for <content:encoded> and
+  // <podcast:guid>).
+  let out = xml.replace(/<rss\b([^>]*)>/, (_m, attrs: string) => {
+    let a = attrs;
+    if (!a.includes("xmlns:content"))
+      a += ` xmlns:content="http://purl.org/rss/1.0/modules/content/"`;
+    if (!a.includes("xmlns:podcast"))
+      a += ` xmlns:podcast="https://podcastindex.org/namespace/1.0"`;
+    return `<rss${a}>`;
+  });
 
   // Descriptions → CDATA HTML (channel + every item).
   out = out.replace(
@@ -124,11 +132,11 @@ function rewriteFeed(xml: string): string {
     `<atom:link href="${SELF_URL}" rel="self" type="application/rss+xml"/>`,
   );
 
-  // Channel-level: mark the show episodic + declare our feed canonical.
+  // Channel-level: stable identity, mark the show episodic, declare canonical.
   if (!out.includes("<itunes:type>")) {
     out = out.replace(
       "</image>",
-      `</image>\n        <itunes:type>episodic</itunes:type>\n        <itunes:new-feed-url>${SELF_URL}</itunes:new-feed-url>`,
+      `</image>\n        <podcast:guid>${PODCAST_GUID}</podcast:guid>\n        <itunes:type>episodic</itunes:type>\n        <itunes:new-feed-url>${SELF_URL}</itunes:new-feed-url>`,
     );
   }
 
