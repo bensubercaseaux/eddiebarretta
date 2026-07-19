@@ -13,6 +13,8 @@
 const FEED_URL =
   "https://feeds.soundcloud.com/users/soundcloud:users:211674230/sounds.rss";
 const SELF_URL = "https://eddiebarretta.com/podcast.rss";
+// Show cover art for the podcast (2048×2048, served from /public).
+const PODCAST_IMAGE = "https://eddiebarretta.com/transcend.png";
 
 // The source feed's ttl is 60m; match it.
 export const revalidate = 3600;
@@ -71,6 +73,17 @@ function rewriteFeed(xml: string): string {
         .join("\n");
       return `<itunes:summary>${clean}</itunes:summary>`;
     },
+  );
+
+  // Swap the channel cover art (the first <itunes:image> + the <image> block,
+  // both channel-level — per-episode <itunes:image> tags come later and stay).
+  out = out.replace(
+    /<itunes:image href="[^"]*"\s*\/>/,
+    `<itunes:image href="${PODCAST_IMAGE}"/>`,
+  );
+  out = out.replace(
+    /(<image>\s*<url>)[^<]*(<\/url>)/,
+    `$1${PODCAST_IMAGE}$2`,
   );
 
   // Point the self link at our feed, and mark it canonical for Apple.

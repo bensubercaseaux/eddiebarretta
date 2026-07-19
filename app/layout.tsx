@@ -36,7 +36,26 @@ export const metadata: Metadata = {
     "Transcend podcast",
     "book a DJ",
   ],
-  alternates: { canonical: "/" },
+  alternates: {
+    canonical: "/",
+    // AI/LLM resource pack (Geordy) — <link rel="alternate"> tags in <head>
+    // pointing crawlers at the generated files on the ai. subdomain. Geordy's
+    // verifier looks for these in the head.
+    types: {
+      "text/markdown": "https://ai.eddiebarretta.com/index.md",
+      "application/yaml": "https://ai.eddiebarretta.com/index.yaml",
+      "application/ld+json": "https://ai.eddiebarretta.com/index.schema.json",
+      "application/rss+xml": "https://ai.eddiebarretta.com/index.xml",
+      "text/plain": [
+        { url: "https://ai.eddiebarretta.com/llms.txt", title: "llms.txt" },
+        { url: "https://ai.eddiebarretta.com/humans.txt", title: "humans.txt" },
+      ],
+      "application/json": [
+        { url: "https://ai.eddiebarretta.com/index.manifest.json", title: "Manifest" },
+        { url: "https://ai.eddiebarretta.com/index.og.json", title: "OG" },
+      ],
+    },
+  },
   // og:image / twitter:image come from the file-based opengraph-image.tsx
   // generators (branded, per-route), so no static image is set here.
   openGraph: {
