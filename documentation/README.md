@@ -31,6 +31,16 @@ You drive everything inside **Bandzoogle / eNom / Vercel / Cloudflare / Resend /
 Google Analytics** — those logins are yours. Claude can handle anything in this
 repo and via the Vercel CLI.
 
+## Reference
+
+Not part of the migration — ongoing feature docs:
+
+- [podcast-feed.md](podcast-feed.md) — the self-hosted Transcend podcast feed at
+  `/podcast.rss`: what it is, how it auto-refreshes, and submitting it to
+  Apple/Amazon/YouTube.
+- [soundcloud-descriptions.md](soundcloud-descriptions.md) — copy-paste-ready mix
+  descriptions for SoundCloud (one-time backfill snapshot).
+
 ## Key facts
 
 - **Domain:** `eddiebarretta.com`
