@@ -127,6 +127,42 @@ function buildJsonLd(shows: Show[]) {
   };
 }
 
+// AI/LLM resource pack published by Geordy at ai.eddiebarretta.com (separate
+// A record → Geordy CDN). This Dataset tag points AI crawlers at the generated
+// files. `dateModified` is copied from Geordy's snippet — refresh it (or
+// re-copy the tag) whenever Geordy regenerates the pack.
+const AI_HOST = "https://ai.eddiebarretta.com";
+const AI_DATASET_MODIFIED = "2026-07-19";
+const AI_FILES = [
+  { name: "YAML Configuration", path: "index.yaml", type: "application/yaml" },
+  { name: "Markdown Documentation", path: "index.md", type: "text/markdown" },
+  { name: "LLMs Configuration (llms.txt)", path: "llms.txt", type: "text/plain" },
+  { name: "Schema JSON", path: "index.schema.json", type: "application/ld+json" },
+  { name: "RSS Feed", path: "index.xml", type: "application/rss+xml" },
+  { name: "Manifest.json", path: "index.manifest.json", type: "application/json" },
+  { name: "Humans.txt", path: "humans.txt", type: "text/plain" },
+  { name: "OG.json", path: "index.og.json", type: "application/json" },
+] as const;
+
+function buildAiDatasetJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    name: "AI/LLM Resource Pack",
+    dateModified: AI_DATASET_MODIFIED,
+    hasPart: AI_FILES.map((f) => ({
+      "@type": "DataDownload",
+      name: f.name,
+      contentUrl: `${AI_HOST}/${f.path}`,
+      encodingFormat: f.type,
+      additionalProperty: [
+        { "@type": "PropertyValue", name: "audience", value: "LLM" },
+        { "@type": "PropertyValue", name: "updateFrequency", value: "weekly" },
+      ],
+    })),
+  };
+}
+
 export default async function Home() {
   const jsonLd = buildJsonLd(await getPublicShows());
 
@@ -135,6 +171,12 @@ export default async function Home() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buildAiDatasetJsonLd()),
+        }}
       />
       <Nav />
       <main>
