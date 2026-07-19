@@ -1,8 +1,9 @@
 // Self-hosted, normalized copy of the SoundCloud "Transcend" podcast feed.
 //
-// We rewrite episode notes into HTML (one <p> per line) in both <description>
-// and <content:encoded>, so Apple/Amazon/YouTube render tracklists with line
-// breaks. Everything else passes through untouched — including each <enclosure>
+// We rewrite episode notes into HTML — matching Podbean's proven format (<p>
+// per block, <br/> between lines) — in both <description> and <content:encoded>,
+// so Apple/Amazon/YouTube render tracklists with line breaks. Everything else
+// passes through untouched — including each <enclosure>
 // (SoundCloud's own stream URL), so audio is still served AND counted by
 // SoundCloud. Episode <link>s are pointed at our own mix pages, the cover art
 // is swapped, and the show is marked episodic.
@@ -29,21 +30,31 @@ const LEADING_MARKER = /^\s*(?:[•·▪‣◦*–—]|-|\d+[.)])\s+/u;
 const HANDLE_TAG = /\s*\[@[^\]]+\]/g;
 
 /**
- * Render a description into HTML with one <p> per line. <p> is the most broadly
- * rendered line break across podcast apps — Apple, Spotify, and Amazon Music all
- * honor it. <ul>/<li> is NOT reliable: Amazon Music (and others) drop the list
- * tags and run the tracks together. The real newlines between the <p> tags also
- * produce a break in apps that strip HTML and keep the text. The input is
- * already XML-entity-encoded (&amp; etc.), which is valid HTML, so it drops in
- * as-is; we only strip our own bullets and @handles.
+ * Render a description into HTML that renders line breaks across every podcast
+ * app. This mirrors exactly what Podbean does (a proven "renders everywhere"
+ * host): a <p> per block (blank-line separated), with lines inside a block
+ * joined by <br/>. So the intro is its own paragraph and the tracklist is one
+ * paragraph with a <br/> between each track — tight, single line breaks. Both
+ * <p> and <br> are honored by Apple, Amazon Music, and Spotify. The input is
+ * already XML-entity-encoded (&amp; etc.), valid HTML, so it drops in as-is; we
+ * only strip our own bullets and @handles.
  */
 function descriptionToHtml(text: string): string {
-  const lines = text
+  const blocks = text
     .replace(/\r\n/g, "\n")
-    .split("\n")
-    .map((l) => l.replace(LEADING_MARKER, "").replace(HANDLE_TAG, "").trim())
+    .split(/\n\s*\n/)
+    .map((b) => b.trim())
     .filter(Boolean);
-  return lines.map((l) => `<p>${l}</p>`).join("\n");
+
+  return blocks
+    .map((block) => {
+      const lines = block
+        .split("\n")
+        .map((l) => l.replace(LEADING_MARKER, "").replace(HANDLE_TAG, "").trim())
+        .filter(Boolean);
+      return `<p>${lines.join("<br />\n")}</p>`;
+    })
+    .join("\n");
 }
 
 /** Wrap HTML in CDATA, guarding the one sequence that can close it early. */
