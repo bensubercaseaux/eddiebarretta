@@ -47,12 +47,16 @@ function descriptionToHtml(text: string): string {
     .filter(Boolean);
 
   return blocks
-    .map((block) => {
+    .map((block, i) => {
       const lines = block
         .split("\n")
         .map((l) => l.replace(LEADING_MARKER, "").replace(HANDLE_TAG, "").trim())
         .filter(Boolean);
-      return `<p>${lines.join("<br />\n")}</p>`;
+      // Two extra line breaks before the tracklist (the first multi-line block)
+      // so it's clearly separated from the intro. Single-line prose blocks (the
+      // show bio's paragraphs) keep the normal single paragraph gap.
+      const spacer = i > 0 && lines.length >= 2 ? "<br />\n<br />\n" : "";
+      return `${spacer}<p>${lines.join("<br />\n")}</p>`;
     })
     .join("\n");
 }
