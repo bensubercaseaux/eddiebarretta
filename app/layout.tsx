@@ -37,19 +37,19 @@ export const metadata: Metadata = {
     "book a DJ",
   ],
   alternates: { canonical: "/" },
+  // og:image / twitter:image come from the file-based opengraph-image.tsx
+  // generators (branded, per-route), so no static image is set here.
   openGraph: {
     type: "website",
     url: "https://eddiebarretta.com",
     title: "Eddie Barretta | House & Trance DJ in Jacksonville Beach, FL",
     description,
     siteName: "Eddie Barretta",
-    images: [{ url: "/hero.png", width: 1024, height: 1024, alt: "Eddie Barretta" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Eddie Barretta | House & Trance DJ in Jacksonville Beach, FL",
     description,
-    images: ["/hero.png"],
   },
 };
 

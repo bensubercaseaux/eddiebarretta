@@ -34,7 +34,7 @@ export default async function EditShowPage({
         Edit show
       </h1>
 
-      <section className="mt-8 rounded-[16px] border border-line bg-surface/40 p-6 sm:p-8">
+      <section className="mt-8 rounded-card border border-line bg-surface/40 p-6 sm:p-8">
         <ShowForm
           action={editShow.bind(null, id)}
           initial={show}

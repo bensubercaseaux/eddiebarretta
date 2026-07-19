@@ -4,8 +4,11 @@ import { Footer } from "@/components/Footer";
 import { MixCard } from "@/components/mixes/MixCard";
 import { PodcastSubscribe } from "@/components/mixes/PodcastSubscribe";
 import { getMixes } from "@/lib/mixes-store";
+import { site } from "@/lib/site";
 
 const ORIGIN = "https://eddiebarretta.com";
+const FEED_URL =
+  "https://feeds.soundcloud.com/users/soundcloud:users:211674230/sounds.rss";
 
 export const metadata: Metadata = {
   title: "Mixes — Transcend Sessions",
@@ -26,20 +29,40 @@ export default async function MixesPage() {
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: "Transcend Mixes",
-    url: `${ORIGIN}/mixes`,
-    about: { "@id": `${ORIGIN}/#eddie` },
-    mainEntity: {
-      "@type": "ItemList",
-      numberOfItems: mixes.length,
-      itemListElement: mixes.map((mix, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        url: `${ORIGIN}/mixes/${mix.slug}`,
-        name: mix.title,
-      })),
-    },
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        name: "Transcend Mixes",
+        url: `${ORIGIN}/mixes`,
+        about: { "@id": `${ORIGIN}/#eddie` },
+        mainEntity: {
+          "@type": "ItemList",
+          numberOfItems: mixes.length,
+          itemListElement: mixes.map((mix, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            url: `${ORIGIN}/mixes/${mix.slug}`,
+            name: mix.title,
+          })),
+        },
+      },
+      {
+        "@type": "PodcastSeries",
+        "@id": `${ORIGIN}/#transcend`,
+        name: "Transcend",
+        url: `${ORIGIN}/mixes`,
+        description:
+          "House & trance DJ mixes by Eddie Barretta, with full tracklists.",
+        webFeed: FEED_URL,
+        author: { "@id": `${ORIGIN}/#eddie` },
+        sameAs: [
+          site.podcast.apple,
+          site.podcast.amazon,
+          site.podcast.youtube,
+          site.podcast.soundcloud,
+        ],
+      },
+    ],
   };
 
   return (

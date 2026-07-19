@@ -27,7 +27,7 @@ export function About() {
 
         <Reveal delay={0.1} className="lg:pt-4">
           <div className="space-y-5">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[16px] border border-line bg-surface/40">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-card border border-line bg-surface/40">
               <Image
                 src="/eddieb_profile_pic.webp"
                 alt="Eddie Barretta DJing"
@@ -36,7 +36,7 @@ export function About() {
                 className="object-cover"
               />
             </div>
-            <div className="overflow-hidden rounded-[16px] border border-line bg-surface/40">
+            <div className="overflow-hidden rounded-card border border-line bg-surface/40">
               <ul className="divide-y divide-line">
                 {facts.map((f) => (
                   <li

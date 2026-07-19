@@ -28,7 +28,7 @@ export function Tracklist({
                   href={part.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-fg underline decoration-line decoration-1 underline-offset-2 transition-colors hover:text-accent-bright hover:decoration-accent-bright"
+                  className="text-fg underline decoration-accent/50 decoration-1 underline-offset-2 transition-colors hover:text-accent-bright hover:decoration-accent-bright"
                 >
                   {part.text}
                 </a>

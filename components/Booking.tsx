@@ -82,7 +82,7 @@ export function Booking() {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <div className="rounded-[16px] border border-line bg-surface/40 p-6 sm:p-8">
+          <div className="rounded-card border border-line bg-surface/40 p-6 sm:p-8">
             {status === "success" ? (
               <div className="flex min-h-[20rem] flex-col items-center justify-center text-center">
                 <CheckCircle size={48} weight="fill" className="text-accent-bright" />

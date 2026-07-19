@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 function ShowRow({ show }: { show: Show }) {
   const { weekday, month, day } = formatShowDate(show.date);
   return (
-    <li className="flex items-center gap-5 rounded-[16px] border border-line bg-surface/40 p-5">
+    <li className="flex items-center gap-5 rounded-card border border-line bg-surface/40 p-5">
       <div className="flex w-16 shrink-0 flex-col items-center rounded-xl bg-ink px-2 py-3 text-center">
         <span className="text-xs uppercase tracking-wide text-faint">{weekday}</span>
         <span className="font-display text-2xl font-bold leading-none text-fg">{day}</span>
@@ -100,7 +100,7 @@ export default async function AdminPage() {
         </p>
       )}
 
-      <section className="mt-10 rounded-[16px] border border-line bg-surface/40 p-6 sm:p-8">
+      <section className="mt-10 rounded-card border border-line bg-surface/40 p-6 sm:p-8">
         <h2 className="font-display text-xl font-bold tracking-tight">Add a show</h2>
         <div className="mt-6">
           <ShowForm action={createShow} submitLabel="Add show" />

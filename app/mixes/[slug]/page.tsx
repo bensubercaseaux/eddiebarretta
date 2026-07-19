@@ -70,27 +70,49 @@ export default async function MixPage({
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "MusicRecording",
-    "@id": `${ORIGIN}/mixes/${mix.slug}`,
-    name: mix.title,
-    url: `${ORIGIN}/mixes/${mix.slug}`,
-    image: mix.artwork,
-    datePublished: mix.date,
-    duration: isoDuration(mix.durationSeconds),
-    genre: ["House", "Trance"],
-    inAlbum: { "@type": "MusicAlbum", name: "Transcend" },
-    byArtist: {
-      "@type": "MusicGroup",
-      "@id": `${ORIGIN}/#eddie`,
-      name: "Eddie Barretta",
-    },
-    audio: {
-      "@type": "AudioObject",
-      contentUrl: mix.streamUrl,
-      encodingFormat: "audio/mpeg",
-      duration: isoDuration(mix.durationSeconds),
-    },
-    sameAs: mix.permalink,
+    "@graph": [
+      {
+        "@type": "MusicRecording",
+        "@id": `${ORIGIN}/mixes/${mix.slug}`,
+        name: mix.title,
+        url: `${ORIGIN}/mixes/${mix.slug}`,
+        image: mix.artwork,
+        datePublished: mix.date,
+        duration: isoDuration(mix.durationSeconds),
+        genre: ["House", "Trance"],
+        inAlbum: { "@type": "MusicAlbum", name: "Transcend" },
+        byArtist: {
+          "@type": "MusicGroup",
+          "@id": `${ORIGIN}/#eddie`,
+          name: "Eddie Barretta",
+        },
+        audio: {
+          "@type": "AudioObject",
+          contentUrl: mix.streamUrl,
+          encodingFormat: "audio/mpeg",
+          duration: isoDuration(mix.durationSeconds),
+        },
+        sameAs: mix.permalink,
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: ORIGIN },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Mixes",
+            item: `${ORIGIN}/mixes`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: mix.title,
+            item: `${ORIGIN}/mixes/${mix.slug}`,
+          },
+        ],
+      },
+    ],
   };
 
   return (

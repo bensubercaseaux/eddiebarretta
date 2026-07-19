@@ -10,7 +10,7 @@
   --surface-2: #1b1830;
   --fg: #efedf6;
   --muted: #a6a2bc;
-  --faint: #726d89;
+  --faint: #847f9c; /* WCAG AA (5.2:1) on --ink for small meta text */
   --line: #221f33;
   --accent: #7c2bff;
   --accent-bright: #9a64ff;
