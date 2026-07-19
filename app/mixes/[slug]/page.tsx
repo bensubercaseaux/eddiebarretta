@@ -7,6 +7,7 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { PlayButton } from "@/components/player/PlayButton";
 import { Tracklist } from "@/components/mixes/Tracklist";
+import { PodcastSubscribe } from "@/components/mixes/PodcastSubscribe";
 import { formatMixDate } from "@/lib/mixes";
 import { getMix, getMixes } from "@/lib/mixes-store";
 
@@ -191,6 +192,8 @@ export default async function MixPage({
               )}
             </div>
           </div>
+
+          <PodcastSubscribe className="mt-12" />
         </div>
       </main>
       <Footer />
