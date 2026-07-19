@@ -25,29 +25,21 @@ const LEADING_MARKER = /^\s*(?:[•·▪‣◦*–—]|-|\d+[.)])\s+/u;
 const HANDLE_TAG = /\s*\[@[^\]]+\]/g;
 
 /**
- * Render a description into Apple-safe HTML. Blocks are split on blank lines;
- * a multi-line block (a tracklist) becomes a <ul>, a single line becomes a <p>.
- * The text is already XML-entity-encoded (&amp; etc.), which is valid HTML, so
- * it's dropped in as-is — only <br>-unsafe structure is upgraded to <p>/<ul>.
+ * Render a description into HTML with one <p> per line. <p> is the most broadly
+ * rendered line break across podcast apps — Apple, Spotify, and Amazon Music all
+ * honor it. <ul>/<li> is NOT reliable: Amazon Music (and others) drop the list
+ * tags and run the tracks together. The real newlines between the <p> tags also
+ * produce a break in apps that strip HTML and keep the text. The input is
+ * already XML-entity-encoded (&amp; etc.), which is valid HTML, so it drops in
+ * as-is; we only strip our own bullets and @handles.
  */
 function descriptionToHtml(text: string): string {
-  const blocks = text
+  const lines = text
     .replace(/\r\n/g, "\n")
-    .split(/\n\s*\n/)
-    .map((b) => b.trim())
+    .split("\n")
+    .map((l) => l.replace(LEADING_MARKER, "").replace(HANDLE_TAG, "").trim())
     .filter(Boolean);
-
-  return blocks
-    .map((block) => {
-      const lines = block
-        .split("\n")
-        .map((l) => l.replace(LEADING_MARKER, "").replace(HANDLE_TAG, "").trim())
-        .filter(Boolean);
-      return lines.length >= 2
-        ? `<ul>${lines.map((l) => `<li>${l}</li>`).join("")}</ul>`
-        : `<p>${lines[0] ?? ""}</p>`;
-    })
-    .join("");
+  return lines.map((l) => `<p>${l}</p>`).join("\n");
 }
 
 /** Wrap HTML in CDATA, guarding the one sequence that can close it early. */
