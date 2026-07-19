@@ -59,6 +59,7 @@ export default async function MixesPage() {
           site.podcast.apple,
           site.podcast.amazon,
           site.podcast.youtube,
+          site.podcast.iheart,
           site.podcast.soundcloud,
         ],
       },

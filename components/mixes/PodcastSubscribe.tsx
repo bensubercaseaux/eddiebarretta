@@ -2,6 +2,7 @@ import type { Icon } from "@phosphor-icons/react";
 import {
   AmazonLogo,
   ApplePodcastsLogo,
+  Heart,
   SoundcloudLogo,
   YoutubeLogo,
 } from "@phosphor-icons/react/dist/ssr";
@@ -11,6 +12,7 @@ const PLATFORMS: { href: string; label: string; icon: Icon }[] = [
   { href: site.podcast.apple, label: "Apple Podcasts", icon: ApplePodcastsLogo },
   { href: site.podcast.amazon, label: "Amazon Music", icon: AmazonLogo },
   { href: site.podcast.youtube, label: "YouTube", icon: YoutubeLogo },
+  { href: site.podcast.iheart, label: "iHeartRadio", icon: Heart },
   { href: site.podcast.soundcloud, label: "SoundCloud", icon: SoundcloudLogo },
 ];
 

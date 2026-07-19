@@ -35,6 +35,7 @@ export const site = {
       "https://music.amazon.com/podcasts/3ac70ad2-8a98-4d09-8f00-3cf99cde7350/transcend",
     youtube:
       "https://www.youtube.com/playlist?list=PLjisbdyvOZPD3tiXrQ2rJeBAoGfqjl2GI",
+    iheart: "https://www.iheart.com/podcast/339189693/",
     soundcloud: "https://soundcloud.com/eddie-barretta",
   },
 
