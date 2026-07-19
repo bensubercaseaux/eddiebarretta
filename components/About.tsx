@@ -1,6 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./Reveal";
 import { site } from "@/lib/site";
+import { venues } from "@/lib/venues";
 
 const facts = [
   { label: "Sound", value: "House · Trance" },
@@ -59,16 +62,30 @@ export function About() {
 
       <div className="mx-auto mt-16 max-w-6xl border-t border-line pt-10">
         <Reveal>
-          <h3 className="font-display text-2xl font-bold tracking-tight">
-            Played around town
-          </h3>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <h3 className="font-display text-2xl font-bold tracking-tight">
+              Played around town
+            </h3>
+            <Link
+              href="/venues"
+              className="group inline-flex items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-fg"
+            >
+              All venues
+              <ArrowUpRight
+                size={16}
+                className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            </Link>
+          </div>
           <ul className="mt-6 flex flex-wrap gap-2.5">
-            {site.venues.map((v) => (
-              <li
-                key={v}
-                className="rounded-full border border-line bg-surface/40 px-4 py-2 text-sm text-muted transition-colors duration-200 hover:border-accent/60 hover:text-fg"
-              >
-                {v}
+            {venues.map((v) => (
+              <li key={v.slug}>
+                <Link
+                  href={`/venues/${v.slug}`}
+                  className="inline-block rounded-full border border-line bg-surface/40 px-4 py-2 text-sm text-muted transition-colors duration-200 hover:border-accent/60 hover:text-fg"
+                >
+                  {v.name}
+                </Link>
               </li>
             ))}
           </ul>

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getMixes } from "@/lib/mixes-store";
+import { venues } from "@/lib/venues";
 
 const ORIGIN = "https://eddiebarretta.com";
 
@@ -25,6 +26,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${ORIGIN}/mixes/${mix.slug}`,
       lastModified: new Date(mix.date),
       changeFrequency: "yearly" as const,
+      priority: 0.6,
+    })),
+    {
+      url: `${ORIGIN}/venues`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    },
+    ...venues.map((v) => ({
+      url: `${ORIGIN}/venues/${v.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
       priority: 0.6,
     })),
   ];
