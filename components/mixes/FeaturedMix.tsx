@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, SoundcloudLogo } from "@phosphor-icons/react";
+import { ArrowUpRight, Heart } from "@phosphor-icons/react";
 import type { Mix } from "@/lib/mixes";
 import { formatMixDate } from "@/lib/mixes";
 import { PlayButton } from "@/components/player/PlayButton";
@@ -70,10 +70,13 @@ export function FeaturedMix({ mix }: { mix: Mix }) {
             href={mix.permalink}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 font-medium text-muted transition-colors hover:text-fg"
+            className="group/like inline-flex items-center gap-1.5 font-medium text-muted transition-colors hover:text-accent-bright"
           >
-            <SoundcloudLogo size={18} />
-            Play on SoundCloud
+            <Heart
+              size={18}
+              className="transition-transform duration-200 group-hover/like:scale-110"
+            />
+            Like on SoundCloud
           </a>
         </div>
 

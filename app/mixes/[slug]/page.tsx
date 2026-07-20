@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, SoundcloudLogo } from "@phosphor-icons/react/dist/ssr";
+import { ArrowLeft, Heart } from "@phosphor-icons/react/dist/ssr";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { PlayButton } from "@/components/player/PlayButton";
@@ -157,10 +157,13 @@ export default async function MixPage({
                 href={mix.permalink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-medium text-fg transition-colors hover:border-accent/50 hover:bg-surface-2"
+                className="group/like mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-medium text-fg transition-colors hover:border-accent/50 hover:bg-surface-2"
               >
-                <SoundcloudLogo size={18} />
-                Play on SoundCloud
+                <Heart
+                  size={18}
+                  className="text-accent-bright transition-transform duration-200 group-hover/like:scale-110"
+                />
+                Like on SoundCloud
               </a>
             </div>
 

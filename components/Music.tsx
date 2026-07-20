@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
+import { ArrowUpRight, SoundcloudLogo } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./Reveal";
 import { FeaturedMix } from "./mixes/FeaturedMix";
 import { MixCard } from "./mixes/MixCard";
@@ -37,13 +37,10 @@ export async function Music() {
               href={site.socials.soundcloud}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-fg"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-fg transition-colors hover:border-accent/50 hover:bg-surface-2"
             >
+              <SoundcloudLogo size={18} weight="fill" className="text-accent-bright" />
               Follow on SoundCloud
-              <ArrowUpRight
-                size={16}
-                className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-              />
             </a>
           </div>
         </Reveal>
