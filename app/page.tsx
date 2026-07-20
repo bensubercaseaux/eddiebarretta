@@ -13,6 +13,20 @@ import { getPublicShows } from "@/lib/shows-store";
 const ORIGIN = "https://eddiebarretta.com";
 const ACT_ID = `${ORIGIN}/#eddie`;
 
+// Primary navigation, exposed as SiteNavigationElement so search engines can see
+// the site's sections/pages explicitly — the structure Google draws on for the
+// "jump to section" sitelinks under a listing. Includes the home-page anchors
+// plus the real sub-pages (/mixes, /venues), which are strong sitelink targets.
+const NAV_SECTIONS = [
+  { name: "About", url: `${ORIGIN}/#about` },
+  { name: "Music", url: `${ORIGIN}/#music` },
+  { name: "Watch", url: `${ORIGIN}/#watch` },
+  { name: "Shows", url: `${ORIGIN}/#shows` },
+  { name: "Book", url: `${ORIGIN}/#book` },
+  { name: "Mixes", url: `${ORIGIN}/mixes` },
+  { name: "Venues", url: `${ORIGIN}/venues` },
+];
+
 function buildJsonLd(shows: Show[]) {
   const { upcoming } = splitShows(new Date(), shows);
 
@@ -65,6 +79,11 @@ function buildJsonLd(shows: Show[]) {
         description: site.bioShort,
         publisher: { "@id": ACT_ID },
       },
+      ...NAV_SECTIONS.map((s) => ({
+        "@type": "SiteNavigationElement",
+        name: s.name,
+        url: s.url,
+      })),
       ...upcoming.map((s) => ({
         "@type": "Event",
         name: `${site.name} — ${s.name}`,
