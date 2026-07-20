@@ -19,6 +19,21 @@ export const site = {
     "Always hunting for the hottest new records, Eddie keeps his sets fresh and dynamic. Whether you are a seasoned club-goer or a curious newcomer, expect pulsating beats and infectious energy from start to finish.",
   ],
 
+  // Genres Eddie plays. House & Trance are the flagship; the rest round out the
+  // palette. Shown in the About section and in structured data.
+  genres: [
+    "House",
+    "Trance",
+    "Tech House",
+    "Latin House",
+    "Melodic House",
+    "Afro House",
+    "Dance",
+    "Funky House",
+    "Vocal House",
+    "Tropical House",
+  ],
+
   socials: {
     instagram: "https://instagram.com/djeddiebarretta",
     tiktok: "https://www.tiktok.com/@eddie_barretta",

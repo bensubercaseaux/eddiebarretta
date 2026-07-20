@@ -24,7 +24,7 @@ function buildJsonLd(shows: Show[]) {
         "@id": ACT_ID,
         name: site.name,
         alternateName: "DJ Eddie Barretta",
-        genre: ["House", "Trance"],
+        genre: [...site.genres],
         url: ORIGIN,
         image: `${ORIGIN}/hero.png`,
         description: site.bioShort,
