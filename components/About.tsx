@@ -13,7 +13,7 @@ const facts = [
 
 export function About() {
   return (
-    <section id="about" className="px-6 pb-24 pt-14 md:pb-32 md:pt-20">
+    <section id="about" className="px-6 pb-24 pt-6 md:pb-32 md:pt-10">
       <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:gap-20">
         {/* Photo + facts (left on desktop) */}
         <Reveal>

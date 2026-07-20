@@ -69,7 +69,7 @@ export const venues: Venue[] = [
     relationText:
       "Eddie has played featured sets in Surfer's high-energy upstairs club room.",
     summary:
-      "Surfer [The Bar] is SURFER magazine's flagship bar in the heart of Jacksonville Beach — a multi-level spot with several bars, a wraparound deck, a live-music stage, and a restored 1960s Airstream serving tacos. The relaxed downstairs and patio give way to an upstairs dance floor where DJs spin house and remixes on weekends.",
+      "Surfer [The Bar] is SURFER magazine's flagship bar in the heart of Jacksonville Beach — a multi-level spot with several bars, a wraparound deck, a live-music stage, and a restored 1960s Airstream serving tacos. The relaxed downstairs and patio give way to an upstairs dancefloor where DJs spin house and remixes on weekends.",
     street: "200 1st St N",
     locality: "Jacksonville Beach",
     region: "FL",

@@ -54,7 +54,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-[100dvh] items-center overflow-hidden px-6 pb-16 pt-24"
+      className="relative flex min-h-[86dvh] items-center overflow-hidden px-6 pb-10 pt-24"
     >
       {/* Violet glow */}
       <div
