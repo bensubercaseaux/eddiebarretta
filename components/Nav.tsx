@@ -30,7 +30,7 @@ export function Nav() {
           Eddie Barretta
         </Link>
 
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="hidden items-center gap-7 lg:flex">
           {nav.map((item) => (
             <li key={item.href}>
               <Link
@@ -43,7 +43,7 @@ export function Nav() {
           ))}
         </ul>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-3 lg:flex">
           <Social className="-mr-1" size={18} />
           <Link
             href="/#book"
@@ -58,14 +58,14 @@ export function Nav() {
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
-          className="grid h-10 w-10 place-items-center rounded-full text-fg transition-colors hover:bg-surface md:hidden"
+          className="grid h-10 w-10 place-items-center rounded-full text-fg transition-colors hover:bg-surface lg:hidden"
         >
           {open ? <X size={22} /> : <List size={22} />}
         </button>
       </nav>
 
       {open && (
-        <div className="border-t border-line bg-ink/95 backdrop-blur-md md:hidden">
+        <div className="border-t border-line bg-ink/95 backdrop-blur-md lg:hidden">
           <ul className="mx-auto flex max-w-6xl flex-col gap-1 px-6 py-4">
             {nav.map((item) => (
               <li key={item.href}>

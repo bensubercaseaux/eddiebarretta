@@ -31,9 +31,22 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-line pt-6 text-xs text-faint sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} Eddie Barretta. All rights reserved.</p>
-          <p>House &amp; Trance · {site.serviceArea}</p>
+        <div className="mt-12 border-t border-line pt-6">
+          <div className="flex flex-col gap-2 text-xs text-faint sm:flex-row sm:items-center sm:justify-between">
+            <p>© {year} Eddie Barretta. All rights reserved.</p>
+            <p>House &amp; Trance · {site.serviceArea}</p>
+          </div>
+          <p className="mt-4 text-xs text-faint">
+            Powered by{" "}
+            <a
+              href="https://www.avant-concepts.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-muted transition-colors hover:text-fg"
+            >
+              Avant Concepts, LLC
+            </a>
+          </p>
         </div>
       </div>
     </footer>

@@ -79,6 +79,8 @@ export const site = {
 export const nav = [
   { label: "About", href: "/#about" },
   { label: "Music", href: "/#music" },
+  { label: "Mixes", href: "/mixes" },
   { label: "Watch", href: "/#watch" },
   { label: "Shows", href: "/#shows" },
+  { label: "Venues", href: "/venues" },
 ] as const;
