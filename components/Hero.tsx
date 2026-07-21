@@ -1,32 +1,32 @@
 "use client";
 
-import Image from "next/image";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 import { Equalizer } from "./Equalizer";
 import { site } from "@/lib/site";
 
-function Vinyl({ priority = false }: { priority?: boolean }) {
-  const reduce = useReducedMotion();
+// "Sound-waves" hero mark: EB monogram disc with slow concentric ripple rings.
+// Reduced motion is handled in globals.css (one static ring, no animation).
+function SoundWaves() {
   return (
-    <motion.div
-      className="relative aspect-square w-full"
-      initial={{ rotate: 0 }}
-      animate={{ rotate: reduce ? 0 : 360 }}
-      transition={
-        reduce
-          ? { duration: 0 }
-          : { repeat: Infinity, ease: "linear", duration: 22 }
-      }
-    >
-      <Image
-        src="/hero.png"
-        alt="Eddie Barretta — EB logo on a vinyl record"
-        fill
-        priority={priority}
-        sizes="(min-width: 1024px) 40vw, 80vw"
-        className="rounded-full object-cover"
-      />
-    </motion.div>
+    <div className="relative grid aspect-square w-full place-items-center">
+      {[0, 1.5, 3].map((delay) => (
+        <span
+          key={delay}
+          aria-hidden="true"
+          className="ripple-ring absolute inset-0 rounded-full border border-accent-bright/70"
+          style={{ animationDelay: `${delay}s` }}
+        />
+      ))}
+      <div
+        role="img"
+        aria-label="Eddie Barretta — EB mark"
+        className="grid h-[38%] w-[38%] place-items-center rounded-full border border-line bg-[radial-gradient(circle_at_35%_30%,var(--surface-2),var(--ink))] shadow-[0_0_80px_rgba(124,43,255,0.35)]"
+      >
+        <span className="font-display text-[clamp(2.5rem,4vw,4rem)] font-extrabold tracking-[-0.03em] text-accent-bright">
+          EB
+        </span>
+      </div>
+    </div>
   );
 }
 
@@ -62,9 +62,12 @@ export function Hero() {
         aria-hidden="true"
       />
       {/* Mobile brand watermark */}
-      <div className="pointer-events-none absolute inset-0 -z-10 grid place-items-center opacity-15 lg:hidden">
+      <div
+        className="pointer-events-none absolute inset-0 -z-10 grid place-items-center opacity-15 lg:hidden"
+        aria-hidden="true"
+      >
         <div className="w-[22rem] max-w-[80vw]">
-          <Vinyl />
+          <SoundWaves />
         </div>
       </div>
 
@@ -114,7 +117,7 @@ export function Hero() {
         {/* Desktop split asset */}
         <div className="hidden lg:flex lg:justify-center">
           <div className="relative w-[clamp(20rem,28vw,32rem)]">
-            <Vinyl priority />
+            <SoundWaves />
           </div>
         </div>
       </div>

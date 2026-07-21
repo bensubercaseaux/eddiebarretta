@@ -115,6 +115,22 @@ body {
   animation: glow-pulse 7s ease-in-out infinite;
 }
 
+/* Hero "sound-waves" mark: concentric rings rippling out from the EB disc */
+@keyframes ripple {
+  0% {
+    transform: scale(0.45);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+.ripple-ring {
+  animation: ripple 4.5s ease-out infinite;
+}
+
 /* Now-playing bar slides up when a mix starts */
 @keyframes slide-up {
   from {
@@ -164,5 +180,13 @@ body {
   .animate-slide-up,
   .eq-bar {
     animation: none !important;
+  }
+  /* One static ring at rest instead of the ripple loop */
+  .ripple-ring {
+    animation: none !important;
+    opacity: 0.3;
+  }
+  .ripple-ring + .ripple-ring {
+    display: none;
   }
 }
