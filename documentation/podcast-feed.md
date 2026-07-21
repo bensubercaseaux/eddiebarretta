@@ -12,10 +12,11 @@ mixes. On every request it fetches SoundCloud's feed and fixes two things:
 1. **Episode notes → real HTML.** SoundCloud publishes descriptions as plain
    text. Apple/Amazon/YouTube render notes as HTML and collapse plain line
    breaks (and strip bullets) into one run-on paragraph. Our feed rewrites each
-   description into proper HTML, mirroring Podbean's proven format — the intro
-   as a paragraph, a blank line (an empty `<p><br /></p>` — bare `<br>`s between
-   paragraphs get stripped by Amazon), then the tracklist as one paragraph with
-   a `<br />` per track — so line breaks actually show. It also drops the
+   description into proper HTML: everything in one `<p>`, a `<br />` per track
+   line, and a `<br /><br />` (blank line) between the intro and the tracklist.
+   Bare `<br>`s *between* `<p>` blocks get stripped by Amazon (ones inside a
+   `<p>` are honored), and raw newlines in the markup show up as stray spaces in
+   some apps — hence one paragraph, no literal newlines. It also drops the
    `[@handle]` tags, which are meaningless in podcast apps.
 2. **Cover art.** The show artwork is set to `public/transcend.jpg` instead of
    the SoundCloud avatar.

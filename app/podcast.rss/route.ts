@@ -1,7 +1,7 @@
 // Self-hosted, normalized copy of the SoundCloud "Transcend" podcast feed.
 //
-// We rewrite episode notes into HTML — matching Podbean's proven format (<p>
-// per block, <br/> between lines) — in both <description> and <content:encoded>,
+// We rewrite episode notes into HTML — one <p>, <br/> between lines, <br/><br/>
+// between blocks — in both <description> and <content:encoded>,
 // so Apple/Amazon/YouTube render tracklists with line breaks. Everything else
 // passes through untouched — including each <enclosure>
 // (SoundCloud's own stream URL), so audio is still served AND counted by
@@ -37,37 +37,31 @@ const HANDLE_TAG = /\s*\[@[^\]]+\]/g;
 
 /**
  * Render a description into HTML that renders line breaks across every podcast
- * app. This mirrors exactly what Podbean does (a proven "renders everywhere"
- * host): a <p> per block (blank-line separated), with lines inside a block
- * joined by <br/>. So the intro is its own paragraph and the tracklist is one
- * paragraph with a <br/> between each track — tight, single line breaks. Both
- * <p> and <br> are honored by Apple, Amazon Music, and Spotify. The input is
- * already XML-entity-encoded (&amp; etc.), valid HTML, so it drops in as-is; we
- * only strip our own bullets and @handles.
+ * app. Everything goes into a single <p> with lines joined by <br /> and a
+ * <br /><br /> (blank line) between blocks — so the intro reads "…the following
+ * tracks:", blank line, then one track per line. Two renderer quirks force this
+ * shape: Amazon Music strips <br />s that sit *between* <p> blocks (while
+ * honoring the ones inside them), so paragraph gaps and empty spacer paragraphs
+ * can't be trusted for the blank line; and apps that convert tags to newlines
+ * naively render raw newlines in the markup as visible spaces, so the HTML must
+ * contain no literal newlines at all. The input is already XML-entity-encoded
+ * (&amp; etc.), valid HTML, so it drops in as-is; we only strip our own bullets
+ * and @handles.
  */
 function descriptionToHtml(text: string): string {
   const blocks = text
     .replace(/\r\n/g, "\n")
     .split(/\n\s*\n/)
-    .map((b) => b.trim())
-    .filter(Boolean);
-
-  return blocks
-    .map((block, i) => {
-      const lines = block
+    .map((block) =>
+      block
         .split("\n")
         .map((l) => l.replace(LEADING_MARKER, "").replace(HANDLE_TAG, "").trim())
-        .filter(Boolean);
-      // A blank line before the tracklist (the first multi-line block) so it's
-      // clearly separated from the intro. Written as an empty paragraph — the
-      // rich-text-editor idiom — because Amazon Music strips bare <br /> tags
-      // that sit between <p> blocks (while honoring the ones inside them).
-      // Single-line prose blocks (the show bio's paragraphs) keep the normal
-      // single paragraph gap.
-      const spacer = i > 0 && lines.length >= 2 ? "<p><br /></p>\n" : "";
-      return `${spacer}<p>${lines.join("<br />\n")}</p>`;
-    })
-    .join("\n");
+        .filter(Boolean)
+        .join("<br />"),
+    )
+    .filter(Boolean);
+
+  return `<p>${blocks.join("<br /><br />")}</p>`;
 }
 
 /** Wrap HTML in CDATA, guarding the one sequence that can close it early. */
