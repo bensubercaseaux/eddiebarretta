@@ -9,14 +9,16 @@
 // is swapped, and the show is marked episodic.
 //
 // Point Apple Podcasts Connect / Amazon / YouTube at:
-//   https://eddiebarretta.com/podcast.rss
+//   https://www.eddiebarretta.com/podcast.rss
 // GUIDs are preserved, so existing episodes map 1:1 (no duplicates).
 
 import { createHash } from "node:crypto";
 
 const FEED_URL =
   "https://feeds.soundcloud.com/users/soundcloud:users:211674230/sounds.rss";
-const SELF_URL = "https://eddiebarretta.com/podcast.rss";
+// The www host is the canonical one — the apex 308-redirects to it, and the
+// self link / new-feed-url must match the URL crawlers actually end up on.
+const SELF_URL = "https://www.eddiebarretta.com/podcast.rss";
 // Show cover art — 1400×1400 JPG (<500KB) served from /public.
 const PODCAST_IMAGE = "https://eddiebarretta.com/transcend.jpg";
 const SITE = "https://eddiebarretta.com";
@@ -160,11 +162,15 @@ export async function GET() {
     // Help podcast apps check for updates efficiently.
     etag: `"${createHash("md5").update(out).digest("hex")}"`,
   };
-  const built = /<lastBuildDate>([^<]+)<\/lastBuildDate>/.exec(src)?.[1];
-  const builtDate = built ? new Date(built) : null;
-  if (builtDate && !Number.isNaN(builtDate.getTime())) {
-    headers["last-modified"] = builtDate.toUTCString();
+  // SoundCloud's <lastBuildDate> lags behind scheduled releases (it can sit a
+  // week stale while a newer item is already in the feed), and a stale
+  // Last-Modified tells crawlers nothing changed. Use the newest item pubDate.
+  let newest: Date | null = null;
+  for (const m of src.matchAll(/<pubDate>([^<]+)<\/pubDate>/g)) {
+    const d = new Date(m[1]);
+    if (!Number.isNaN(d.getTime()) && (!newest || d > newest)) newest = d;
   }
+  if (newest) headers["last-modified"] = newest.toUTCString();
 
   return new Response(out, { headers });
 }

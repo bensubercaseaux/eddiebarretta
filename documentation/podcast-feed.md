@@ -1,7 +1,7 @@
 # Transcend podcast feed (`/podcast.rss`)
 
 The site serves its own copy of the Transcend podcast feed at
-**`https://eddiebarretta.com/podcast.rss`**. This is the feed you submit to
+**`https://www.eddiebarretta.com/podcast.rss`**. This is the feed you submit to
 Apple Podcasts, Amazon Music, and YouTube — not SoundCloud's raw feed.
 
 ## What it is
@@ -55,7 +55,8 @@ expects: an intro line, a blank line, then one track per line.
 ## Pointing the podcast platforms at this feed
 
 In each platform's dashboard, set/replace the RSS feed URL with
-`https://eddiebarretta.com/podcast.rss`:
+`https://www.eddiebarretta.com/podcast.rss` (use the `www` form — the bare
+domain redirects to it, and some crawlers handle redirects poorly):
 
 - **Apple** — Podcasts Connect → your show → edit the RSS feed URL
 - **Amazon Music for Podcasters** — update the feed URL
