@@ -25,8 +25,10 @@ const SITE = "https://eddiebarretta.com";
 // namespace ead4c236-bf58-58c6-a2c6-a6b28d128cb6. Assign once — NEVER change it.
 const PODCAST_GUID = "624c3722-aa94-5e43-95ce-de389eff7957";
 
-// The source feed's ttl is 60m; match it.
-export const revalidate = 3600;
+// The source feed's <ttl>60</ttl> is advisory only — SoundCloud serves new
+// episodes within minutes of release. 5m keeps Apple/Amazon/YouTube pickup
+// fast on release day (directories poll this feed, not SoundCloud's).
+export const revalidate = 300;
 
 /** Leading bullet/dash/number a description line may carry (we re-add real HTML). */
 const LEADING_MARKER = /^\s*(?:[•·▪‣◦*–—]|-|\d+[.)])\s+/u;
@@ -157,7 +159,7 @@ export async function GET() {
 
   const headers: Record<string, string> = {
     "content-type": "application/rss+xml; charset=utf-8",
-    "cache-control": "public, s-maxage=3600, stale-while-revalidate=86400",
+    "cache-control": "public, s-maxage=300, stale-while-revalidate=86400",
     // Help podcast apps check for updates efficiently.
     etag: `"${createHash("md5").update(out).digest("hex")}"`,
   };

@@ -5,9 +5,10 @@ import { formatClock, type Mix } from "./mixes";
 
 // The Transcend mix library is sourced live from SoundCloud's public podcast
 // RSS feed — new uploads appear with no code change or redeploy. fetch isn't
-// cached by default in Next 16, so unstable_cache (tagged, hourly revalidate)
-// is the single caching layer, matching lib/shows-store.ts. The feed ttl is
-// 60m, so hourly keeps the site static-fast without going stale.
+// cached by default in Next 16, so unstable_cache (tagged, 5m revalidate) is
+// the single caching layer, matching lib/shows-store.ts. The feed's <ttl>60</ttl>
+// is advisory only — SoundCloud serves new episodes within minutes of release,
+// and 5m keeps release-day pickup on par with podcast directories.
 
 const FEED_URL =
   "https://feeds.soundcloud.com/users/soundcloud:users:211674230/sounds.rss";
@@ -156,7 +157,7 @@ async function fetchMixes(): Promise<Mix[]> {
 
 const getCachedMixes = unstable_cache(fetchMixes, ["mixes:all"], {
   tags: [TAG],
-  revalidate: 3600,
+  revalidate: 300,
 });
 
 /** All Transcend mixes, newest first. */
