@@ -9,6 +9,7 @@ import {
 } from "@phosphor-icons/react";
 import { Reveal } from "./Reveal";
 import { site } from "@/lib/site";
+import { track } from "@/lib/analytics";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -38,6 +39,9 @@ export function Booking() {
         throw new Error(body.error || "Something went wrong. Please try again.");
       }
       setStatus("success");
+      // GA4's recommended lead event — mark it as a key event in the GA admin
+      // to surface booking requests as conversions.
+      track("generate_lead", { form: "booking" });
       form.reset();
     } catch (err) {
       setStatus("error");

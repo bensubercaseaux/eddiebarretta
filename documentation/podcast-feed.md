@@ -12,10 +12,12 @@ mixes. On every request it fetches SoundCloud's feed and fixes two things:
 1. **Episode notes → real HTML.** SoundCloud publishes descriptions as plain
    text. Apple/Amazon/YouTube render notes as HTML and collapse plain line
    breaks (and strip bullets) into one run-on paragraph. Our feed rewrites each
-   description into proper HTML — the intro as a paragraph and the tracklist as
-   a bulleted list (`<p>` + `<ul><li>`) — so line breaks actually show. It also
-   drops the `[@handle]` tags, which are meaningless in podcast apps.
-2. **Cover art.** The show artwork is set to `public/transcend.png` instead of
+   description into proper HTML, mirroring Podbean's proven format — the intro
+   as a paragraph, a blank line (an empty `<p><br /></p>` — bare `<br>`s between
+   paragraphs get stripped by Amazon), then the tracklist as one paragraph with
+   a `<br />` per track — so line breaks actually show. It also drops the
+   `[@handle]` tags, which are meaningless in podcast apps.
+2. **Cover art.** The show artwork is set to `public/transcend.jpg` instead of
    the SoundCloud avatar.
 
 Everything else — episode titles, dates, GUIDs, per-episode artwork, and most
@@ -35,10 +37,11 @@ counted by SoundCloud exactly as before. We host the feed, not the audio.
 **Yes — no code change, no redeploy.** Just upload the mix to SoundCloud as
 usual. Then:
 
-- SoundCloud updates its own feed.
-- Our `/podcast.rss` re-reads SoundCloud once an hour (it caches the result for
-  60 minutes), so the new episode shows up within ~1 hour.
-- The website's **Listen** section and **/mixes** pages use the same ~1-hour
+- SoundCloud updates its own feed (new episodes appear there within minutes,
+  even for scheduled releases).
+- Our `/podcast.rss` re-reads SoundCloud every 5 minutes, so the new episode
+  shows up in our feed within ~5–10 minutes.
+- The website's **Listen** section and **/mixes** pages use the same 5-minute
   cache, so the new mix appears on the site in the same window.
 - Apple/Amazon/YouTube then re-poll our feed on *their* schedule (Apple is
   usually within a day; you can force it in Apple Podcasts Connect → your show →
@@ -66,9 +69,9 @@ Everything lives in [`app/podcast.rss/route.ts`](../app/podcast.rss/route.ts):
 
 | To change… | Edit |
 |---|---|
-| The cover art | Replace `public/transcend.png` (square, 1400–3000px, no transparency) |
+| The cover art | Replace `public/transcend.jpg` (square, 1400–3000px, no transparency) |
 | The source feed | `FEED_URL` |
-| How fast new mixes appear (default 1h) | `export const revalidate` (seconds) |
+| How fast new mixes appear (default 5m) | `export const revalidate` (seconds) |
 | The published feed URL | `SELF_URL` |
 
 ## Troubleshooting
@@ -76,7 +79,7 @@ Everything lives in [`app/podcast.rss/route.ts`](../app/podcast.rss/route.ts):
 - **Notes look like one paragraph in a podcast app** — that app is reading
   `<itunes:summary>` (plain text) instead of `<description>` (HTML). Most modern
   apps use `<description>`. Nothing to fix on our end.
-- **New episode isn't showing** — give it up to an hour (our cache), then hit
+- **New episode isn't showing** — give it ~10 minutes (our cache), then hit
   Refresh in the platform's dashboard. Confirm it's live on SoundCloud first.
 - **Cover art not updating** — podcast apps cache artwork aggressively; it can
-  take a while. Confirm `https://eddiebarretta.com/transcend.png` loads.
+  take a while. Confirm `https://eddiebarretta.com/transcend.jpg` loads.

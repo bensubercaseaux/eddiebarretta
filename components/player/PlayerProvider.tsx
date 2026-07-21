@@ -10,6 +10,7 @@ import {
   useState,
 } from "react";
 import type { Mix } from "@/lib/mixes";
+import { track } from "@/lib/analytics";
 import { NowPlayingBar } from "./NowPlayingBar";
 
 // One <audio> element for the whole site, driven imperatively so the play()
@@ -39,8 +40,19 @@ export function usePlayer(): PlayerContextValue {
   return ctx;
 }
 
+// GA listening funnel for the active mix, mirroring GA4's video milestones.
+// Lives in a ref (not state) so the once-bound <audio> listeners can read it.
+type MixTracking = {
+  mix: Mix;
+  playSent: boolean;
+  completeSent: boolean;
+  /** Progress milestones (25/50/75) already reported, each fired at most once. */
+  milestones: Set<number>;
+};
+
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const trackingRef = useRef<MixTracking | null>(null);
   const [current, setCurrent] = useState<Mix | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -59,6 +71,12 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       }
 
       setCurrent(mix);
+      trackingRef.current = {
+        mix,
+        playSent: false,
+        completeSent: false,
+        milestones: new Set(),
+      };
       setCurrentTime(0);
       // Seed the scrubber range from the feed's duration before metadata loads.
       setDuration(mix.durationSeconds || 0);
@@ -94,15 +112,43 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const onPlay = () => setIsPlaying(true);
+    const onPlay = () => {
+      setIsPlaying(true);
+      const t = trackingRef.current;
+      if (t && !t.playSent) {
+        t.playSent = true;
+        track("mix_play", { mix_title: t.mix.title, mix_slug: t.mix.slug });
+      }
+    };
     const onPause = () => setIsPlaying(false);
     const onPlaying = () => setIsLoading(false);
     const onWaiting = () => setIsLoading(true);
-    const onTime = () => setCurrentTime(audio.currentTime);
+    const onTime = () => {
+      setCurrentTime(audio.currentTime);
+      const t = trackingRef.current;
+      if (t && audio.duration > 0) {
+        const pct = (audio.currentTime / audio.duration) * 100;
+        for (const milestone of [25, 50, 75]) {
+          if (pct >= milestone && !t.milestones.has(milestone)) {
+            t.milestones.add(milestone);
+            track("mix_progress", {
+              mix_title: t.mix.title,
+              mix_slug: t.mix.slug,
+              percent: milestone,
+            });
+          }
+        }
+      }
+    };
     const onMeta = () => setDuration(audio.duration || 0);
     const onEnded = () => {
       setIsPlaying(false);
       setCurrentTime(0);
+      const t = trackingRef.current;
+      if (t && !t.completeSent) {
+        t.completeSent = true;
+        track("mix_complete", { mix_title: t.mix.title, mix_slug: t.mix.slug });
+      }
     };
 
     audio.addEventListener("play", onPlay);

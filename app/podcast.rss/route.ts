@@ -58,10 +58,13 @@ function descriptionToHtml(text: string): string {
         .split("\n")
         .map((l) => l.replace(LEADING_MARKER, "").replace(HANDLE_TAG, "").trim())
         .filter(Boolean);
-      // Two extra line breaks before the tracklist (the first multi-line block)
-      // so it's clearly separated from the intro. Single-line prose blocks (the
-      // show bio's paragraphs) keep the normal single paragraph gap.
-      const spacer = i > 0 && lines.length >= 2 ? "<br />\n<br />\n" : "";
+      // A blank line before the tracklist (the first multi-line block) so it's
+      // clearly separated from the intro. Written as an empty paragraph — the
+      // rich-text-editor idiom — because Amazon Music strips bare <br /> tags
+      // that sit between <p> blocks (while honoring the ones inside them).
+      // Single-line prose blocks (the show bio's paragraphs) keep the normal
+      // single paragraph gap.
+      const spacer = i > 0 && lines.length >= 2 ? "<p><br /></p>\n" : "";
       return `${spacer}<p>${lines.join("<br />\n")}</p>`;
     })
     .join("\n");

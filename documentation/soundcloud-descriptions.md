@@ -7,6 +7,34 @@ The `•` bullets stay readable on Apple/Amazon/YouTube (which collapse plain li
 > Two mixes (*Absolute Zero*, *Night Sessions*) have no tracklist, so they're left as-is.
 
 
+## Kinetic
+<https://soundcloud.com/eddie-barretta/kinetic>
+
+```text
+An Anthemic Electronic Pop & Crossover Dance Mix by Eddie Barretta featuring the following tracks:
+
+• Drifting Through Heaven L.D.B Time to Chill
+• Mean It Lauv [@lauvsongs], LANY [@thisislany]
+• How Long (From ”Euphoria” An HBO Original Series) Tove Lo [@tovelo]
+• Too Late (feat. Wiz Khalifa & Lukas Graham) Cash Cash [@cashcash]
+• Watercolor (Original Mix) Forester [@forester-family]
+• Heartache (feat. Dakota) Sondr [@sondrofficial], Faul & Wad [@faul-official]
+• People Crying Every Night A R I Z O N A [@thisisarizonamusic]
+• Tear Me Down (feat. Philip Rustad) Davai
+• Te Vi Piso 21 [@piso21official], Micro Tdh [@micro-tdh]
+• Out of My Head Le Moon, soleil
+• Higher Ground (feat. Naomi Wild) ODESZA [@odesza]
+• Iko Iko (My Bestie) [feat. Small Jam] Justin Wellington [@justnwellington]
+• Like It Is Kygo [@kygo], Zara Larsson, Tyga [@kinggoldchains]
+• Middle (feat. Bipolar Sunshine) DJ Snake [@djsnake]
+• Sex Cheat Codes [@cheatcodesmusic], Kris Kross Amsterdam [@kriskrossamsterdam]
+• Stronger (feat. Kesha) (Extended Mix) Kesha [@kesha], Sam Feldt [@samfeldt]
+• Waterbed (feat. Waterbed) The Chainsmokers [@thechainsmokers]
+• Me Looking At U Mike Perry [@mikeperrysweden]
+• Sweet But Psycho PHURS, haLuna [@haluna1207]
+• Clandestina (Extended) Dj Dark [@djdarkofficialro], Mentol [@mentolmusic]
+```
+
 ## Currents
 <https://soundcloud.com/eddie-barretta/currents>
 
