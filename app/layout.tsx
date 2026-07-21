@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Syne, Space_Grotesk } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { PlayerProvider } from "@/components/player/PlayerProvider";
+import { getMixes } from "@/lib/mixes-store";
 import "./globals.css";
 
 const syne = Syne({
@@ -72,12 +73,21 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   // GA4 measurement ID. Public by design, so it uses the NEXT_PUBLIC_ prefix.
   // Leave unset locally — analytics only loads where the var is configured.
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
+
+  // Play queue for the site-wide player (auto-advance when a mix ends). The
+  // player only needs card-level fields, so drop each mix's intro/tracklist —
+  // otherwise every page would ship every tracklist in its RSC payload.
+  const queue = (await getMixes()).map((mix) => ({
+    ...mix,
+    intro: "",
+    tracks: [],
+  }));
 
   return (
     <html
@@ -85,7 +95,7 @@ export default function RootLayout({
       className={`${syne.variable} ${spaceGrotesk.variable} antialiased`}
     >
       <body className="grain min-h-[100dvh] bg-ink text-fg">
-        <PlayerProvider>{children}</PlayerProvider>
+        <PlayerProvider queue={queue}>{children}</PlayerProvider>
       </body>
       {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
     </html>

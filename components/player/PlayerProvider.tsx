@@ -50,14 +50,45 @@ type MixTracking = {
   milestones: Set<number>;
 };
 
-export function PlayerProvider({ children }: { children: React.ReactNode }) {
+export function PlayerProvider({
+  queue = [],
+  children,
+}: {
+  /** All mixes in display order — when one ends, the next in this list plays. */
+  queue?: Mix[];
+  children: React.ReactNode;
+}) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const trackingRef = useRef<MixTracking | null>(null);
+  // Ref so the once-bound `ended` listener always sees the current queue.
+  const queueRef = useRef(queue);
   const [current, setCurrent] = useState<Mix | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+
+  useEffect(() => {
+    queueRef.current = queue;
+  }, [queue]);
+
+  const startMix = useCallback((mix: Mix) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    setCurrent(mix);
+    trackingRef.current = {
+      mix,
+      playSent: false,
+      completeSent: false,
+      milestones: new Set(),
+    };
+    setCurrentTime(0);
+    // Seed the scrubber range from the feed's duration before metadata loads.
+    setDuration(mix.durationSeconds || 0);
+    setIsLoading(true);
+    audio.src = mix.streamUrl;
+    void audio.play().catch(() => setIsLoading(false));
+  }, []);
 
   const toggle = useCallback(
     (mix: Mix) => {
@@ -70,21 +101,9 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      setCurrent(mix);
-      trackingRef.current = {
-        mix,
-        playSent: false,
-        completeSent: false,
-        milestones: new Set(),
-      };
-      setCurrentTime(0);
-      // Seed the scrubber range from the feed's duration before metadata loads.
-      setDuration(mix.durationSeconds || 0);
-      setIsLoading(true);
-      audio.src = mix.streamUrl;
-      void audio.play().catch(() => setIsLoading(false));
+      startMix(mix);
     },
-    [current],
+    [current, startMix],
   );
 
   const seek = useCallback((seconds: number) => {
@@ -149,6 +168,12 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         t.completeSent = true;
         track("mix_complete", { mix_title: t.mix.title, mix_slug: t.mix.slug });
       }
+      // Auto-advance to the next mix in display order. The shared <audio>
+      // element was unlocked by the original click, so play() is allowed here.
+      const queue = queueRef.current;
+      const i = t ? queue.findIndex((m) => m.id === t.mix.id) : -1;
+      const next = i >= 0 ? queue[i + 1] : undefined;
+      if (next) startMix(next);
     };
 
     audio.addEventListener("play", onPlay);
@@ -167,7 +192,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       audio.removeEventListener("loadedmetadata", onMeta);
       audio.removeEventListener("ended", onEnded);
     };
-  }, []);
+  }, [startMix]);
 
   // Keep the fixed bar from covering the footer while a mix is loaded.
   useEffect(() => {
