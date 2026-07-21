@@ -43,6 +43,9 @@ Not part of the migration — ongoing feature docs:
 - [google-analytics.md](google-analytics.md) — what GA4 tracks: mix-listening
   events (`mix_play` / `mix_progress` / `mix_complete`), booking-form leads, and
   the one-time GA admin setup.
+- [text-bookings.md](text-bookings.md) — forward a booking text to
+  `ben.subercaseaux+booking@gmail.com` and a daily Claude agent adds the show
+  to the site via `POST /api/shows`.
 
 ## Key facts
 
