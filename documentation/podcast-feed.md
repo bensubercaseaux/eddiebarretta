@@ -18,8 +18,8 @@ mixes. On every request it fetches SoundCloud's feed and fixes two things:
    `<p>` are honored), and raw newlines in the markup show up as stray spaces in
    some apps — hence one paragraph, no literal newlines. It also drops the
    `[@handle]` tags, which are meaningless in podcast apps.
-2. **Cover art.** The show artwork is set to `public/transcend.jpg` instead of
-   the SoundCloud avatar.
+2. **Cover art.** The show artwork is set to `public/transcend-v2.jpg` instead
+   of the SoundCloud avatar.
 
 Everything else — episode titles, dates, GUIDs, per-episode artwork, and most
 importantly each episode's audio `<enclosure>` — is passed through untouched.
@@ -71,7 +71,7 @@ Everything lives in [`app/podcast.rss/route.ts`](../app/podcast.rss/route.ts):
 
 | To change… | Edit |
 |---|---|
-| The cover art | Replace `public/transcend.jpg` (square, 1400–3000px, no transparency) |
+| The cover art | Add the new image as `public/transcend-v3.jpg` (bump the number; square, 1400–3000px, no transparency) and update `PODCAST_IMAGE` to match — Apple only re-downloads artwork when the URL changes, so replacing the file in place won't update Apple |
 | The source feed | `FEED_URL` |
 | How fast new mixes appear (default 5m) | `export const revalidate` (seconds) |
 | The published feed URL | `SELF_URL` |
@@ -83,5 +83,7 @@ Everything lives in [`app/podcast.rss/route.ts`](../app/podcast.rss/route.ts):
   apps use `<description>`. Nothing to fix on our end.
 - **New episode isn't showing** — give it ~10 minutes (our cache), then hit
   Refresh in the platform's dashboard. Confirm it's live on SoundCloud first.
-- **Cover art not updating** — podcast apps cache artwork aggressively; it can
-  take a while. Confirm `https://eddiebarretta.com/transcend.jpg` loads.
+- **Cover art not updating** — Apple only re-fetches artwork when its URL
+  changes; bump the filename version (see the table above). Even then apps
+  cache artwork aggressively and it can take a day or two. Confirm
+  `https://www.eddiebarretta.com/transcend-v2.jpg` loads.

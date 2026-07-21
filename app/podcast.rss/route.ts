@@ -19,8 +19,10 @@ const FEED_URL =
 // The www host is the canonical one — the apex 308-redirects to it, and the
 // self link / new-feed-url must match the URL crawlers actually end up on.
 const SELF_URL = "https://www.eddiebarretta.com/podcast.rss";
-// Show cover art — 1400×1400 JPG (<500KB) served from /public.
-const PODCAST_IMAGE = "https://eddiebarretta.com/transcend.jpg";
+// Show cover art — 1400×1400 JPG (<500KB) served from /public. Apple only
+// re-downloads artwork when this URL changes, so bump the -vN suffix (rename
+// the file to match) whenever the art itself is replaced.
+const PODCAST_IMAGE = "https://www.eddiebarretta.com/transcend-v2.jpg";
 const SITE = "https://eddiebarretta.com";
 // Stable Podcasting 2.0 identity for the show. UUIDv5 of the feed URL
 // ("eddiebarretta.com/podcast.rss", protocol stripped) under the Podcast Index
