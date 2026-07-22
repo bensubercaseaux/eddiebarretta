@@ -1,6 +1,6 @@
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./Reveal";
-import { LiteYouTube } from "./LiteYouTube";
+import { WatchShelf } from "./WatchShelf";
 import { site } from "@/lib/site";
 import { getWatchVideos } from "@/lib/videos-store";
 
@@ -35,19 +35,8 @@ export async function Watch() {
           </div>
         </Reveal>
 
-        <div className="scrollbar-none -mx-6 mt-10 flex snap-x gap-4 overflow-x-auto scroll-px-6 px-6 pb-2">
-          {videos.map((video, i) => (
-            <Reveal
-              key={video.id}
-              delay={Math.min(0.1 + i * 0.06, 0.4)}
-              className="w-52 shrink-0 snap-start sm:w-60"
-            >
-              <LiteYouTube id={video.id} title={video.title} vertical />
-              <p className="mt-2.5 truncate text-sm text-muted">
-                {video.title}
-              </p>
-            </Reveal>
-          ))}
+        <div className="mt-10">
+          <WatchShelf videos={videos} />
         </div>
       </div>
     </section>

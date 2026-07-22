@@ -11,9 +11,10 @@ import { XMLParser } from "fast-xml-parser";
 // cached by default in Next 16, so unstable_cache (tagged, hourly revalidate)
 // is the single caching layer, and the probes run inside it.
 
-// "Site — Watch" playlist. Note: playlist RSS returns at most the first 15
-// entries, which bounds the shelf length.
-const PLAYLIST_ID = "PLjisbdyvOZPBAy5NWNcvdolDuqBqu2sWX";
+// "Site — Watch" playlist, overridable per-environment. Note: playlist RSS
+// returns at most the first 15 entries, which bounds the shelf length.
+const PLAYLIST_ID =
+  process.env.YOUTUBE_WATCH_PLAYLIST_ID || "PLjisbdyvOZPBAy5NWNcvdolDuqBqu2sWX";
 const FEED_URL = `https://www.youtube.com/feeds/videos.xml?playlist_id=${PLAYLIST_ID}`;
 const TAG = "videos";
 
