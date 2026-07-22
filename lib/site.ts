@@ -70,8 +70,6 @@ export const site = {
     "Lucky's",
     "Myth",
   ],
-
-  youtubeVideos: ["2TjrdaVfZ-4", "IjrgRdo6O-Y", "rhO2JklK0sQ"],
 } as const;
 
 // Root-relative anchors so the nav works from subpages (e.g. /mixes) too, not

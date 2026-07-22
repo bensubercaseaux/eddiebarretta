@@ -2,9 +2,15 @@ import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./Reveal";
 import { LiteYouTube } from "./LiteYouTube";
 import { site } from "@/lib/site";
+import { getWatchVideos } from "@/lib/videos-store";
 
-export function Watch() {
-  const [featured, ...rest] = site.youtubeVideos;
+// Vertical-clip shelf fed by the Watch playlist (lib/videos-store.ts). All
+// clips are 9:16 Shorts — landscape uploads are filtered out at the feed
+// level — so they render at their native aspect ratio in a horizontal
+// snap-scroll strip that bleeds to the section edge.
+export async function Watch() {
+  const videos = await getWatchVideos();
+  if (videos.length === 0) return null;
 
   return (
     <section id="watch" className="px-6 py-24 md:py-32">
@@ -29,14 +35,17 @@ export function Watch() {
           </div>
         </Reveal>
 
-        <Reveal delay={0.1} className="mt-10">
-          <LiteYouTube id={featured} title="Eddie Barretta — featured set" />
-        </Reveal>
-
-        <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          {rest.map((id, i) => (
-            <Reveal key={id} delay={0.15 + i * 0.08}>
-              <LiteYouTube id={id} title={`Eddie Barretta — set ${i + 2}`} />
+        <div className="scrollbar-none -mx-6 mt-10 flex snap-x gap-4 overflow-x-auto scroll-px-6 px-6 pb-2">
+          {videos.map((video, i) => (
+            <Reveal
+              key={video.id}
+              delay={Math.min(0.1 + i * 0.06, 0.4)}
+              className="w-52 shrink-0 snap-start sm:w-60"
+            >
+              <LiteYouTube id={video.id} title={video.title} vertical />
+              <p className="mt-2.5 truncate text-sm text-muted">
+                {video.title}
+              </p>
             </Reveal>
           ))}
         </div>

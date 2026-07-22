@@ -38,6 +38,15 @@
   border-color: var(--line);
 }
 
+/* Horizontal shelves (Watch) scroll without a visible scrollbar; the cut-off
+   card at the edge is the scroll affordance. */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 html {
   scroll-behavior: smooth;
   /* offset anchored scroll so the sticky nav doesn't cover headings */
