@@ -14,12 +14,13 @@ type Artist = {
 type Track = { title: string; artists: Artist[] };
 type Lookup = Awaited<ReturnType<typeof resolveArtistAction>>;
 
-// "&" is ambiguous in dance music: "Aly & Fila" is one act, "Ferry Corsten &
-// Markus Schulz" is two. So names are never split on "&" at parse time — only
-// as a resolve fallback, when the combined name fails to match on SoundCloud.
-function ampParts(name: string): string[] {
+// "&" and "/" are ambiguous in dance music: "Aly & Fila" and "AC/DC" are one
+// act, "Ferry Corsten & Markus Schulz" or "GENESI / MEDUZA" are two. So names
+// are never split on them at parse time — only as a resolve fallback, when the
+// combined name fails to match on SoundCloud.
+function collabParts(name: string): string[] {
   return name
-    .split(/\s*&\s*/)
+    .split(/\s*[&/]\s*/)
     .map((s) => s.trim())
     .filter(Boolean);
 }
@@ -248,10 +249,11 @@ export function TracklistTool() {
           continue;
         }
 
-        // Combined name didn't resolve — retry the "&"-separated parts. Split
-        // the row only if at least one part matches; an unresolvable duo name
-        // ("Aly & Fila" under the follower floor) stays intact for manual entry.
-        const parts = ampParts(name);
+        // Combined name didn't resolve — retry the "&"/"/"-separated parts.
+        // Split the row only if at least one part matches; an unresolvable duo
+        // name ("Aly & Fila" under the follower floor) stays intact for manual
+        // entry.
+        const parts = collabParts(name);
         if (parts.length > 1) {
           const resolved: Artist[] = [];
           for (const part of parts) {
@@ -348,9 +350,9 @@ export function TracklistTool() {
         <p className="mt-1 text-sm text-muted">
           One track per line, e.g. <code>Damn Good (Original Mix) Dark Heart</code>.
           Artists are read from the end of each line — fix any mis-splits below.
-          Names with &ldquo;&amp;&rdquo; are treated as one act (Aly &amp; Fila);
-          auto-resolve splits them only when the combined name has no SoundCloud
-          match.
+          Names with &ldquo;&amp;&rdquo; or &ldquo;/&rdquo; are treated as one
+          act (Aly &amp; Fila); auto-resolve splits them only when the combined
+          name has no SoundCloud match.
         </p>
         <textarea
           id="raw"
