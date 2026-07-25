@@ -12,6 +12,29 @@ type Artist = {
   followers?: number | null;
 };
 type Track = { title: string; artists: Artist[] };
+type Lookup = Awaited<ReturnType<typeof resolveArtistAction>>;
+
+// "&" is ambiguous in dance music: "Aly & Fila" is one act, "Ferry Corsten &
+// Markus Schulz" is two. So names are never split on "&" at parse time — only
+// as a resolve fallback, when the combined name fails to match on SoundCloud.
+function ampParts(name: string): string[] {
+  return name
+    .split(/\s*&\s*/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+function artistFromLookup(name: string, r: Lookup): Artist {
+  return r.status === "valid"
+    ? {
+        name,
+        handle: r.handle,
+        status: "valid",
+        displayName: r.name,
+        followers: r.followers,
+      }
+    : { name, handle: "", status: "idle" };
+}
 
 function fmtFollowers(n: number | null | undefined): string {
   if (n == null) return "";
@@ -174,6 +197,18 @@ export function TracklistTool() {
     );
   }
 
+  // Swap every occurrence of a combined name ("A & B") for its resolved parts.
+  function replaceByName(name: string, replacements: Artist[]) {
+    setTracks((prev) =>
+      prev.map((t) => ({
+        ...t,
+        artists: t.artists.flatMap((a) =>
+          a.name.trim() === name ? replacements.map((r) => ({ ...r })) : [a],
+        ),
+      })),
+    );
+  }
+
   // Resolve one unique artist name at a time, pausing `delaySec` between calls
   // so we never burst requests at SoundCloud.
   async function autoResolve() {
@@ -188,25 +223,51 @@ export function TracklistTool() {
     setRunning(true);
     cancelRef.current = false;
     const gap = Math.max(0, delaySec) * 1000;
+    // Results seen this run, so a name that appears both solo and as half of an
+    // "A & B" collab costs one API call, not two.
+    const cache = new Map<string, Lookup>();
+    const lookup = async (name: string, pace: boolean): Promise<Lookup> => {
+      const hit = cache.get(name);
+      if (hit) return hit;
+      if (pace && gap) await sleep(gap);
+      const r = await resolveArtistAction(name, minFollowers);
+      cache.set(name, r);
+      return r;
+    };
+
     try {
       for (let i = 0; i < names.length; i++) {
         if (cancelRef.current) break;
         setProgress({ done: i, total: names.length });
         const name = names[i];
         patchByName(name, { status: "checking" });
-        const r = await resolveArtistAction(name, minFollowers);
-        patchByName(
-          name,
-          r.status === "valid"
-            ? {
-                status: "valid",
-                handle: r.handle,
-                displayName: r.name,
-                followers: r.followers,
-              }
-            : { status: "idle" }, // leave blank for manual entry
-        );
-        if (gap && i < names.length - 1 && !cancelRef.current) await sleep(gap);
+        const r = await lookup(name, i > 0);
+
+        if (r.status === "valid") {
+          patchByName(name, artistFromLookup(name, r));
+          continue;
+        }
+
+        // Combined name didn't resolve — retry the "&"-separated parts. Split
+        // the row only if at least one part matches; an unresolvable duo name
+        // ("Aly & Fila" under the follower floor) stays intact for manual entry.
+        const parts = ampParts(name);
+        if (parts.length > 1) {
+          const resolved: Artist[] = [];
+          for (const part of parts) {
+            if (cancelRef.current) break;
+            resolved.push(artistFromLookup(part, await lookup(part, true)));
+          }
+          if (
+            resolved.length === parts.length &&
+            resolved.some((a) => a.status === "valid")
+          ) {
+            replaceByName(name, resolved);
+            continue;
+          }
+        }
+
+        patchByName(name, { status: "idle" }); // leave blank for manual entry
       }
     } finally {
       setRunning(false);
@@ -287,6 +348,9 @@ export function TracklistTool() {
         <p className="mt-1 text-sm text-muted">
           One track per line, e.g. <code>Damn Good (Original Mix) Dark Heart</code>.
           Artists are read from the end of each line — fix any mis-splits below.
+          Names with &ldquo;&amp;&rdquo; are treated as one act (Aly &amp; Fila);
+          auto-resolve splits them only when the combined name has no SoundCloud
+          match.
         </p>
         <textarea
           id="raw"

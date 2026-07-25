@@ -17,8 +17,9 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["400", "500", "700"],
 });
 
+// Keep under ~155 chars so Google doesn't truncate it mid-sentence.
 const description =
-  "Eddie Barretta is a house and trance DJ in the Jacksonville Beach, FL area and host of the Transcend podcast. Book euphoric, dancefloor-driven sets across Northeast Florida.";
+  "Eddie Barretta is a house and trance DJ in Jacksonville Beach, FL, and host of the Transcend podcast. Book him for bars, residencies, and private events.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://eddiebarretta.com"),

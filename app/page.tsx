@@ -5,9 +5,10 @@ import { Music } from "@/components/Music";
 import { Watch } from "@/components/Watch";
 import { Shows } from "@/components/Shows";
 import { Booking } from "@/components/Booking";
+import { Faq } from "@/components/Faq";
 import { Footer } from "@/components/Footer";
-import { site } from "@/lib/site";
-import { splitShows, type Show } from "@/lib/shows";
+import { faq, site } from "@/lib/site";
+import { showSchedule, splitShows, type Show } from "@/lib/shows";
 import { getPublicShows } from "@/lib/shows-store";
 
 const ORIGIN = "https://eddiebarretta.com";
@@ -23,6 +24,7 @@ const NAV_SECTIONS = [
   { name: "Watch", url: `${ORIGIN}/#watch` },
   { name: "Shows", url: `${ORIGIN}/#shows` },
   { name: "Book", url: `${ORIGIN}/#book` },
+  { name: "FAQ", url: `${ORIGIN}/#faq` },
   { name: "Mixes", url: `${ORIGIN}/mixes` },
   { name: "Venues", url: `${ORIGIN}/venues` },
 ];
@@ -87,7 +89,7 @@ function buildJsonLd(shows: Show[]) {
       ...upcoming.map((s) => ({
         "@type": "Event",
         name: `${site.name} — ${s.name}`,
-        startDate: s.date,
+        ...showSchedule(s),
         eventStatus: "https://schema.org/EventScheduled",
         eventAttendanceMode:
           "https://schema.org/OfflineEventAttendanceMode",
@@ -105,42 +107,14 @@ function buildJsonLd(shows: Show[]) {
         ...(s.url ? { url: s.url } : {}),
       })),
       {
+        // Mirrors the visible <Faq /> section — both render from lib/site.ts.
         "@type": "FAQPage",
         "@id": `${ORIGIN}/#faq`,
-        mainEntity: [
-          {
-            "@type": "Question",
-            name: "What kind of music does Eddie Barretta play?",
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: "Eddie Barretta is a house and trance DJ known for euphoric, dancefloor-driven sets.",
-            },
-          },
-          {
-            "@type": "Question",
-            name: "Where is Eddie Barretta based?",
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: "Eddie is based in the Jacksonville Beach, FL area and performs across Jacksonville and Northeast Florida.",
-            },
-          },
-          {
-            "@type": "Question",
-            name: "How can I book Eddie Barretta to DJ my event?",
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: `You can book Eddie for bar nights, residencies, private events, and parties by emailing ${site.bookingEmail} or messaging @djeddiebarretta on Instagram.`,
-            },
-          },
-          {
-            "@type": "Question",
-            name: "What is the Transcend podcast?",
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: "Transcend is Eddie Barretta's mix series and podcast, featuring his latest house and trance DJ sets.",
-            },
-          },
-        ],
+        mainEntity: faq.map((f) => ({
+          "@type": "Question",
+          name: f.question,
+          acceptedAnswer: { "@type": "Answer", text: f.answer },
+        })),
       },
     ],
   };
@@ -205,6 +179,7 @@ export default async function Home() {
         <Watch />
         <Shows />
         <Booking />
+        <Faq />
       </main>
       <Footer />
     </>

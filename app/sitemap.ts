@@ -9,16 +9,21 @@ const ORIGIN = "https://eddiebarretta.com";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const mixes = await getMixes();
 
+  // Only claim a lastmod we can actually stand behind (the mix feed dates).
+  // Stamping `new Date()` on every build teaches Google to distrust the
+  // field site-wide, so venue pages simply omit it.
+  const latestMix = mixes[0] ? new Date(mixes[0].date) : undefined;
+
   return [
     {
       url: ORIGIN,
-      lastModified: new Date(),
+      lastModified: latestMix,
       changeFrequency: "monthly",
       priority: 1,
     },
     {
       url: `${ORIGIN}/mixes`,
-      lastModified: mixes[0] ? new Date(mixes[0].date) : new Date(),
+      lastModified: latestMix,
       changeFrequency: "weekly",
       priority: 0.8,
     },
@@ -30,13 +35,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     {
       url: `${ORIGIN}/venues`,
-      lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     },
     ...venues.map((v) => ({
       url: `${ORIGIN}/venues/${v.slug}`,
-      lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })),

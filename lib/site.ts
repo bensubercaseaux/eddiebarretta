@@ -72,6 +72,31 @@ export const site = {
   ],
 } as const;
 
+// Single source for the home-page FAQ: renders in the visible <Faq /> section
+// AND feeds the FAQPage JSON-LD, so the markup always matches on-page content
+// (a Google structured-data requirement).
+export const faq = [
+  {
+    question: "What kind of music does Eddie Barretta play?",
+    answer:
+      "Eddie Barretta is a house and trance DJ known for euphoric, dancefloor-driven sets, blending tech house, melodic house, and vocal trance.",
+  },
+  {
+    question: "Where is Eddie Barretta based?",
+    answer:
+      "Eddie is based in the Jacksonville Beach, FL area and performs across Jacksonville and Northeast Florida.",
+  },
+  {
+    question: "How can I book Eddie Barretta to DJ my event?",
+    answer: `You can book Eddie for bar nights, residencies, private events, and parties by emailing ${site.bookingEmail} or messaging @djeddiebarretta on Instagram.`,
+  },
+  {
+    question: "What is the Transcend podcast?",
+    answer:
+      "Transcend is Eddie Barretta's mix series and podcast, featuring his latest house and trance DJ sets with full tracklists.",
+  },
+] as const;
+
 // Root-relative anchors so the nav works from subpages (e.g. /mixes) too, not
 // just the home page.
 export const nav = [
