@@ -48,6 +48,9 @@ Not part of the migration — ongoing feature docs:
   daily agent does the rest; covers edge cases and troubleshooting.
 - [text-bookings.md](text-bookings.md) — how the booking pipeline works under
   the hood (Gmail alias → daily routine → `POST /api/shows`).
+- [watch-playlist.md](watch-playlist.md) — curating the homepage **Watch** shelf
+  from a YouTube playlist: why landscape clips get dropped, the 15-clip cap, and
+  the one-line push (`POST /api/revalidate`) to skip the cache wait.
 
 ## Key facts
 

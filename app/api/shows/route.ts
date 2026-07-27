@@ -3,21 +3,9 @@
 // writing; POST adds one show. Humans use /admin — this exists for callers that
 // can't hold the admin session cookie.
 
-import { timingSafeEqual } from "node:crypto";
+import { isAuthorized } from "@/lib/api-auth";
 import { addShow, getAllShows, isStoreConfigured } from "@/lib/shows-store";
 import type { ShowInput } from "@/lib/shows";
-
-function isAuthorized(req: Request): boolean {
-  const token = process.env.SHOWS_API_TOKEN;
-  if (!token) return false;
-  const provided = (req.headers.get("authorization") ?? "").replace(
-    /^Bearer\s+/i,
-    "",
-  );
-  const a = Buffer.from(provided);
-  const b = Buffer.from(token);
-  return a.length === b.length && timingSafeEqual(a, b);
-}
 
 /** Validate an incoming show payload; returns the error message if invalid. */
 function parseShowInput(
