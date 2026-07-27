@@ -5,10 +5,13 @@ import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import { useReducedMotion } from "motion/react";
 import { Reveal } from "./Reveal";
 import { LiteYouTube } from "./LiteYouTube";
+import { VideoLightbox } from "./VideoLightbox";
 
 // Horizontal snap-scroll strip of 9:16 clips. The scrollbar is hidden, so
 // desktop mouse users get paging arrows (touch/trackpad users just swipe);
-// each arrow fades out at its end of the strip.
+// each arrow fades out at its end of the strip. Clicking a card plays it in a
+// lightbox rather than inline, so a 9:16 clip gets real height instead of a
+// 208px-wide card.
 export function WatchShelf({
   videos,
 }: {
@@ -17,6 +20,7 @@ export function WatchShelf({
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canLeft, setCanLeft] = useState(false);
   const [canRight, setCanRight] = useState(false);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   const reduce = useReducedMotion();
 
   const update = useCallback(() => {
@@ -59,7 +63,12 @@ export function WatchShelf({
             delay={Math.min(0.1 + i * 0.06, 0.4)}
             className="w-52 shrink-0 snap-start sm:w-60"
           >
-            <LiteYouTube id={video.id} title={video.title} vertical />
+            <LiteYouTube
+              id={video.id}
+              title={video.title}
+              vertical
+              onActivate={() => setOpenIndex(i)}
+            />
             <p className="mt-2.5 truncate text-sm text-muted">{video.title}</p>
           </Reveal>
         ))}
@@ -83,6 +92,13 @@ export function WatchShelf({
           <Icon size={20} weight="bold" />
         </button>
       ))}
+
+      <VideoLightbox
+        videos={videos}
+        index={openIndex}
+        onIndexChange={setOpenIndex}
+        onClose={() => setOpenIndex(null)}
+      />
     </div>
   );
 }

@@ -9,16 +9,20 @@ import { Play } from "@phosphor-icons/react";
 // the third-party JS/network cost of the Watch section on initial load.
 // Vertical (Shorts) videos use YouTube's true 9:16 poster (oar2.jpg) instead of
 // the 16:9 hqdefault, so nothing gets cropped or letterboxed.
+// Pass `onActivate` to hand the click off instead of embedding in place — the
+// Watch shelf uses it to open the clip in a lightbox.
 export function LiteYouTube({
   id,
   title,
   vertical = false,
   priority = false,
+  onActivate,
 }: {
   id: string;
   title: string;
   vertical?: boolean;
   priority?: boolean;
+  onActivate?: () => void;
 }) {
   const [active, setActive] = useState(false);
 
@@ -39,8 +43,9 @@ export function LiteYouTube({
       ) : (
         <button
           type="button"
-          onClick={() => setActive(true)}
+          onClick={() => (onActivate ? onActivate() : setActive(true))}
           aria-label={`Play ${title}`}
+          {...(onActivate ? { "aria-haspopup": "dialog" as const } : {})}
           className="group absolute inset-0 h-full w-full"
         >
           <Image
