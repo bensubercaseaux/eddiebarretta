@@ -8,8 +8,8 @@ import { XMLParser } from "fast-xml-parser";
 // Shorts-style vertical thumbnail (oar2.jpg): YouTube serves it only for 9:16
 // videos, so landscape uploads in the playlist are filtered out here and never
 // reach the vertical shelf. Caching mirrors lib/mixes-store.ts — fetch isn't
-// cached by default in Next 16, so unstable_cache (tagged, hourly revalidate)
-// is the single caching layer, and the probes run inside it.
+// cached by default in Next 16, so unstable_cache (tagged, 5m revalidate) is
+// the single caching layer, and the probes run inside it.
 
 // "Site — Watch" playlist, overridable per-environment. Note: playlist RSS
 // returns at most the first 15 entries, which bounds the shelf length.
@@ -82,9 +82,13 @@ async function fetchWatchVideos(): Promise<WatchVideo[]> {
   }
 }
 
+// 5m matches lib/mixes-store.ts. Playlist curation happens in the YouTube app
+// with no redeploy, so the TTL is the only thing gating how fast an edit shows
+// up — an hour was long enough to look broken. The 15 vertical probes re-run on
+// each revalidation, which is cheap at this playlist size.
 const getCachedWatchVideos = unstable_cache(fetchWatchVideos, ["videos:watch"], {
   tags: [TAG],
-  revalidate: 3600,
+  revalidate: 300,
 });
 
 /** Vertical clips from the Watch playlist, in playlist order. */
