@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { SoundcloudLogo, X } from "@phosphor-icons/react";
+import { SoundcloudLogo, SpeakerSimpleSlash, X } from "@phosphor-icons/react";
 import { formatClock } from "@/lib/mixes";
 import { usePlayer } from "./PlayerProvider";
 import { PlayButton } from "./PlayButton";
@@ -35,7 +35,8 @@ function Scrubber({
 }
 
 export function NowPlayingBar() {
-  const { current, currentTime, duration, seek, dismiss } = usePlayer();
+  const { current, currentTime, duration, isMuted, seek, unmute, dismiss } =
+    usePlayer();
   if (!current) return null;
 
   const max = duration || current.durationSeconds || 0;
@@ -65,6 +66,23 @@ export function NowPlayingBar() {
         </Link>
 
         <PlayButton mix={current} size="sm" className="shadow-none" />
+
+        {/* The arrival autoplay is silent by browser mandate, so this is the
+            only thing telling the visitor sound is on offer. It sits beside the
+            play button rather than in the icon cluster on the right, where it
+            would read as a minor control. */}
+        {isMuted && (
+          <button
+            type="button"
+            onClick={unmute}
+            aria-label={`Turn on sound for ${current.title}`}
+            className="animate-sound-pulse inline-flex shrink-0 items-center gap-1.5 rounded-full bg-accent px-3 py-2 text-xs font-semibold text-white transition-transform duration-200 hover:scale-105 hover:bg-accent-bright active:scale-95 sm:px-4 sm:text-sm"
+          >
+            <SpeakerSimpleSlash size={16} weight="fill" />
+            <span className="hidden sm:inline">Tap for sound</span>
+            <span className="sm:hidden">Sound</span>
+          </button>
+        )}
 
         <div className="hidden flex-1 items-center gap-3 md:flex">
           <span className="w-11 text-right text-xs tabular-nums text-faint">

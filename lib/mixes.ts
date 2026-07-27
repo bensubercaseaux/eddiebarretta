@@ -16,7 +16,7 @@ export type Mix = {
   durationLabel: string;
   /** Full-resolution square artwork (SoundCloud CDN). */
   artwork: string;
-  /** Direct, seekable MP3 (RSS enclosure) — plays in a native <audio>. */
+  /** Direct, seekable MP3 (RSS enclosure) — plays in a native media element. */
   streamUrl: string;
   /** Canonical SoundCloud page for this mix. */
   permalink: string;

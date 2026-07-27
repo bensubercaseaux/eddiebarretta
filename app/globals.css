@@ -154,6 +154,24 @@ body {
   animation: slide-up 0.28s ease-out;
 }
 
+/* "Tap for sound" pill on the muted arrival autoplay — a soft ring pulsing
+   outward, so it reads as the one thing to press without shouting. */
+@keyframes sound-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 55%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 9px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.animate-sound-pulse {
+  animation: sound-pulse 2.4s ease-out infinite;
+}
+
 /* Native range styled as the player scrubber (fill is set inline per progress) */
 .player-range {
   outline-offset: 4px;
@@ -187,6 +205,7 @@ body {
   }
   .animate-glow,
   .animate-slide-up,
+  .animate-sound-pulse,
   .eq-bar {
     animation: none !important;
   }
