@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { usePathname } from "next/navigation";
 import type { Mix } from "@/lib/mixes";
 import { track } from "@/lib/analytics";
 import { NowPlayingBar } from "./NowPlayingBar";
@@ -48,18 +49,30 @@ type MixTracking = {
   completeSent: boolean;
   /** Progress milestones (25/50/75) already reported, each fired at most once. */
   milestones: Set<number>;
+  /** Auto-started rather than clicked — reported so GA can separate the two. */
+  auto: boolean;
 };
+
+// One autostart per tab session: a refresh or a second visit in the same tab
+// shouldn't yank the visitor back to a new random mix.
+const AUTOSTART_KEY = "eb:mix-autostarted";
 
 export function PlayerProvider({
   queue = [],
+  autoStart = false,
   children,
 }: {
   /** All mixes in display order — when one ends, the next in this list plays. */
   queue?: Mix[];
+  /** Cue a random mix from the queue on first load of the session. */
+  autoStart?: boolean;
   children: React.ReactNode;
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const trackingRef = useRef<MixTracking | null>(null);
+  // The route the visitor actually landed on, pinned at first render so a later
+  // client-side navigation can't retroactively trigger the autostart.
+  const landingPath = useRef(usePathname()).current;
   // Ref so the once-bound `ended` listener always sees the current queue.
   const queueRef = useRef(queue);
   const [current, setCurrent] = useState<Mix | null>(null);
@@ -72,7 +85,7 @@ export function PlayerProvider({
     queueRef.current = queue;
   }, [queue]);
 
-  const startMix = useCallback((mix: Mix) => {
+  const startMix = useCallback((mix: Mix, opts?: { auto?: boolean }) => {
     const audio = audioRef.current;
     if (!audio) return;
     setCurrent(mix);
@@ -81,6 +94,7 @@ export function PlayerProvider({
       playSent: false,
       completeSent: false,
       milestones: new Set(),
+      auto: opts?.auto ?? false,
     };
     setCurrentTime(0);
     // Seed the scrubber range from the feed's duration before metadata loads.
@@ -127,6 +141,27 @@ export function PlayerProvider({
     setDuration(0);
   }, []);
 
+  // Cue a random mix on arrival. Browsers block unmuted autoplay for visitors
+  // without enough engagement on the domain, so a rejected play() is the
+  // expected path, not a bug: the mix stays loaded in the now-playing bar and
+  // starts on the visitor's first tap. Muting it instead would defeat the
+  // point — this is a DJ's mix, not a background video.
+  //
+  // Home page only. Someone landing on /mixes/<slug> came for *that* mix, and
+  // cueing a random other one over it would be the wrong thing entirely.
+  useEffect(() => {
+    if (!autoStart || queue.length === 0 || landingPath !== "/") return;
+    try {
+      if (sessionStorage.getItem(AUTOSTART_KEY)) return;
+      sessionStorage.setItem(AUTOSTART_KEY, "1");
+    } catch {
+      // Private mode / storage blocked — cue it anyway rather than bail.
+    }
+    startMix(queue[Math.floor(Math.random() * queue.length)], { auto: true });
+    // Runs once on mount; the session guard above makes a re-run a no-op.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -136,7 +171,13 @@ export function PlayerProvider({
       const t = trackingRef.current;
       if (t && !t.playSent) {
         t.playSent = true;
-        track("mix_play", { mix_title: t.mix.title, mix_slug: t.mix.slug });
+        // `play_source` keeps auto-started listens from inflating the
+        // click-through funnel — filter to "click" in GA for chosen plays.
+        track("mix_play", {
+          mix_title: t.mix.title,
+          mix_slug: t.mix.slug,
+          play_source: t.auto ? "auto" : "click",
+        });
       }
     };
     const onPause = () => setIsPlaying(false);
@@ -173,7 +214,8 @@ export function PlayerProvider({
       const queue = queueRef.current;
       const i = t ? queue.findIndex((m) => m.id === t.mix.id) : -1;
       const next = i >= 0 ? queue[i + 1] : undefined;
-      if (next) startMix(next);
+      // Auto-advance isn't a chosen play either, so it carries the same flag.
+      if (next) startMix(next, { auto: true });
     };
 
     audio.addEventListener("play", onPlay);

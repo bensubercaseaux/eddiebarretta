@@ -5,9 +5,9 @@ import type { Show } from "@/lib/shows";
 import { Reveal } from "./Reveal";
 import { ShowCard } from "./ShowCard";
 
-const INITIAL_COUNT = 20;
+const INITIAL_COUNT = 10;
 
-// Newest-first list of past gigs, capped at 20 with a one-click reveal for the
+// Newest-first list of past gigs, capped at 10 with a one-click reveal for the
 // full history. The year count is large (the whole gig archive lives here), so
 // the collapsed view keeps the homepage scannable.
 export function PastSets({ shows }: { shows: Show[] }) {

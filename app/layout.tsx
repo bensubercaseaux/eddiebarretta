@@ -96,7 +96,9 @@ export default async function RootLayout({
       className={`${syne.variable} ${spaceGrotesk.variable} antialiased`}
     >
       <body className="grain min-h-[100dvh] bg-ink text-fg">
-        <PlayerProvider queue={queue}>{children}</PlayerProvider>
+        <PlayerProvider queue={queue} autoStart>
+          {children}
+        </PlayerProvider>
       </body>
       {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
     </html>

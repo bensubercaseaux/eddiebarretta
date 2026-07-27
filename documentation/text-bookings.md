@@ -62,6 +62,11 @@ up, and the show goes live right after that run.
   and updating the routine's prompt.
 - Duplicate guard: a POST for the same venue + date as an existing show
   returns 409, so agent re-runs can't double-post.
+- **Always call the apex host** (`https://eddiebarretta.com/api/shows`), never
+  `www.`. Since the SEO work made the apex canonical, `www` answers with a 308
+  to the apex, and curl drops the `Authorization` header when it follows a
+  cross-host redirect — so a `www` call silently 401s. This broke the routine
+  between 2026-07-22 and 2026-07-27.
 
 ## The routine
 
@@ -74,7 +79,7 @@ Prompt template (the live routine carries the real token):
 > gig: date (ISO), display time range (e.g. "6:00 - 10:00 PM"), venue, city,
 > and an event name (use the venue's usual event name from existing shows, or
 > "Eddie Barretta (DJ Set)" if unclear). Then GET
-> https://www.eddiebarretta.com/api/shows with header "Authorization: Bearer
+> https://eddiebarretta.com/api/shows with header "Authorization: Bearer
 > TOKEN" to see existing shows (also use these to match venue-name spelling and
 > city). POST each genuinely new gig to the same URL with the same header and
 > JSON body {date, time, name, venue, city}. A 409 means it already exists —
