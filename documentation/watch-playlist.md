@@ -9,9 +9,16 @@ redeploy.
 `YOUTUBE_WATCH_PLAYLIST_ID` env var)
 
 The site reads the playlist's public RSS feed
-(`youtube.com/feeds/videos.xml?playlist_id=…`), so playlist order is the shelf
-order. Clicking a clip opens it in a full-screen player with the page dimmed
-behind it; arrow keys and the on-screen arrows step through the shelf.
+(`youtube.com/feeds/videos.xml?playlist_id=…`). Clicking a clip opens it in a
+full-screen player with the page dimmed behind it; arrow keys and the on-screen
+arrows step through the shelf.
+
+**Shelf order is randomized**, so the section looks different on repeat visits
+instead of always leading with the same clip. The shuffle happens on the server
+each time the homepage regenerates — every few minutes — so it's the same order
+for everyone until the next regeneration, not a fresh draw per visitor. The
+trade-off: you can't pin a particular clip to the front. What the playlist still
+controls is *which* clips appear at all (see the next section).
 
 ## Three rules that will otherwise confuse you
 
@@ -21,8 +28,10 @@ behind it; arrow keys and the on-screen arrows step through the shelf.
    **silently dropped** — it never appears on the shelf. If a clip you added
    isn't showing up, this is almost always why.
 2. **The feed caps at 15 entries.** YouTube's playlist RSS only returns the first
-   15, so the shelf can never be longer than that. Order the playlist with the
-   ones you care about first.
+   15, so the shelf can never be longer than that. This is the one place playlist
+   order still matters: it's the *first* 15 that come back, so put the clips you
+   want on the site near the top. A 16th clip further down never reaches the
+   shelf, shuffled or not.
 3. **Changes take about 5–10 minutes.** The feed is cached for 5 minutes
    (`lib/videos-store.ts`), and the page itself for another 5.
 

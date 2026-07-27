@@ -3,7 +3,9 @@ import { unstable_cache } from "next/cache";
 import { XMLParser } from "fast-xml-parser";
 
 // The Watch shelf is sourced from a public YouTube playlist RSS feed — curation
-// (add/remove/reorder) happens in the YouTube app, no code change or redeploy.
+// (which clips appear) happens in the YouTube app, no code change or redeploy.
+// Display order is shuffled per render, so the playlist decides the cast and not
+// the running order.
 // The feed carries no orientation info, so each video is probed for the
 // Shorts-style vertical thumbnail (oar2.jpg): YouTube serves it only for 9:16
 // videos, so landscape uploads in the playlist are filtered out here and never
@@ -24,7 +26,11 @@ export type WatchVideo = {
   title: string;
 };
 
-/** Parse the playlist Atom feed, preserving playlist order for curation. */
+/**
+ * Parse the playlist Atom feed, preserving playlist order. Order is preserved
+ * here (rather than shuffled at parse time) because the cached payload stays
+ * canonical — the shuffle is presentation, applied on the way out.
+ */
 export function parseVideosFeed(xml: string): WatchVideo[] {
   const parser = new XMLParser({
     ignoreAttributes: false,
@@ -91,7 +97,28 @@ const getCachedWatchVideos = unstable_cache(fetchWatchVideos, ["videos:watch"], 
   revalidate: 300,
 });
 
-/** Vertical clips from the Watch playlist, in playlist order. */
+/** Fisher–Yates on a copy — never shuffle the cached array in place. */
+function shuffled(list: readonly WatchVideo[]): WatchVideo[] {
+  const out = [...list];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+/**
+ * Vertical clips from the Watch playlist, in random order.
+ *
+ * Shuffled outside the cache so the stored payload stays in playlist order and
+ * the order re-rolls whenever the homepage regenerates, rather than being frozen
+ * for the life of a cache entry. In practice that means the shelf reshuffles
+ * every few minutes, not per visitor — the page is prerendered, so whatever
+ * order the server picks is baked into the HTML everyone gets until the next
+ * revalidation. Shuffling here rather than in the client is deliberate: the
+ * order arrives as props, so there's nothing for hydration to disagree about and
+ * no reorder flash after mount.
+ */
 export async function getWatchVideos(): Promise<WatchVideo[]> {
-  return getCachedWatchVideos();
+  return shuffled(await getCachedWatchVideos());
 }
