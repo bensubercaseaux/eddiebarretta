@@ -142,6 +142,15 @@ function buildAiDatasetJsonLd() {
     "@context": "https://schema.org",
     "@type": "Dataset",
     name: "AI/LLM Resource Pack",
+    // `description` is required by Google's Dataset rich result — omitting it
+    // makes the whole item invalid (Search Console flagged this 2026-07-25).
+    description:
+      `Machine-readable profile of ${site.name}, ${site.role} in ` +
+      `${site.location} — bio, genres, mixes, and upcoming shows published as ` +
+      `YAML, Markdown, JSON-LD, RSS, and llms.txt for AI crawlers and LLMs.`,
+    url: AI_HOST,
+    creator: { "@id": ACT_ID },
+    isAccessibleForFree: true,
     dateModified: AI_DATASET_MODIFIED,
     hasPart: AI_FILES.map((f) => ({
       "@type": "DataDownload",

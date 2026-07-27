@@ -3,10 +3,11 @@
 Shows are mostly booked over text message. This pipeline turns a forwarded text
 into a show on the site with no manual data entry:
 
-1. **You**: when a gig is confirmed over text, forward the text (or a
-   screenshot of it) from Messages to **ben.subercaseaux+booking@gmail.com**.
-   The `+booking` part is a Gmail alias of your normal address — it lands in
-   your inbox and gives the agent an exact search filter.
+1. **You**: when a gig is confirmed over text, email the text (or a screenshot
+   of it) to **ben.subercaseaux+booking@gmail.com** — see [Sending a booking
+   text](#sending-a-booking-text) below. The `+booking` part is a Gmail alias of
+   your normal address — it lands in your inbox and gives the agent an exact
+   search filter.
 2. **Daily agent**: a scheduled Claude routine (managed at
    <https://claude.ai/code/routines>) runs every morning, searches Gmail for
    messages sent to the `+booking` alias in the last few days, and extracts the
@@ -15,6 +16,38 @@ into a show on the site with no manual data entry:
    bearer token, which writes to the same Vercel Blob store the `/admin`
    dashboard edits. New shows are public immediately; the site revalidates
    instantly (no redeploy).
+
+## Sending a booking text
+
+The routine only finds messages **addressed** to the alias (`to:` search), so it
+has to be in the To: field — pasting the address into the body won't match.
+
+Don't use Messages' own forward arrow: that sends over iMessage/SMS, and the
+`+booking` alias isn't an iMessage address, so it won't be delivered. Go through
+Mail instead.
+
+**iPhone, copy/paste** (best — the agent reads real text):
+
+1. In Messages, long-press the booking message → **Copy**. For a back-and-forth
+   thread, long-press → **More…**, tap-select each bubble, then Copy.
+2. Open Mail → new message → To: `ben.subercaseaux+booking@gmail.com`.
+3. Paste and send. Subject can be blank.
+
+**iPhone, screenshot** (fastest for a long thread): screenshot the conversation,
+tap the thumbnail → share → **Mail** → To: the alias → send.
+
+**Mac**: select the bubbles in Messages, ⌘C, then ⌘N in Mail, paste, To: the
+alias.
+
+Text beats a screenshot — the agent reads the message body directly, whereas an
+image depends on it opening the attachment. If the thread only says something
+like "next Friday", add a one-line note in the body (`Fri Aug 14, SIP Cocktail
+Bar`) and it'll parse fine.
+
+Worth doing once: save a contact named **Booking** with that address so Mail
+autocompletes it. And note the timing — the routine runs daily at 13:00 UTC
+(9am ET) with a 4-day lookback, so anything sent within a few days gets picked
+up, and the show goes live right after that run.
 
 ## The API (`app/api/shows/route.ts`)
 
