@@ -43,12 +43,17 @@ rendering an empty strip.
 To skip the wait — after reordering the playlist for a gig, say:
 
 ```bash
-curl -X POST "https://www.eddiebarretta.com/api/revalidate?tag=videos" \
+curl -X POST "https://eddiebarretta.com/api/revalidate?tag=videos" \
   -H "Authorization: Bearer $SHOWS_API_TOKEN"
 ```
 
 Expected reply: `{"ok":true,"tag":"videos"}`. Reload the homepage and the new
 order is there.
+
+Use the **apex host, never `www`** — this command used to say `www` and was
+silently broken. `www` 308-redirects to the apex, and curl drops the
+`Authorization` header across a cross-host redirect, so the call 401s (or, with
+no `-L`, just prints `Redirecting...` instead of the JSON).
 
 `tag` also accepts `mixes` (the SoundCloud feed behind the Listen section) and
 `shows`. The token is the same `SHOWS_API_TOKEN` used by the booking-texts agent

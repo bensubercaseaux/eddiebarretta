@@ -1,7 +1,7 @@
 # Transcend podcast feed (`/podcast.rss`)
 
 The site serves its own copy of the Transcend podcast feed at
-**`https://www.eddiebarretta.com/podcast.rss`**. This is the feed you submit to
+**`https://eddiebarretta.com/podcast.rss`**. This is the feed you submit to
 Apple Podcasts, Amazon Music, and YouTube — not SoundCloud's raw feed.
 
 ## What it is
@@ -55,8 +55,10 @@ expects: an intro line, a blank line, then one track per line.
 ## Pointing the podcast platforms at this feed
 
 In each platform's dashboard, set/replace the RSS feed URL with
-`https://www.eddiebarretta.com/podcast.rss` (use the `www` form — the bare
-domain redirects to it, and some crawlers handle redirects poorly):
+`https://eddiebarretta.com/podcast.rss` — the **bare apex, no `www`**. This
+doc used to say the opposite, and that was the bug: since the SEO work made the
+apex canonical, `www` 308-redirects here, so pointing a crawler at `www` buys a
+redirect hop on every poll for nothing.
 
 - **Apple** — Podcasts Connect → your show → edit the RSS feed URL
 - **Amazon Music for Podcasters** — update the feed URL
@@ -64,6 +66,12 @@ domain redirects to it, and some crawlers handle redirects poorly):
 
 GUIDs are preserved, so existing episodes map 1:1 — no duplicates. The feed also
 includes `<itunes:new-feed-url>` so Apple treats our URL as canonical.
+
+**Feed move in progress (started 2026-07-28).** Apple was registered at the old
+`www` URL, and `<itunes:new-feed-url>` now points at the apex to migrate it.
+Once Podcasts Connect shows the apex as the feed URL, delete that tag from
+`app/podcast.rss/route.ts` — it's a relocation instruction, not a permanent
+one.
 
 ## Changing things
 
@@ -86,4 +94,4 @@ Everything lives in [`app/podcast.rss/route.ts`](../app/podcast.rss/route.ts):
 - **Cover art not updating** — Apple only re-fetches artwork when its URL
   changes; bump the filename version (see the table above). Even then apps
   cache artwork aggressively and it can take a day or two. Confirm
-  `https://www.eddiebarretta.com/transcend-v2.jpg` loads.
+  `https://eddiebarretta.com/transcend-v2.jpg` loads.

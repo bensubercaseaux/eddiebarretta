@@ -9,20 +9,24 @@
 // is swapped, and the show is marked episodic.
 //
 // Point Apple Podcasts Connect / Amazon / YouTube at:
-//   https://www.eddiebarretta.com/podcast.rss
+//   https://eddiebarretta.com/podcast.rss
 // GUIDs are preserved, so existing episodes map 1:1 (no duplicates).
 
 import { createHash } from "node:crypto";
 
 const FEED_URL =
   "https://feeds.soundcloud.com/users/soundcloud:users:211674230/sounds.rss";
-// The www host is the canonical one — the apex 308-redirects to it, and the
-// self link / new-feed-url must match the URL crawlers actually end up on.
-const SELF_URL = "https://www.eddiebarretta.com/podcast.rss";
+// The apex is canonical — www 308-redirects to it, so the self link and
+// new-feed-url must be the apex or every crawler eats a redirect hop. These
+// were on www until 2026-07-28, left over from before the SEO work flipped the
+// canonical host; Apple was registered at the www URL and <itunes:new-feed-url>
+// below is what migrates it across. See the note on FEED MOVE at the bottom.
+const SELF_URL = "https://eddiebarretta.com/podcast.rss";
 // Show cover art — 1400×1400 JPG (<500KB) served from /public. Apple only
 // re-downloads artwork when this URL changes, so bump the -vN suffix (rename
-// the file to match) whenever the art itself is replaced.
-const PODCAST_IMAGE = "https://www.eddiebarretta.com/transcend-v2.jpg";
+// the file to match) whenever the art itself is replaced. (The www → apex swap
+// counts as a change, so Apple re-fetches once — same image, harmless.)
+const PODCAST_IMAGE = "https://eddiebarretta.com/transcend-v2.jpg";
 const SITE = "https://eddiebarretta.com";
 // Stable Podcasting 2.0 identity for the show. UUIDv5 of the feed URL
 // ("eddiebarretta.com/podcast.rss", protocol stripped) under the Podcast Index
@@ -73,7 +77,17 @@ function cdata(html: string): string {
   return `<![CDATA[${html.replace(/]]>/g, "]]]]><![CDATA[>")}]]>`;
 }
 
-function rewriteFeed(xml: string): string {
+/** Newest <pubDate> anywhere in the feed, or null if it carries none. */
+function newestPubDate(xml: string): Date | null {
+  let newest: Date | null = null;
+  for (const m of xml.matchAll(/<pubDate>([^<]+)<\/pubDate>/g)) {
+    const d = new Date(m[1]);
+    if (!Number.isNaN(d.getTime()) && (!newest || d > newest)) newest = d;
+  }
+  return newest;
+}
+
+function rewriteFeed(xml: string, newest: Date | null): string {
   // Declare the content + podcast namespaces (for <content:encoded> and
   // <podcast:guid>).
   let out = xml.replace(/<rss\b([^>]*)>/, (_m, attrs: string) => {
@@ -136,11 +150,41 @@ function rewriteFeed(xml: string): string {
   );
 
   // Channel-level: stable identity, mark the show episodic, declare canonical.
+  //
+  // FEED MOVE (started 2026-07-28): <itunes:new-feed-url> is Apple's mechanism
+  // for relocating a show, not a permanent tag. Apple was registered at the www
+  // URL; pointing this at the apex is what migrates it. Once Apple Podcasts
+  // Connect shows the apex as the feed URL (give it ~2 weeks), DELETE the
+  // new-feed-url line below — leaving it forever is what turned the old www
+  // value into a directive pointing at a host that only 308s back here.
   if (!out.includes("<itunes:type>")) {
     out = out.replace(
       "</image>",
       `</image>\n        <podcast:guid>${PODCAST_GUID}</podcast:guid>\n        <itunes:type>episodic</itunes:type>\n        <itunes:new-feed-url>${SELF_URL}</itunes:new-feed-url>`,
     );
+  }
+
+  // SoundCloud's channel <lastBuildDate> and <pubDate> lag scheduled releases
+  // by days — on 2026-07-28 they still read "25 Jul" with that day's episode
+  // already in the feed. That tells a directory the show is unchanged while a
+  // brand-new episode sits right there, which is how a release goes live on one
+  // platform and not another. We already override the HTTP Last-Modified for
+  // this reason; the in-feed dates need the same treatment, since that's what a
+  // directory reads once it does parse the body. Only the channel header is
+  // rewritten — item pubDates are real release times and must stay untouched.
+  if (newest) {
+    const stamp = newest.toUTCString();
+    const firstItem = out.indexOf("<item>");
+    const head = firstItem === -1 ? out : out.slice(0, firstItem);
+    const tail = firstItem === -1 ? "" : out.slice(firstItem);
+    out =
+      head
+        .replace(
+          /<lastBuildDate>[^<]*<\/lastBuildDate>/,
+          `<lastBuildDate>${stamp}</lastBuildDate>`,
+        )
+        .replace(/<pubDate>[^<]*<\/pubDate>/, `<pubDate>${stamp}</pubDate>`) +
+      tail;
   }
 
   return out;
@@ -156,7 +200,8 @@ export async function GET() {
   }
 
   const src = await res.text();
-  const out = rewriteFeed(src);
+  const newest = newestPubDate(src);
+  const out = rewriteFeed(src, newest);
 
   const headers: Record<string, string> = {
     "content-type": "application/rss+xml; charset=utf-8",
@@ -164,14 +209,8 @@ export async function GET() {
     // Help podcast apps check for updates efficiently.
     etag: `"${createHash("md5").update(out).digest("hex")}"`,
   };
-  // SoundCloud's <lastBuildDate> lags behind scheduled releases (it can sit a
-  // week stale while a newer item is already in the feed), and a stale
-  // Last-Modified tells crawlers nothing changed. Use the newest item pubDate.
-  let newest: Date | null = null;
-  for (const m of src.matchAll(/<pubDate>([^<]+)<\/pubDate>/g)) {
-    const d = new Date(m[1]);
-    if (!Number.isNaN(d.getTime()) && (!newest || d > newest)) newest = d;
-  }
+  // Same reason the in-feed dates get rewritten above: a stale Last-Modified
+  // tells crawlers nothing changed. Use the newest item pubDate.
   if (newest) headers["last-modified"] = newest.toUTCString();
 
   return new Response(out, { headers });

@@ -43,7 +43,7 @@ Anything it skips is listed in its morning summary with the reason:
 ## When NOT to wait for the morning run
 
 - **Gig is tonight/tomorrow morning** → add it yourself at
-  [eddiebarretta.com/admin](https://www.eddiebarretta.com/admin) (Add show).
+  [eddiebarretta.com/admin](https://eddiebarretta.com/admin) (Add show).
 - **Cancellation or date change** → always yourself in `/admin` — the agent
   never touches existing shows by design.
 - **Fixing an agent mistake** → `/admin`, edit the show. Takes 10 seconds.
