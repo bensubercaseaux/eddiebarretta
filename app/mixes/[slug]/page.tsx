@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowLeft, Heart } from "@phosphor-icons/react/dist/ssr";
+import { Heart } from "@phosphor-icons/react/dist/ssr";
 import { Nav } from "@/components/Nav";
+import { Breadcrumbs, crumbsToJsonLd, type Crumb } from "@/components/Breadcrumbs";
 import { Footer } from "@/components/Footer";
 import { PlayButton } from "@/components/player/PlayButton";
 import { Tracklist } from "@/components/mixes/Tracklist";
@@ -69,6 +69,14 @@ export default async function MixPage({
   const mix = await getMix(slug);
   if (!mix) notFound();
 
+  // Drives both the visible trail and the BreadcrumbList below — one array, so
+  // the markup and what the visitor sees can't drift apart.
+  const crumbs: Crumb[] = [
+    { name: "Home", href: "/" },
+    { name: "Mixes", href: "/mixes" },
+    { name: mix.title, href: `/mixes/${mix.slug}` },
+  ];
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -95,24 +103,7 @@ export default async function MixPage({
         },
         sameAs: mix.permalink,
       },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: ORIGIN },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: "Mixes",
-            item: `${ORIGIN}/mixes`,
-          },
-          {
-            "@type": "ListItem",
-            position: 3,
-            name: mix.title,
-            item: `${ORIGIN}/mixes/${mix.slug}`,
-          },
-        ],
-      },
+      crumbsToJsonLd(crumbs, ORIGIN),
     ],
   };
 
@@ -125,16 +116,7 @@ export default async function MixPage({
       <Nav />
       <main className="px-6 pb-24 pt-28 md:pt-32">
         <div className="mx-auto max-w-5xl">
-          <Link
-            href="/mixes"
-            className="group inline-flex items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-fg"
-          >
-            <ArrowLeft
-              size={16}
-              className="transition-transform duration-200 group-hover:-translate-x-0.5"
-            />
-            All mixes
-          </Link>
+          <Breadcrumbs items={crumbs} />
 
           <div className="mt-8 grid gap-8 md:grid-cols-[320px_1fr] md:gap-12 lg:grid-cols-[360px_1fr]">
             <div className="md:sticky md:top-24 md:self-start">

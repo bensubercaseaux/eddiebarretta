@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  ArrowUpRight,
-  MapPin,
-  Play,
-} from "@phosphor-icons/react/dist/ssr";
+import { ArrowUpRight, MapPin, Play } from "@phosphor-icons/react/dist/ssr";
 import { Nav } from "@/components/Nav";
+import { Breadcrumbs, crumbsToJsonLd, type Crumb } from "@/components/Breadcrumbs";
 import { Footer } from "@/components/Footer";
 import { venues, getVenue, venueAddress, type Venue } from "@/lib/venues";
 import { getMix } from "@/lib/mixes-store";
@@ -43,6 +39,16 @@ export async function generateMetadata({
   };
 }
 
+// Drives both the visible trail and the BreadcrumbList — one array, so the
+// markup and what the visitor sees can't drift apart.
+function venueCrumbs(v: Venue): Crumb[] {
+  return [
+    { name: "Home", href: "/" },
+    { name: "Venues", href: "/venues" },
+    { name: v.name, href: `/venues/${v.slug}` },
+  ];
+}
+
 function buildJsonLd(v: Venue) {
   return {
     "@context": "https://schema.org",
@@ -61,24 +67,7 @@ function buildJsonLd(v: Venue) {
         },
         ...(v.website ? { url: v.website } : {}),
       },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: ORIGIN },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: "Venues",
-            item: `${ORIGIN}/venues`,
-          },
-          {
-            "@type": "ListItem",
-            position: 3,
-            name: v.name,
-            item: `${ORIGIN}/venues/${v.slug}`,
-          },
-        ],
-      },
+      crumbsToJsonLd(venueCrumbs(v), ORIGIN),
     ],
   };
 }
@@ -103,16 +92,7 @@ export default async function VenuePage({
       <Nav />
       <main className="px-6 pb-24 pt-28 md:pt-32">
         <div className="mx-auto max-w-3xl">
-          <Link
-            href="/venues"
-            className="group inline-flex items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-fg"
-          >
-            <ArrowLeft
-              size={16}
-              className="transition-transform duration-200 group-hover:-translate-x-0.5"
-            />
-            All venues
-          </Link>
+          <Breadcrumbs items={venueCrumbs(v)} />
 
           <div className="mt-8">
             <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-accent-bright">
