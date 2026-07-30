@@ -58,18 +58,6 @@ export const site = {
   // Google listing — important for local SEO and entity reconciliation.
   googleBusiness:
     "https://www.google.com/search?kgmid=/g/11yzw30vry&q=Eddie+Barretta",
-
-  // Venues Eddie has played around the Jacksonville area.
-  venues: [
-    "Living Room Lounge",
-    "SIP Cocktail Bar",
-    "Surfer Bar",
-    "Dua Lounge",
-    "Cataluna Lounge",
-    "Lemon Bar",
-    "Lucky's",
-    "Myth",
-  ],
 } as const;
 
 // Single source for the home-page FAQ: renders in the visible <Faq /> section
