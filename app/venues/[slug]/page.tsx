@@ -6,7 +6,7 @@ import { Nav } from "@/components/Nav";
 import { Breadcrumbs, crumbsToJsonLd, type Crumb } from "@/components/Breadcrumbs";
 import { Footer } from "@/components/Footer";
 import { venues, getVenue, venueAddress, type Venue } from "@/lib/venues";
-import { getMix } from "@/lib/mixes-store";
+import { getMixes } from "@/lib/mixes-store";
 import { site } from "@/lib/site";
 
 const ORIGIN = "https://eddiebarretta.com";
@@ -81,7 +81,10 @@ export default async function VenuePage({
   const v = getVenue(slug);
   if (!v) notFound();
 
-  const mix = v.relatedMixSlug ? await getMix(v.relatedMixSlug) : null;
+  // Feed order is newest-first, so the latest set at the venue leads the list.
+  const mixes = v.relatedMixSlugs?.length
+    ? (await getMixes()).filter((m) => v.relatedMixSlugs!.includes(m.slug))
+    : [];
 
   return (
     <>
@@ -119,27 +122,32 @@ export default async function VenuePage({
             <p className="mt-2 text-muted">{v.relationText}</p>
           </div>
 
-          {mix && (
-            <Link
-              href={`/mixes/${mix.slug}`}
-              className="group mt-6 flex items-center gap-4 rounded-card border border-line bg-surface p-4 transition-colors hover:border-accent/50"
-            >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent text-white transition-transform group-hover:scale-105">
-                <Play size={22} weight="fill" className="translate-x-[1px]" />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-xs uppercase tracking-wider text-faint">
-                  Live from {v.name}
-                </span>
-                <span className="block font-display font-semibold text-fg">
-                  {mix.title} · {mix.durationLabel}
-                </span>
-              </span>
-              <ArrowUpRight
-                size={18}
-                className="ml-auto text-muted transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-              />
-            </Link>
+          {mixes.length > 0 && (
+            <div className="mt-6 space-y-3">
+              {mixes.map((mix) => (
+                <Link
+                  key={mix.slug}
+                  href={`/mixes/${mix.slug}`}
+                  className="group flex items-center gap-4 rounded-card border border-line bg-surface p-4 transition-colors hover:border-accent/50"
+                >
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent text-white transition-transform group-hover:scale-105">
+                    <Play size={22} weight="fill" className="translate-x-[1px]" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-xs uppercase tracking-wider text-faint">
+                      Live from {v.name}
+                    </span>
+                    <span className="block font-display font-semibold text-fg">
+                      {mix.title} · {mix.durationLabel}
+                    </span>
+                  </span>
+                  <ArrowUpRight
+                    size={18}
+                    className="ml-auto shrink-0 text-muted transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
+                </Link>
+              ))}
+            </div>
           )}
 
           <div className="mt-8 flex flex-wrap gap-3">

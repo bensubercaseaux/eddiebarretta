@@ -22,8 +22,8 @@ export type Venue = {
   website?: string;
   /** Instagram handle without the @. */
   instagram?: string;
-  /** Slug of Eddie's live mix recorded here, if any (see lib/mixes). */
-  relatedMixSlug?: string;
+  /** Slugs of Eddie's live mixes recorded here, if any (see lib/mixes). */
+  relatedMixSlugs?: string[];
 };
 
 export const venues: Venue[] = [
@@ -41,7 +41,7 @@ export const venues: Venue[] = [
     region: "FL",
     website: "https://www.coop303.com/living-room-lounge",
     instagram: "thelivingroomab",
-    relatedMixSlug: "live-living-room-lounge-extended-set",
+    relatedMixSlugs: ["live-living-room-lounge-extended-set"],
   },
   {
     slug: "sip-cocktail-bar",
@@ -58,7 +58,7 @@ export const venues: Venue[] = [
     region: "FL",
     postalCode: "32202",
     website: "https://www.sipontheroof.com/",
-    relatedMixSlug: "live-sip",
+    relatedMixSlugs: ["last-call-sip-cocktail-bar", "live-sip"],
   },
   {
     slug: "surfer-the-bar",
@@ -75,7 +75,7 @@ export const venues: Venue[] = [
     region: "FL",
     postalCode: "32250",
     website: "https://surferthebar.com/",
-    relatedMixSlug: "live-surfer-bar",
+    relatedMixSlugs: ["live-surfer-bar"],
   },
   {
     slug: "dua-lounge",
@@ -92,7 +92,7 @@ export const venues: Venue[] = [
     region: "FL",
     postalCode: "32256",
     website: "https://www.dualoungejax.com/",
-    relatedMixSlug: "live-dua-lounge",
+    relatedMixSlugs: ["live-dua-lounge"],
   },
   {
     slug: "cataluna-lounge",
@@ -126,7 +126,7 @@ export const venues: Venue[] = [
     region: "FL",
     postalCode: "32266",
     website: "https://www.lemonbarjax.com/",
-    relatedMixSlug: "live-lemon-bar",
+    relatedMixSlugs: ["live-lemon-bar"],
   },
   {
     slug: "myth-nightclub",
