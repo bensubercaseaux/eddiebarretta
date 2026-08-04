@@ -15,11 +15,11 @@ const FEED_URL =
 const TAG = "mixes";
 
 /**
- * The blank line that separates the intro paragraph from the tracklist. Every
- * Transcend description follows "intro sentence → blank line → one track per
- * line", so this is more robust than matching a specific lead-in phrase (which
- * varies: "featuring the following tracks:", "and the following tracks:",
- * "including the following tracks:", …).
+ * Blank line between description paragraphs. The tracklist is the run of
+ * paragraphs after the last one ending in a "…the following tracks:" lead-in
+ * (see INTRO_TRACKS_TAIL) — live-set descriptions can put several prose
+ * paragraphs before the tracks, so the first blank line alone doesn't mark
+ * where they start.
  */
 const PARAGRAPH_BREAK = /\n\s*\n/;
 /**
@@ -64,16 +64,28 @@ function slugFromLink(link: string): string {
 /** Split a description blob into the lead-in prose and the track lines. */
 function splitDescription(raw: string): { intro: string; tracks: string[] } {
   const description = String(raw ?? "").trim();
-  const match = PARAGRAPH_BREAK.exec(description);
+  const paragraphs = description.split(PARAGRAPH_BREAK);
   // No blank line → single paragraph, no tracklist (e.g. short live recordings).
-  if (!match) return { intro: description, tracks: [] };
+  if (paragraphs.length < 2) return { intro: description, tracks: [] };
 
-  const intro = description
-    .slice(0, match.index)
+  // The tracklist starts after the last paragraph ending in the "…the
+  // following tracks:" lead-in. Live-set descriptions can run several prose
+  // paragraphs before it (venue line, story, standalone lead-in line), so the
+  // first blank line alone is not a reliable boundary; it's only the fallback
+  // when no lead-in appears anywhere.
+  let leadIn = 0;
+  for (let i = 0; i < paragraphs.length - 1; i++) {
+    if (INTRO_TRACKS_TAIL.test(paragraphs[i])) leadIn = i;
+  }
+
+  const intro = paragraphs
+    .slice(0, leadIn + 1)
+    .join("\n\n")
     .replace(INTRO_TRACKS_TAIL, "")
     .trim();
-  const tracks = description
-    .slice(match.index + match[0].length)
+  const tracks = paragraphs
+    .slice(leadIn + 1)
+    .join("\n")
     .split(/\r?\n/)
     // Keep [@handle] tags — the Tracklist component turns them into profile
     // links. Only strip any leading bullet/number the description may carry.

@@ -52,7 +52,9 @@ export function FeaturedMix({ mix }: { mix: Mix }) {
         </p>
 
         {mix.intro && (
-          <p className="mt-4 max-w-prose text-muted">{mix.intro}</p>
+          <p className="mt-4 max-w-prose whitespace-pre-line text-muted">
+            {mix.intro}
+          </p>
         )}
 
         <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">

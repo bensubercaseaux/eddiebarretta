@@ -27,8 +27,9 @@ export async function generateMetadata({
   const mix = await getMix(slug);
   if (!mix) return { title: "Mix not found" };
 
+  // Intros can span paragraphs — meta descriptions are single-line.
   const description = mix.intro
-    ? `${mix.intro} — a ${mix.durationLabel} house & trance mix by Eddie Barretta.`
+    ? `${mix.intro.replace(/\s+/g, " ")} — a ${mix.durationLabel} house & trance mix by Eddie Barretta.`
     : `A ${mix.durationLabel} house & trance mix by Eddie Barretta, with full tracklist.`;
 
   return {
@@ -162,7 +163,7 @@ export default async function MixPage({
               </p>
 
               {mix.intro && (
-                <p className="mt-6 max-w-prose leading-relaxed text-muted">
+                <p className="mt-6 max-w-prose whitespace-pre-line leading-relaxed text-muted">
                   {mix.intro}
                 </p>
               )}
