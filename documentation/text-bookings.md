@@ -92,6 +92,11 @@ Notes:
 
 - The routine needs the **Gmail connector** attached (connect at
   <https://claude.ai/customize/connectors>).
+- The routine's cloud environment must allow network egress to
+  **eddiebarretta.com** (environment settings at <https://claude.ai/code>).
+  When the egress policy blocks it, the run fails with a 403 on CONNECT from
+  the sandbox proxy: Gmail search still works, but no shows get checked or
+  posted — this silently stalled the pipeline on 2026-08-04.
 - Reschedules/cancellations are deliberately left to a human — the agent only
   ever *adds* shows; it flags everything else in its run summary.
 - Anything the agent gets slightly wrong is a 10-second fix in `/admin`.
