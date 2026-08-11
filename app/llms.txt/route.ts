@@ -1,3 +1,4 @@
+import { formatPostDate, posts } from "@/lib/blog";
 import { site } from "@/lib/site";
 import { venues } from "@/lib/venues";
 
@@ -28,6 +29,7 @@ ${site.bio.join("\n\n")}
 - [Home](${ORIGIN}/): bio, latest mixes, upcoming shows, booking
 - [Mixes](${ORIGIN}/mixes): the Transcend mix library — every mix with a native player and full tracklist, each at ${ORIGIN}/mixes/<slug>
 - [Venues](${ORIGIN}/venues): venues Eddie has played, each at ${ORIGIN}/venues/<slug>
+- [Blog — EDM Trends](${ORIGIN}/blog): monthly posts on where the EDM / DJ scene is heading, each at ${ORIGIN}/blog/<slug>
 - [Full site content for LLMs](${ORIGIN}/llms-full.txt)
 
 ## Music — the Transcend podcast
@@ -51,6 +53,14 @@ Transcend is Eddie's house & trance mix series / podcast. Listen on:
 - SoundCloud: ${site.socials.soundcloud}
 - YouTube: ${site.socials.youtube}
 - Google: ${site.googleBusiness}
+
+## Blog — EDM Trends (monthly)
+${posts
+  .map(
+    (p) =>
+      `- [${p.title}](${ORIGIN}/blog/${p.slug}) (${formatPostDate(p.date)}): ${p.excerpt}`,
+  )
+  .join("\n")}
 
 ## Venues played
 ${venues

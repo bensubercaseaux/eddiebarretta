@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { posts } from "@/lib/blog";
 import { getMixes } from "@/lib/mixes-store";
 import { venues } from "@/lib/venues";
 
@@ -41,6 +42,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...venues.map((v) => ({
       url: `${ORIGIN}/venues/${v.slug}`,
       changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+    {
+      url: `${ORIGIN}/blog`,
+      // Posts land monthly, so the newest publish date is an honest lastmod.
+      lastModified: posts[0] ? new Date(posts[0].date) : undefined,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    },
+    ...posts.map((p) => ({
+      url: `${ORIGIN}/blog/${p.slug}`,
+      lastModified: new Date(p.date),
+      changeFrequency: "yearly" as const,
       priority: 0.6,
     })),
   ];

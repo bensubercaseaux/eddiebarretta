@@ -48,6 +48,8 @@ Not part of the migration — ongoing feature docs:
   daily agent does the rest; covers edge cases and troubleshooting.
 - [text-bookings.md](text-bookings.md) — how the booking pipeline works under
   the hood (Gmail alias → daily routine → `POST /api/shows`).
+- [blog-posts.md](blog-posts.md) — the monthly **EDM Trends** blog post: where
+  posts live (`lib/blog.ts`), the publishing steps, and the voice checklist.
 - [watch-playlist.md](watch-playlist.md) — curating the homepage **Watch** shelf
   from a YouTube playlist: why landscape clips get dropped, the 15-clip cap, and
   the one-line push (`POST /api/revalidate`) to skip the cache wait.

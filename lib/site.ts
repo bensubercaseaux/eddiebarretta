@@ -94,4 +94,5 @@ export const nav = [
   { label: "Watch", href: "/#watch" },
   { label: "Shows", href: "/#shows" },
   { label: "Venues", href: "/venues" },
+  { label: "Blog", href: "/blog" },
 ] as const;
