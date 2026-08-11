@@ -9,6 +9,14 @@ export type PostSection = {
   paragraphs: string[];
 };
 
+/** A real, verified article backing the post — never invent these. */
+export type PostSource = {
+  title: string;
+  /** Publication name, e.g. "Mixmag". */
+  publisher: string;
+  url: string;
+};
+
 export type Post = {
   slug: string;
   title: string;
@@ -23,6 +31,8 @@ export type Post = {
   sections: PostSection[];
   /** One-liner that closes the post, tying the trend back to Eddie's sets. */
   outro: string;
+  /** Rendered as a "Further reading" block; URLs must be verified real pages. */
+  sources?: PostSource[];
 };
 
 export const posts: Post[] = [
@@ -62,6 +72,18 @@ export const posts: Post[] = [
     ],
     outro:
       "The best slot in dance music used to be the one nobody was awake for. Increasingly, it's the one with a sunset behind the decks — and that suits a beach-town house and trance DJ just fine.",
+    sources: [
+      {
+        title: "The New Nightlife: Gen Z's “Soft Clubbing” Proves the Party Isn't Over, It's Evolving",
+        publisher: "Eventbrite",
+        url: "https://www.eventbrite.com/blog/press/newsroom/the-new-nightlife-gen-zs-soft-clubbing/",
+      },
+      {
+        title: "Coffee raves are reinventing the café experience, but will they last?",
+        publisher: "Perfect Daily Grind",
+        url: "https://perfectdailygrind.com/2025/11/coffee-raves-reinventing-cafes-gen-z/",
+      },
+    ],
   },
   {
     slug: "stems-changed-the-dj-booth",
@@ -99,6 +121,23 @@ export const posts: Post[] = [
     ],
     outro:
       "I've been folding stem moments into my Transcend sets where they earn their place — a vocal held over a new groove, a breakdown stripped to melody. The tech is new; the rule is old: play the room, not the toy.",
+    sources: [
+      {
+        title: "Real-Time Stems Separation Comes To Serato DJ Software",
+        publisher: "Digital DJ Tips",
+        url: "https://www.digitaldjtips.com/real-time-stems-separation-comes-to-serato-dj-software/",
+      },
+      {
+        title: "Serato Stems: what DJs are doing with real-time stem separation added to Serato DJ",
+        publisher: "DJ TechTools",
+        url: "https://djtechtools.com/2022/10/11/serato-stems-what-djs-are-doing-with-real-time-stem-separation-added-to-serato-dj/",
+      },
+      {
+        title: "DJ Stems Compared: Serato vs VirtualDJ vs rekordbox vs djay vs Traktor vs Engine DJ",
+        publisher: "The DJ Mixtape",
+        url: "https://thedjmixtape.com/virtualdj-stems-vs-serato-stems-vs-rekordbox-stems/",
+      },
+    ],
   },
   {
     slug: "the-trance-revival-is-real",
@@ -136,6 +175,23 @@ export const posts: Post[] = [
     ],
     outro:
       "I named my mix series Transcend for a reason — the euphoric end of house and trance never stopped working on a dancefloor. It's just nice that the industry remembered.",
+    sources: [
+      {
+        title: "Trance reborn: The sound is back and big as ever",
+        publisher: "Mixmag",
+        url: "https://mixmag.net/feature/trance-reborn-the-sound-is-back-and-big-as-ever",
+      },
+      {
+        title: "The enduring appeal of trance",
+        publisher: "DJ Mag",
+        url: "https://djmag.com/content/enduring-appeal-trance",
+      },
+      {
+        title: "The cupids of clubland: DJ HEARTSTRING will make you fall in love on the dancefloor",
+        publisher: "Mixmag",
+        url: "https://mixmag.net/feature/dj-heartstring-interview-cover-feature-berlin-trance-techno-dance-music",
+      },
+    ],
   },
 ];
 

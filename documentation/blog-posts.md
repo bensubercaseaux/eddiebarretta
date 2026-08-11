@@ -32,8 +32,29 @@ touching.
    - `excerpt` — 1–2 sentences; doubles as the meta description.
    - `intro` (1–2 paragraphs), `sections` (2–4, each with a `heading` and
      paragraphs), `outro` — one line tying the trend back to Eddie's sets.
+   - `sources` — 2–4 real articles (title, publisher, URL) backing the trend;
+     rendered as a "Further reading" block and as `citation` JSON-LD.
+     **URLs must be actual pages found via web search — never invented.**
 3. `npm run build` locally to confirm, then push — Vercel deploys, and the
    sitemap/home page/llms files pick the post up on the next build.
+
+## The automated monthly draft
+
+A scheduled Claude routine (**"Monthly EDM Trends blog draft"**) runs on the
+1st of each month at 14:00 UTC. Each run starts a fresh session that:
+
+1. Researches the past month's EDM / DJ industry news via web search and picks
+   one emerging trend not already covered in `lib/blog.ts`.
+2. Writes the post in Eddie's voice per the checklist below, with 2–4 verified
+   sources from that research.
+3. Verifies with `npm run build`, then pushes the draft to a review branch
+   named `blog/draft-YYYY-MM`. **It never pushes to `main`** — nothing goes
+   live without a human merge.
+
+Ben gets a notification when the draft lands. To review: read the branch's
+diff on GitHub (it's one entry in `lib/blog.ts`), then merge the branch into
+`main` — or ask Claude to revise or merge it. If a month's draft isn't wanted,
+just delete the branch.
 
 ## Voice checklist
 
