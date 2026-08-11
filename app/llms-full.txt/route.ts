@@ -1,3 +1,4 @@
+import { formatPostDate, posts } from "@/lib/blog";
 import { faq, site } from "@/lib/site";
 import { venueAddress, venues } from "@/lib/venues";
 import { formatMixDate } from "@/lib/mixes";
@@ -70,6 +71,21 @@ export async function GET() {
     )
     .join("\n\n");
 
+  const blogSection = posts
+    .map((p) =>
+      [
+        `### ${p.title}`,
+        `- Page: ${ORIGIN}/blog/${p.slug}`,
+        `- Published: ${formatPostDate(p.date)} · Topic: ${p.tag}`,
+        ``,
+        ...p.intro,
+        ...p.sections.flatMap((s) => [``, `**${s.heading}**`, ...s.paragraphs]),
+        ``,
+        p.outro,
+      ].join("\n"),
+    )
+    .join("\n\n");
+
   const body = `# ${site.name} — full site content
 
 > ${site.bioShort}
@@ -117,6 +133,11 @@ ${venuesSection}
 Library: ${ORIGIN}/mixes
 
 ${mixesSection}
+
+## Blog — EDM Trends (one post a month)
+Index: ${ORIGIN}/blog
+
+${blogSection}
 `;
 
   return new Response(body, {

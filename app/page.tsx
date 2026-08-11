@@ -6,6 +6,7 @@ import { Watch } from "@/components/Watch";
 import { Shows } from "@/components/Shows";
 import { Booking } from "@/components/Booking";
 import { Faq } from "@/components/Faq";
+import { Blog } from "@/components/Blog";
 import { Footer } from "@/components/Footer";
 import { faq, site } from "@/lib/site";
 import { showSchedule, splitShows, type Show } from "@/lib/shows";
@@ -27,6 +28,7 @@ const NAV_SECTIONS = [
   { name: "FAQ", url: `${ORIGIN}/#faq` },
   { name: "Mixes", url: `${ORIGIN}/mixes` },
   { name: "Venues", url: `${ORIGIN}/venues` },
+  { name: "Blog", url: `${ORIGIN}/blog` },
 ];
 
 function buildJsonLd(shows: Show[]) {
@@ -188,6 +190,7 @@ export default async function Home() {
         <Watch />
         <Shows />
         <Booking />
+        <Blog />
         <Faq />
       </main>
       <Footer />
