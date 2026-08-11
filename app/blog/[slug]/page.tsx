@@ -60,6 +60,15 @@ function buildJsonLd(post: Post) {
         author: { "@type": "Person", name: "Eddie Barretta", url: ORIGIN },
         publisher: { "@type": "Person", name: "Eddie Barretta", url: ORIGIN },
         articleSection: post.tag,
+        ...(post.sources?.length
+          ? {
+              citation: post.sources.map((s) => ({
+                "@type": "WebPage",
+                name: s.title,
+                url: s.url,
+              })),
+            }
+          : {}),
       },
       crumbsToJsonLd(postCrumbs(post), ORIGIN),
     ],
@@ -132,6 +141,37 @@ export default async function BlogPostPage({
           <p className="mt-10 rounded-card border border-line bg-surface/40 p-6 leading-relaxed text-fg">
             {post.outro}
           </p>
+
+          {post.sources && post.sources.length > 0 && (
+            <section className="mt-10">
+              <h2 className="font-display text-lg font-bold tracking-tight">
+                Further reading
+              </h2>
+              <ul className="mt-4 space-y-3">
+                {post.sources.map((s) => (
+                  <li key={s.url}>
+                    <a
+                      href={s.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-baseline gap-1.5 text-sm"
+                    >
+                      <span className="font-medium text-muted transition-colors group-hover:text-fg">
+                        {s.title}
+                      </span>
+                      <span className="shrink-0 text-xs uppercase tracking-wider text-faint">
+                        {s.publisher}
+                      </span>
+                      <ArrowUpRight
+                        size={13}
+                        className="shrink-0 self-center text-faint transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                      />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           <div className="mt-10 flex flex-wrap gap-3">
             <Link

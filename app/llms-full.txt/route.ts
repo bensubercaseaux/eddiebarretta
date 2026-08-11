@@ -82,6 +82,13 @@ export async function GET() {
         ...p.sections.flatMap((s) => [``, `**${s.heading}**`, ...s.paragraphs]),
         ``,
         p.outro,
+        ...(p.sources?.length
+          ? [
+              ``,
+              `Sources:`,
+              ...p.sources.map((s) => `- ${s.title} (${s.publisher}): ${s.url}`),
+            ]
+          : []),
       ].join("\n"),
     )
     .join("\n\n");
