@@ -40,21 +40,28 @@ touching.
 
 ## The automated monthly draft
 
-A scheduled Claude routine (**"Monthly EDM Trends blog draft"**) runs on the
-1st of each month at 14:00 UTC. Each run starts a fresh session that:
+`.github/workflows/blog-draft.yml` runs `scripts/blog-draft.mts` on the 1st of each month at
+13:00 UTC (and on demand from the Actions tab). Each run:
 
-1. Researches the past month's EDM / DJ industry news via web search and picks
-   one emerging trend not already covered in `lib/blog.ts`.
-2. Writes the post in Eddie's voice per the checklist below, with 2–4 verified
-   sources from that research.
-3. Verifies with `npm run build`, then pushes the draft to a review branch
-   named `blog/draft-YYYY-MM`. **It never pushes to `main`** — nothing goes
-   live without a human merge.
+1. Researches the past month's EDM / DJ industry news with Claude and the web-search tool, and
+   picks one trend not already covered in `lib/blog.ts`.
+2. Writes the post in Eddie's voice — the guide the agent reads is [`lib/blog-voice.md`](../lib/blog-voice.md),
+   which mirrors the checklist below — with 2–5 verified sources from that research.
+3. Prepends the new entry to `posts` in `lib/blog.ts`, pushes it to a review branch named
+   `blog/draft-<slug>`, and opens a pull request. **It never pushes to `main`.**
 
-Ben gets a notification when the draft lands. To review: read the branch's
-diff on GitHub (it's one entry in `lib/blog.ts`), then merge the branch into
-`main` — or ask Claude to revise or merge it. If a month's draft isn't wanted,
-just delete the branch.
+To review: read the PR diff (it is one entry in `lib/blog.ts`), fix anything that needs fixing in
+the PR, then merge — Vercel deploys and the listing page, post page, home-page section, sitemap
+and llms files all pick it up. If a month's draft isn't wanted, close the PR and delete the branch.
+
+The run needs an `ANTHROPIC_API_KEY` repository secret. To draft locally:
+
+```bash
+ANTHROPIC_API_KEY=… npx tsx scripts/blog-draft.mts --dry-run
+```
+
+The shared architecture behind this script — it is the same file in five of Ben's repos — is
+documented in the umbrella repo's `docs/blog-pipeline.md`.
 
 ## Voice checklist
 

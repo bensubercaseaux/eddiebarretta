@@ -14,6 +14,15 @@ nothing here is committed.
 | `AUTH_SECRET` | Yes (prod, for `/admin`) | Server only | Signs the admin session cookie. Generate: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`. Dev falls back to an insecure default. |
 | `BLOB_READ_WRITE_TOKEN` | Yes (to edit shows) | Server only | Vercel Blob token, auto-injected once you create a Blob store. Without it, the site shows seed data and editing is disabled. See [06-admin-events.md](06-admin-events.md). |
 
+## GitHub Actions secrets (not Vercel)
+
+The monthly blog draft agent runs in GitHub Actions, not on Vercel, so its key is a
+**repository secret** (Settings → Secrets and variables → Actions), not a Vercel env var.
+
+| Secret | Purpose |
+|---|---|
+| `ANTHROPIC_API_KEY` | Research and drafting for `.github/workflows/blog-draft.yml`. See [blog-posts.md](blog-posts.md). |
+
 ## Tips
 
 - After changing a var in Vercel, **redeploy** for it to take effect.
