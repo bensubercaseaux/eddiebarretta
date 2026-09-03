@@ -255,7 +255,7 @@ Source discipline:
 - When a page repeats data that someone else published first, follow it back and cite the original publisher, not the summary.
 - Every source must be one of: the organization that produced the data or made the announcement, a peer-reviewed or working paper, or an established news outlet reporting it. A company's own blog counts only for that company's own news.
 - Reject content marketing on sight, however well written: SEO "guides", "state of X 2026" roundups, statistics-listicles, and posts on a vendor's blog about a problem that vendor happens to sell software for. If a page's numbers have no named, linked origin, it is not a source.
-- If fewer than 3 qualifying sources exist, narrow to a related sub-topic rather than citing stale material.
+- Return at least 3 sources. An empty or one-item "sources" array is a failed run, not a careful one. If the topic you first picked has too little qualifying material inside the window, pick a different topic that does and write about that instead. Do not write an uncited post.
 
 EXISTING POST TITLES (do not repeat these topics):
 ${opts.existing.length ? opts.existing.map((p) => `- ${p.title} (${p.date})`).join("\n") : "(none yet)"}
@@ -358,6 +358,7 @@ function validateDraft(draft: Draft, cutoff: string): { words: number; warnings:
   if (draft.description.length > 160) warnings.push(`Meta description is ${draft.description.length} characters (target under 160)`);
   draft.tags = [...new Set((draft.tags ?? []).map((t) => t.trim()).filter(Boolean))].slice(0, 4);
 
+  const returnedSources = (draft.sources ?? []).length;
   const kept: DraftSource[] = [];
   for (const s of draft.sources ?? []) {
     if (!/^https?:\/\//.test(s.url ?? "")) { warnings.push(`Dropped source "${s.id}": not an http(s) URL`); continue; }
@@ -367,7 +368,13 @@ function validateDraft(draft: Draft, cutoff: string): { words: number; warnings:
     kept.push({ ...s, author: s.author || null });
   }
   draft.sources = kept;
-  if (kept.length < 2) throw new Error(`Only ${kept.length} usable source(s) after the date cutoff — not publishing`);
+  if (kept.length < 2) {
+    const why = warnings.length ? ` Dropped: ${warnings.join("; ")}.` : "";
+    throw new Error(
+      `Only ${kept.length} usable source(s); the model returned ${returnedSources}. Not publishing.${why}` +
+        ` Try a wider window with --lookback, or the workflow's lookback_days input.`,
+    );
+  }
 
   const ids = new Set(kept.map((s) => s.id));
   const scrub = (t: string) => t.replace(/\[cite:([a-z0-9-]+)\]/g, (m, id: string) => (ids.has(id) ? m : ""));
@@ -425,7 +432,9 @@ function prBody(opts: { draft: Draft; words: number; warnings: string[]; cutoff:
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const dryRun = args.dryRun || process.env.BLOG_DRY_RUN === "1";
-  const lookbackDays = Math.max(7, args.lookback || parseInt(process.env.BLOG_LOOKBACK_DAYS || "45", 10) || 45);
+  // A site whose subject moves slowly needs a wider window to find enough primary material.
+  const siteDefault = SITE.lookbackDays ?? 45;
+  const lookbackDays = Math.max(7, args.lookback || parseInt(process.env.BLOG_LOOKBACK_DAYS || "", 10) || siteDefault);
   const model = process.env.BLOG_MODEL || "claude-sonnet-5";
   const outDir = process.env.BLOG_OUT_DIR || path.join(os.tmpdir(), "blog-draft");
   fs.mkdirSync(outDir, { recursive: true });
