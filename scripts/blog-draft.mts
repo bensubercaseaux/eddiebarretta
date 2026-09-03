@@ -253,6 +253,8 @@ Source discipline:
 - Append "after:${opts.cutoff}" to search queries.
 - For each candidate source, confirm its publication date from the page or the result. If you cannot confirm the date is on or after ${opts.cutoff}, DROP the source. Do not guess.
 - When a page repeats data that someone else published first, follow it back and cite the original publisher, not the summary.
+- Every source must be one of: the organization that produced the data or made the announcement, a peer-reviewed or working paper, or an established news outlet reporting it. A company's own blog counts only for that company's own news.
+- Reject content marketing on sight, however well written: SEO "guides", "state of X 2026" roundups, statistics-listicles, and posts on a vendor's blog about a problem that vendor happens to sell software for. If a page's numbers have no named, linked origin, it is not a source.
 - If fewer than 3 qualifying sources exist, narrow to a related sub-topic rather than citing stale material.
 
 EXISTING POST TITLES (do not repeat these topics):
@@ -401,6 +403,7 @@ function prBody(opts: { draft: Draft; words: number; warnings: string[]; cutoff:
   const { draft } = opts;
   const checks = [
     "Every source URL loads and says what the post claims",
+    "No source is content marketing: an SEO guide, a statistics roundup, or a vendor blog recycling someone else's numbers",
     `Source dates are on or after ${opts.cutoff} (no stale sources dressed as new)`,
     `Voice matches \`${SITE.voiceFile}\``,
     ...SITE.checklist,
