@@ -37,6 +37,58 @@ export type Post = {
 
 export const posts: Post[] = [
   {
+    slug: "dj-booth-becomes-a-network",
+    title: "The DJ Booth Is Turning Into a Wireless Network",
+    date: "2026-09-05",
+    tag: "Tech & craft",
+    excerpt: "New gear shown at this year's DJX proves the booth is being redesigned around wireless links and networking, not just decks and mixers, and that means DJs now have to think a little like IT.",
+    intro: [
+      "The new gear AlphaTheta rolled out at this year's DJX show has less to do with turntables and more to do with wireless links and firmware, and that shift tells you more about where the booth is headed than any single controller could.",
+    ],
+    sections: [
+      {
+        heading: "A bigger booth than usual, and a wireless one",
+        paragraphs: [
+          "DJX ran in Atlantic City in August, and AlphaTheta and Pioneer DJ showed up with what the company called its biggest presence at the show yet, headlined by two debuts: the CDJ-1500X and the all-in-one XDJ-AN. Alongside those sat a compact three-channel mixer, a new effector, and a Serato-branded controller, all crammed into one booth for DJs to actually put their hands on.",
+          "The detail that stuck with me wasn't a new player or mixer, it was the headphones. AlphaTheta's HDJ-F10 uses a wireless monitoring link called SonicLink, and the write-up from the show floor noted that it made \"wireless DJ monitoring feel less like a gimmick\". That's a small sentence carrying a big idea: the cable running from your head to the mixer, the one piece of the booth nobody questioned for thirty years, is now optional.",
+          "I notice this every time I'm setting up for a Transcend night or filling a booth at a Jax Beach bar with barely enough room to turn around. Being tethered to the mixer shapes how you move, how you dig through a bag mid-set, how you lean over to talk to whoever's next to you. Cut that cord and the booth stops being a fixed point you're chained to.",
+        ],
+      },
+      {
+        heading: "Home rig and club rig, converging",
+        paragraphs: [
+          "The other thread running through the DJX lineup was how much the gear blurs the line between a home setup and what's bolted into a real club booth. An all-in-one system built to sit at either end of that spectrum, shown next to club-standard players and a compact mixer built for smaller rooms, points at the same idea from a few different directions: manufacturers are betting DJs want their prep rig and their performance rig to behave the same way.",
+          "That matters for anyone building sets the way I build mixes for Transcend, working out transitions at home long before they ever get tested on a real floor. When the gear you rehearse on and the gear you perform on run on the same logic, the prep actually transfers instead of getting rebuilt from scratch once you're behind the club rig.",
+        ],
+      },
+      {
+        heading: "Wireless means you're running a network now",
+        paragraphs: [
+          "Here's the part that doesn't make it into the gear photos. Days before DJX wrapped, Pioneer DJ pushed out a security notice warning DJs about a vulnerability in PRO DJ LINK, the protocol that lets CDJs, mixers, and rekordbox talk to each other over a network, and told users to update their firmware. That's not a headline anyone screenshots for their story, but it's the natural flip side of everything else happening in the booth right now.",
+          "Once your monitoring is wireless and your players are talking to each other over a network instead of a straight cable, you've quietly signed up to maintain that network. Firmware updates stop being a nice-to-do before a gig and start being the thing that keeps your rig from being the weak point in the room. It's a small mental shift, but it's a real one: DJs are becoming their own IT department, whether we signed up for that or not.",
+        ],
+      },
+    ],
+    outro: "I still show up early to a set to check my cables, but lately I'm checking firmware first, and on a wireless rig at Transcend, that trade feels worth it.",
+    sources: [
+      {
+        title: "Pioneer DJ and AlphaTheta bring the beats to DJX 2026",
+        publisher: "Rekkerd.org",
+        url: "https://rekkerd.org/pioneer-dj-and-alphatheta-bring-the-beats-to-djx-2026/",
+      },
+      {
+        title: "AlphaTheta Brings New DJ Gear to DJX",
+        publisher: "Magnetic Magazine",
+        url: "https://magneticmag.com/2026/08/alphatheta-brings-new-dj-gear-to-djx/",
+      },
+      {
+        title: "Important Notice: Security Vulnerability in PRO DJ LINK",
+        publisher: "Pioneer DJ",
+        url: "https://www.pioneerdj.com/en/news/",
+      },
+    ],
+  },
+  {
     slug: "bar-circuit-djs-get-real-gear",
     title: "The Bar-Circuit DJ Finally Gets Real Gear",
     date: "2026-09-05",
