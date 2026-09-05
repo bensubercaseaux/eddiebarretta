@@ -37,6 +37,58 @@ export type Post = {
 
 export const posts: Post[] = [
   {
+    slug: "bar-circuit-djs-get-real-gear",
+    title: "The Bar-Circuit DJ Finally Gets Real Gear",
+    date: "2026-09-05",
+    tag: "Tech & craft",
+    excerpt: "AlphaTheta's biggest DJX lineup in years was built around all-in-one systems for DJs who work small rooms, not headline stages — and a security notice the same week showed what that new connectivity actually costs.",
+    intro: [
+      "Every DJX for the last few years has felt like a flagship showcase, all big CDJs and big-room thinking. This year the story at AlphaTheta's booth was different. Their biggest DJX yet was built around gear for the rooms most working DJs actually play, and the same week brought a reminder that all that new connectivity comes with a cost.",
+    ],
+    sections: [
+      {
+        heading: "All-in-one gear stops being an afterthought",
+        paragraphs: [
+          "DJX ran August 10 to 13 in Atlantic City, and AlphaTheta showed up with more new gear on the floor than in any previous year, including two products making their Atlantic City debut: the CDJ-1500X and the XDJ-AN. The XDJ-AN is the one that matters if you don't play main stages. AlphaTheta is positioning it as a genuine all-in-one system, aimed squarely at mobile and solo DJs who want fewer boxes in the bag, not a scaled-down club rig.",
+          "That's a real shift in emphasis. Since last year's DJX, AlphaTheta has shipped the CDJ-3000X flagship player, the SLAB Serato Studio controller, the RMX-IGNITE effector, the compact DJM-V5 mixer, and now the CDJ-1500X and XDJ-AN. That's a lot of hardware in twelve months, and a good chunk of it is built for smaller setups rather than the two-CDJ, big-mixer club standard. Reporting on the show framed it plainly: new players, new all-in-one systems, new mixer options, all aimed at DJs who work in real rooms, not just headline stages.",
+          "I feel this one directly. Nobody's rolling a full club rig into Lucky's or Sip or the Living Room Lounge. You're working a booth built for a bar, not a main room, and for a long time the gear didn't really acknowledge that middle tier existed. You either bought club hardware and hauled it every night, or you settled for something that felt like a toy next to it. A manufacturer building an all-in-one system with that kind of intention, and putting it front and center at its biggest trade show, is an admission that most working DJs don't play arenas most nights, and never will, and that's fine.",
+        ],
+      },
+      {
+        heading: "Connected gear, new stakes",
+        paragraphs: [
+          "The trade-off is that this gear isn't just smaller, it's more networked. All-in-one systems and modern mixers lean on the same protocols that let CDJs talk to each other, sync libraries, and pull tracks over a shared connection. Four days after DJX wrapped, AlphaTheta posted an important notice about a security vulnerability in PRO DJ LINK, the protocol its gear uses to network with itself in the booth.",
+          "That notice landing right on the heels of a showcase built around connected, all-in-one hardware is the part worth sitting with. A DJ booth used to be about as low-tech a network as exists: cables, a mixer, maybe a laptop. Now it's an actual network, with all the upside that brings and, as of this month, a documented reminder that networks need patching like anything else.",
+          "Practically, that means firmware updates aren't just about new features anymore. Checking for an update before a gig used to be about unlocking a waveform color or a new performance mode. Increasingly it's basic booth hygiene, the same way you'd think twice about which venue Wi-Fi your laptop joins before you plug in.",
+        ],
+      },
+      {
+        heading: "What it means for the rest of us",
+        paragraphs: [
+          "None of this shows up on a flyer, but it changes what a bar or lounge can reasonably ask a DJ to bring. If the gear built for that tier keeps improving, venues that book the Jax Beach and Atlantic Beach circuit get to expect a fuller, more capable setup without asking anyone to load in a club rig for a Tuesday night crowd of forty people. That's good for the rooms and good for the DJs working them, as long as everyone treats the network side of the booth with the same care they give the sound.",
+        ],
+      },
+    ],
+    outro: "I'm still deciding what lives in the Transcend road case next, but for the first time in a while, the gear built for a bar-sized room feels like it was actually designed for one, patch notes and all.",
+    sources: [
+      {
+        title: "Pioneer DJ and AlphaTheta Bring the Beats to DJX 2026",
+        publisher: "Rekkerd.org",
+        url: "https://rekkerd.org/pioneer-dj-and-alphatheta-bring-the-beats-to-djx-2026/",
+      },
+      {
+        title: "AlphaTheta Brings New DJ Gear to DJX",
+        publisher: "Magnetic Magazine",
+        url: "https://magneticmag.com/2026/08/alphatheta-brings-new-dj-gear-to-djx/",
+      },
+      {
+        title: "Important Notice: Security Vulnerability in PRO DJ LINK",
+        publisher: "AlphaTheta",
+        url: "https://alphatheta.com/en/information/",
+      },
+    ],
+  },
+  {
     slug: "nightlife-is-moving-earlier",
     title: "Nightlife Is Moving Earlier — and Dance Music Is Better for It",
     date: "2026-08-10",
