@@ -47,8 +47,9 @@ touching.
    picks one trend not already covered in `lib/blog.ts`.
 2. Writes the post in Eddie's voice — the guide the agent reads is [`lib/blog-voice.md`](../lib/blog-voice.md),
    which mirrors the checklist below — with 2–5 verified sources from that research.
-3. Prepends the new entry to `posts` in `lib/blog.ts`, pushes it to a review branch named
-   `blog/draft-<slug>`, and opens a pull request. **It never pushes to `main`.**
+3. Prepends the new entry to `posts` in `lib/blog.ts`, commits it straight to `main`
+   (since 2026-09-05; the validator is the gate and the review notes go to the run summary).
+   Dispatch the workflow with the `review` input for the old `blog/draft-<slug>` branch and PR.
 
 To review: read the PR diff (it is one entry in `lib/blog.ts`), fix anything that needs fixing in
 the PR, then merge — Vercel deploys and the listing page, post page, home-page section, sitemap
