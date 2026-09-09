@@ -62,13 +62,10 @@ export function Booking() {
           </p>
 
           <div className="mt-9 space-y-1">
-            <a
-              href={`mailto:${site.bookingEmail}`}
-              className="flex items-center gap-3 rounded-xl px-3 py-3 text-muted transition-colors hover:bg-surface hover:text-fg"
-            >
+            <div className="flex items-center gap-3 px-3 py-3 text-muted">
               <EnvelopeSimple size={20} className="text-accent-bright" />
-              {site.bookingEmail}
-            </a>
+              Booking requests through the form
+            </div>
             <a
               href={site.socials.instagram}
               target="_blank"

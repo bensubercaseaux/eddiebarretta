@@ -6,9 +6,9 @@ export const site = {
   location: "Jacksonville Beach, FL",
   serviceArea: "Jacksonville, Jacksonville Beach & Northeast Florida",
 
-  // Public booking address. Set up forwarding for this once you control the
-  // domain (see README). The contact form below works immediately regardless.
-  bookingEmail: "bookings@eddiebarretta.com",
+  // Booking goes through the on-site form only — no public inbox to scrape or
+  // fill with spam. Root-relative so it works from subpages too.
+  bookingUrl: "/#book",
 
   bioShort:
     "Euphoric house and trance sets that keep the dancefloor moving across the Jacksonville Beach scene, and host of the Transcend podcast.",
@@ -76,7 +76,8 @@ export const faq = [
   },
   {
     question: "How can I book Eddie Barretta to DJ my event?",
-    answer: `You can book Eddie for bar nights, residencies, private events, and parties by emailing ${site.bookingEmail} or messaging @djeddiebarretta on Instagram.`,
+    answer:
+      "You can book Eddie for bar nights, residencies, private events, and parties using the booking form at eddiebarretta.com/#book, or by messaging @djeddiebarretta on Instagram.",
   },
   {
     question: "What is the Transcend podcast?",

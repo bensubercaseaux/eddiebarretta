@@ -3,8 +3,9 @@ import { Resend } from "resend";
 
 const TO = process.env.CONTACT_TO_EMAIL || "ben.subercaseaux@gmail.com";
 // Resend's onboarding sender works without domain verification, so the form is
-// functional immediately. Switch to bookings@eddiebarretta.com once the domain
-// is verified in Resend (see README).
+// functional immediately. Switch to noreply@eddiebarretta.com once the domain
+// is verified in Resend (see README) — send-only, since the site publishes no
+// booking address and routes everything through this form.
 const FROM = process.env.CONTACT_FROM_EMAIL || "Eddie Barretta <onboarding@resend.dev>";
 
 const isEmail = (v: unknown): v is string =>
@@ -72,7 +73,7 @@ export async function POST(req: Request) {
     if (error) {
       console.error("[contact] Resend error:", error);
       return NextResponse.json(
-        { error: "Could not send right now. Please try again or email directly." },
+        { error: "Could not send right now. Please try again, or reach out on Instagram." },
         { status: 502 },
       );
     }
@@ -80,7 +81,7 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error("[contact] send failed:", err);
     return NextResponse.json(
-      { error: "Could not send right now. Please try again or email directly." },
+      { error: "Could not send right now. Please try again, or reach out on Instagram." },
       { status: 500 },
     );
   }

@@ -2,7 +2,8 @@
 
 Until this is done, the booking form works but sends from Resend's shared
 `onboarding@resend.dev`. This step lets it send from
-`bookings@eddiebarretta.com`. Do it **after** the domain points at your DNS
+`noreply@eddiebarretta.com`. It is a **send-only** sender: the site publishes
+no booking address, so every inquiry arrives through the form. Do it **after** the domain points at your DNS
 (step 4), since you'll be adding DNS records.
 
 ## Steps
@@ -12,10 +13,10 @@ Until this is done, the booking form works but sends from Resend's shared
       DNS (Cloudflare, or wherever the domain resolves after step 3).
 - [ ] Wait for Resend to show the domain as **Verified**.
 - [ ] In Vercel, set
-      `CONTACT_FROM_EMAIL="Eddie Barretta <bookings@eddiebarretta.com>"` and
+      `CONTACT_FROM_EMAIL="Eddie Barretta <noreply@eddiebarretta.com>"` and
       **redeploy**.
-- [ ] *(Optional)* Set up forwarding for `bookings@eddiebarretta.com` so replies
-      to inquiries reach your normal inbox.
+- [ ] Do **not** create a mailbox for this address or publish it anywhere. The
+      form sets `replyTo` to the inquirer, so replying from your own inbox works.
 
 ## Verify
 

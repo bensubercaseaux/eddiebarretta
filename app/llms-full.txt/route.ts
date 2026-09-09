@@ -32,7 +32,7 @@ export async function GET() {
           (s) => `- ${s.date}, ${s.time} — ${s.name} at ${s.venue}, ${s.city}`,
         )
         .join("\n")
-    : `No public shows are currently announced. Booking inquiries: ${site.bookingEmail}`;
+    : `No public shows are currently announced. Booking inquiries: ${ORIGIN}${site.bookingUrl}`;
 
   const venuesSection = venues
     .map((v) =>
@@ -105,7 +105,7 @@ Genres: ${site.genres.join(", ")}
 ${site.bio.join("\n\n")}
 
 ## Booking
-- Email: ${site.bookingEmail}
+- Booking form: ${ORIGIN}${site.bookingUrl} (the only way to reach Eddie by message; there is no public booking email)
 - Instagram: ${site.socials.instagram}
 - Available for: bar nights, residencies, private events, and parties
 - Service area: ${site.serviceArea}

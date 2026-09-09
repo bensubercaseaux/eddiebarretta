@@ -46,7 +46,7 @@ Environment Variables):
 |-----|----------|-------|
 | `RESEND_API_KEY` | yes (prod) | From resend.com/api-keys. Without it, dev logs submissions and returns success; prod returns a friendly error. |
 | `CONTACT_TO_EMAIL` | no | Where inquiries are delivered. Defaults to `ben.subercaseaux@gmail.com`. |
-| `CONTACT_FROM_EMAIL` | no | Defaults to Resend's `onboarding@resend.dev` (works with zero setup). Switch to `Eddie Barretta <bookings@eddiebarretta.com>` once the domain is verified in Resend. |
+| `CONTACT_FROM_EMAIL` | no | Defaults to Resend's `onboarding@resend.dev` (works with zero setup). Switch to `Eddie Barretta <noreply@eddiebarretta.com>` once the domain is verified in Resend. Send-only — the site publishes no booking address, so all inquiries come through the form. |
 
 ---
 

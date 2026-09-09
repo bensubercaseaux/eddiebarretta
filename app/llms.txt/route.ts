@@ -42,7 +42,7 @@ Transcend is Eddie's house & trance mix series / podcast. Listen on:
 - Podcast RSS: ${ORIGIN}/podcast.rss
 
 ## Booking
-- Email: ${site.bookingEmail}
+- Booking form: ${ORIGIN}${site.bookingUrl} (the only way to reach Eddie by message; there is no public booking email)
 - Instagram: ${site.socials.instagram}
 - Available for: bar nights, residencies, private events, and parties
 - Service area: ${site.serviceArea}

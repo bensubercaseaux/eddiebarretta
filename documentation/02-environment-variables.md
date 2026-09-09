@@ -8,7 +8,7 @@ nothing here is committed.
 |-----|----------|------------|-------|
 | `RESEND_API_KEY` | Yes (prod) | Server only | From [resend.com/api-keys](https://resend.com/api-keys). Without it, dev logs the submission and fakes success; prod returns a friendly error. |
 | `CONTACT_TO_EMAIL` | No | Server only | Where booking inquiries land. Defaults to `ben.subercaseaux@gmail.com`. |
-| `CONTACT_FROM_EMAIL` | No | Server only | Defaults to Resend's onboarding sender (zero setup). Switch to `Eddie Barretta <bookings@eddiebarretta.com>` once Resend verifies the domain — see [05-resend-email.md](05-resend-email.md). |
+| `CONTACT_FROM_EMAIL` | No | Server only | Defaults to Resend's onboarding sender (zero setup). Switch to `Eddie Barretta <noreply@eddiebarretta.com>` once Resend verifies the domain — see [05-resend-email.md](05-resend-email.md). |
 | `NEXT_PUBLIC_GA_ID` | No | **Browser** | GA4 Measurement ID (`G-XXXXXXXXXX`), from GA Admin → Data Streams → your web stream. Analytics only loads when this is set, so local dev stays out of your reports. |
 | `ADMIN_USERNAME` / `ADMIN_PASSWORD` | Yes (for `/admin`) | Server only | Login for the shows dashboard. Without them you can't sign in. |
 | `AUTH_SECRET` | Yes (prod, for `/admin`) | Server only | Signs the admin session cookie. Generate: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`. Dev falls back to an insecure default. |

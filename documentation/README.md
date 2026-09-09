@@ -59,5 +59,5 @@ Not part of the migration — ongoing feature docs:
 - **Domain:** `eddiebarretta.com`
 - **Current registrar:** eNom, via Bandzoogle (nameservers `*.sitezoogle.com`)
 - **Past the 60-day transfer lock:** yes — it can move
-- **Booking address:** `bookings@eddiebarretta.com`
+- **Booking address:** none published — the on-site form (`/#book`) is the only contact path
 - **Inquiries delivered to:** `ben.subercaseaux@gmail.com` (until changed via `CONTACT_TO_EMAIL`)

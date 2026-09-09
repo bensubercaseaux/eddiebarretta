@@ -80,12 +80,13 @@ export function Nav() {
             ))}
             <li className="mt-2 flex items-center justify-between px-2">
               <Social size={20} />
-              <a
-                href={`mailto:${site.bookingEmail}`}
-                className="text-sm text-muted"
+              <Link
+                href={site.bookingUrl}
+                onClick={() => setOpen(false)}
+                className="rounded-full bg-accent px-5 py-2 text-sm font-medium text-white transition-transform duration-200 hover:bg-accent-bright active:scale-[0.97]"
               >
-                {site.bookingEmail}
-              </a>
+                Book Eddie
+              </Link>
             </li>
           </ul>
         </div>
