@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Social } from "./Social";
 import { nav, site } from "@/lib/site";
+import { servicePages } from "@/lib/services";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -18,17 +19,34 @@ export function Footer() {
             <Social className="-ml-2 mt-4" />
           </div>
 
-          <nav className="flex flex-col gap-3">
-            {nav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-sm text-muted transition-colors hover:text-fg"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          <div className="flex gap-16">
+            <nav className="flex flex-col gap-3">
+              {nav.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="text-sm text-muted transition-colors hover:text-fg"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+
+            <nav aria-label="Book a DJ" className="flex flex-col gap-3">
+              <p className="text-xs font-medium uppercase tracking-wider text-faint">
+                Book a DJ
+              </p>
+              {Object.values(servicePages).map((p) => (
+                <Link
+                  key={p.slug}
+                  href={`/${p.slug}`}
+                  className="text-sm text-muted transition-colors hover:text-fg"
+                >
+                  {p.footerLabel}
+                </Link>
+              ))}
+            </nav>
+          </div>
         </div>
 
         <div className="mt-12 border-t border-line pt-6">

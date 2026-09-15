@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import { venues, getVenue, venueAddress, type Venue } from "@/lib/venues";
 import { getMixes } from "@/lib/mixes-store";
 import { site } from "@/lib/site";
+import { servicePages } from "@/lib/services";
 
 const ORIGIN = "https://eddiebarretta.com";
 
@@ -183,8 +184,21 @@ export default async function VenuePage({
 
           <p className="mt-2 text-xs text-faint">
             Looking to book a house &amp; trance DJ in {v.locality}? Eddie Barretta
-            plays bars, rooftops, lounges, and private events across{" "}
-            {site.serviceArea}.
+            plays{" "}
+            <Link
+              href={`/${servicePages.barLounge.slug}`}
+              className="text-muted underline underline-offset-4 transition-colors hover:text-fg"
+            >
+              bars, rooftops, and lounges
+            </Link>{" "}
+            and{" "}
+            <Link
+              href={`/${servicePages.privateEvent.slug}`}
+              className="text-muted underline underline-offset-4 transition-colors hover:text-fg"
+            >
+              private events
+            </Link>{" "}
+            across {site.serviceArea}.
           </p>
         </div>
       </main>

@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { posts } from "@/lib/blog";
 import { getMixes } from "@/lib/mixes-store";
 import { venues } from "@/lib/venues";
+import { servicePages } from "@/lib/services";
 
 const ORIGIN = "https://eddiebarretta.com";
 
@@ -43,6 +44,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${ORIGIN}/venues/${v.slug}`,
       changeFrequency: "monthly" as const,
       priority: 0.6,
+    })),
+    // Hire-intent pages (lib/services.ts).
+    ...Object.values(servicePages).map((p) => ({
+      url: `${ORIGIN}/${p.slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
     })),
     {
       url: `${ORIGIN}/blog`,
