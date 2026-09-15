@@ -25,7 +25,9 @@ export async function generateMetadata({
   if (!v) return { title: "Venue not found" };
 
   const title = `DJ at ${v.name} — ${v.area}`;
-  const description = `${v.name} is a ${v.type.toLowerCase()} in ${v.area}. ${v.relationText} Book Eddie Barretta or hear a set.`;
+  // Type is used as written ("Mediterranean restaurant & lounge"); interpolating it mid-sentence needed a/an and
+  // lower-casing, which shipped "a upscale" and "a mediterranean".
+  const description = `${v.name}, ${v.area} — ${v.type}. ${v.relationText} Book Eddie Barretta or hear a set.`;
   return {
     title,
     description,
