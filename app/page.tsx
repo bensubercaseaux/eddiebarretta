@@ -184,7 +184,9 @@ function buildAiDatasetJsonLd() {
       `Machine-readable profile of ${site.name}, ${site.role} in ` +
       `${site.location} — bio, genres, mixes, and upcoming shows published as ` +
       `YAML, Markdown, JSON-LD, RSS, and llms.txt for AI crawlers and LLMs.`,
-    url: AI_HOST,
+    // Not the bare host: Geordy's root has no page and Search Console reported it
+    // as a Soft 404 (2026-09-15). index.md is the pack's human-readable entry.
+    url: `${AI_HOST}/index.md`,
     // Dataset creator must be a named Person/Organization inline — a bare @id
     // reads as an invalid object type.
     creator: { "@type": "Person", name: site.name, url: ORIGIN },

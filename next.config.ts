@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "i.ytimg.com" },
     ],
   },
+  // /home is an old URL Google still crawls (Search Console "Not found (404)", 2026-09-15).
+  async redirects() {
+    return [{ source: "/home", destination: "/", permanent: true }];
+  },
 };
 
 export default nextConfig;
