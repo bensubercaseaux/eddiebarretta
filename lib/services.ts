@@ -10,6 +10,11 @@
 export type ServicePage = {
   /** Route segment, e.g. "bar-lounge-dj". */
   slug: string;
+  /**
+   * Date the page copy last changed (YYYY-MM-DD). Bump it with any copy edit: it is the
+   * sitemap lastmod, which is how the IndexNow workflow knows to resubmit the page.
+   */
+  updated: string;
   /** <title> segment; the root layout appends " | Eddie Barretta" (17 chars), so keep ≤ 43. */
   title: string;
   /** Meta description, ≤ 155 chars. */
@@ -42,6 +47,7 @@ export type ServicePage = {
 export const servicePages = {
   barLounge: {
     slug: "bar-lounge-dj",
+    updated: "2026-09-15",
     title: "Bar & Lounge DJ in Jacksonville Beach, FL",
     description:
       "House & trance DJ Eddie Barretta has held residencies at SIP, Living Room Lounge and Dua Lounge. Book him for your Jacksonville-area bar or lounge.",
@@ -61,6 +67,7 @@ export const servicePages = {
   },
   privateEvent: {
     slug: "private-event-dj",
+    updated: "2026-09-15",
     title: "Private Event DJ in Jacksonville, FL",
     description:
       "Hire house DJ Eddie Barretta for private parties in Jacksonville & Northeast Florida. His own equipment, requests in his style. Contact for a quote.",

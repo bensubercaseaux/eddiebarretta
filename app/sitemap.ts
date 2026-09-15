@@ -45,9 +45,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })),
-    // Hire-intent pages (lib/services.ts).
+    // Hire-intent pages (lib/services.ts). `updated` is a hand-maintained copy date,
+    // so it's a lastmod we can stand behind — and the IndexNow workflow resubmits
+    // only URLs whose lastmod moved.
     ...Object.values(servicePages).map((p) => ({
       url: `${ORIGIN}/${p.slug}`,
+      lastModified: new Date(p.updated),
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
