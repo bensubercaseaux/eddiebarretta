@@ -55,7 +55,11 @@ function buildJsonLd(post: Post) {
         headline: post.title,
         description: post.excerpt,
         datePublished: post.date,
+        dateModified: post.date,
+        // Posts carry no artwork of their own; the site hero is the shared image.
+        image: `${ORIGIN}/hero.png`,
         url: `${ORIGIN}/blog/${post.slug}`,
+        mainEntityOfPage: { "@type": "WebPage", "@id": `${ORIGIN}/blog/${post.slug}` },
         isPartOf: { "@id": `${ORIGIN}/blog` },
         author: { "@type": "Person", name: "Eddie Barretta", url: ORIGIN },
         publisher: { "@type": "Person", name: "Eddie Barretta", url: ORIGIN },

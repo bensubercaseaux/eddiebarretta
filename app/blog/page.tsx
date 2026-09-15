@@ -34,8 +34,11 @@ export default function BlogPage() {
     blogPost: posts.map((p) => ({
       "@type": "BlogPosting",
       headline: p.title,
+      description: p.excerpt,
       url: `${ORIGIN}/blog/${p.slug}`,
       datePublished: p.date,
+      author: { "@type": "Person", name: "Eddie Barretta", url: ORIGIN },
+      image: `${ORIGIN}/hero.png`,
     })),
   };
 

@@ -11,9 +11,24 @@ import { Footer } from "@/components/Footer";
 import { faq, site } from "@/lib/site";
 import { showSchedule, splitShows, type Show } from "@/lib/shows";
 import { getPublicShows } from "@/lib/shows-store";
+import { venues, type Venue } from "@/lib/venues";
 
 const ORIGIN = "https://eddiebarretta.com";
 const ACT_ID = `${ORIGIN}/#eddie`;
+const ACT_IMAGE = `${ORIGIN}/hero.png`;
+
+// Shows store the venue as free text ("Surfer Bar"); match it to the researched
+// venue record ("Surfer [The Bar]") so Event markup can carry a street address.
+const venueKey = (name: string) =>
+  name.toLowerCase().replace(/\bthe\b/g, "").replace(/[^a-z0-9]/g, "");
+function findVenue(name: string): Venue | undefined {
+  const key = venueKey(name);
+  if (key.length < 3) return undefined; // "The" would prefix-match every venue
+  return venues.find((v) => {
+    const vk = venueKey(v.name);
+    return vk === key || vk.startsWith(key) || key.startsWith(vk);
+  });
+}
 
 // Primary navigation, exposed as SiteNavigationElement so search engines can see
 // the site's sections/pages explicitly — the structure Google draws on for the
@@ -88,26 +103,45 @@ function buildJsonLd(shows: Show[]) {
         name: s.name,
         url: s.url,
       })),
-      ...upcoming.map((s) => ({
-        "@type": "Event",
-        name: `${site.name} — ${s.name}`,
-        ...showSchedule(s),
-        eventStatus: "https://schema.org/EventScheduled",
-        eventAttendanceMode:
-          "https://schema.org/OfflineEventAttendanceMode",
-        performer: { "@id": ACT_ID },
-        location: {
-          "@type": "Place",
-          name: s.venue,
-          address: {
-            "@type": "PostalAddress",
-            addressLocality: s.city,
-            addressRegion: "FL",
-            addressCountry: "US",
+      ...upcoming.map((s) => {
+        const v = findVenue(s.venue);
+        return {
+          "@type": "Event",
+          name: `${site.name} — ${s.name}`,
+          description: `${site.role} ${site.name} live at ${s.venue}, ${s.city} (${s.time}).`,
+          image: ACT_IMAGE,
+          ...showSchedule(s),
+          eventStatus: "https://schema.org/EventScheduled",
+          eventAttendanceMode:
+            "https://schema.org/OfflineEventAttendanceMode",
+          // Google's Events report doesn't resolve a bare @id — the performer
+          // needs its own name.
+          performer: {
+            "@type": "MusicGroup",
+            "@id": ACT_ID,
+            name: site.name,
+            url: ORIGIN,
           },
-        },
-        ...(s.url ? { url: s.url } : {}),
-      })),
+          organizer: {
+            "@type": "Organization",
+            name: v?.name ?? s.venue,
+            ...(v?.website ? { url: v.website } : {}),
+          },
+          location: {
+            "@type": "Place",
+            name: s.venue,
+            address: {
+              "@type": "PostalAddress",
+              ...(v?.street ? { streetAddress: v.street } : {}),
+              addressLocality: s.city,
+              addressRegion: "FL",
+              ...(v?.postalCode ? { postalCode: v.postalCode } : {}),
+              addressCountry: "US",
+            },
+          },
+          url: s.url ?? `${ORIGIN}/#shows`,
+        };
+      }),
       {
         // Mirrors the visible <Faq /> section — both render from lib/site.ts.
         "@type": "FAQPage",
@@ -151,10 +185,13 @@ function buildAiDatasetJsonLd() {
       `${site.location} — bio, genres, mixes, and upcoming shows published as ` +
       `YAML, Markdown, JSON-LD, RSS, and llms.txt for AI crawlers and LLMs.`,
     url: AI_HOST,
-    creator: { "@id": ACT_ID },
+    // Dataset creator must be a named Person/Organization inline — a bare @id
+    // reads as an invalid object type.
+    creator: { "@type": "Person", name: site.name, url: ORIGIN },
     isAccessibleForFree: true,
     dateModified: AI_DATASET_MODIFIED,
-    hasPart: AI_FILES.map((f) => ({
+    // DataDownload files go in `distribution`; `hasPart` expects Dataset/CreativeWork.
+    distribution: AI_FILES.map((f) => ({
       "@type": "DataDownload",
       name: f.name,
       contentUrl: `${AI_HOST}/${f.path}`,
