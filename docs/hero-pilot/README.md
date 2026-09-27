@@ -129,6 +129,8 @@ Locked-off static camera, no camera movement, no zoom. An empty late-night club.
 | Purchased credits on the account | 300 |
 | Total available | 2,170 |
 
+The upscale may have cost 100, not 20. The balance later read 80 lower than this table adds up to, and the upscale settling after the fact is the likeliest cause. Not confirmed.
+
 The 300 purchased credits are not on the invoice and cost nothing. The only invoice is $26.25, for the Pro plan. Where Runway credited them from is not shown anywhere on the billing pages.
 
 ## In the site
