@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Eddie Barretta hero pilot: the loop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root { --ink:#09080f; --fg:#efedf6; --muted:#a6a2bc; --line:#221f33; --accent:#7c2bff; --accent-bright:#9a64ff; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--ink); color:var(--fg); font-family:"Space Grotesk",system-ui,sans-serif; }
+  .hero { position:relative; min-height:86vh; display:flex; align-items:center; overflow:hidden; padding:96px 24px 40px; isolation:isolate; }
+  .hero .bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:72% 50%; z-index:-2; }
+  .hero .still { display:none; }
+  /* Scrim: ink on the headline side, ink fade at the bottom into the next section */
+  .hero::after { content:""; position:absolute; inset:0; z-index:-1;
+    background:
+      linear-gradient(90deg, rgba(9,8,15,.88) 0%, rgba(9,8,15,.55) 38%, rgba(9,8,15,0) 70%),
+      linear-gradient(0deg, rgba(9,8,15,1) 0%, rgba(9,8,15,0) 28%); }
+  .inner { width:100%; max-width:72rem; margin:0 auto; }
+  .kicker { margin:0 0 24px; font-size:14px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
+  h1 { margin:0; font-family:"Syne",sans-serif; font-weight:800; text-transform:uppercase; line-height:.92; letter-spacing:-.025em; font-size:clamp(2.5rem,10vw,6.5rem); }
+  p.sub { margin:24px 0 0; max-width:28rem; font-size:18px; line-height:1.6; color:var(--muted); }
+  .cta { margin-top:36px; display:flex; flex-wrap:wrap; gap:12px; }
+  .cta span { border-radius:999px; padding:12px 28px; font-weight:500; }
+  .cta .a { background:var(--accent); color:#fff; }
+  .cta .b { border:1px solid var(--line); }
+  .next { padding:64px 24px; color:var(--muted); max-width:72rem; margin:0 auto; font-size:15px; line-height:1.7; }
+  .next code { color:var(--accent-bright); }
+  @media (max-width:640px) {
+    .hero::after { background: linear-gradient(0deg, rgba(9,8,15,1) 0%, rgba(9,8,15,.62) 45%, rgba(9,8,15,.35) 100%); }
+  }
+  /* Reduced motion: the still replaces the video */
+  @media (prefers-reduced-motion: reduce) {
+    .hero video.bg { display:none; }
+    .hero .still { display:block; }
+  }
+</style>
+</head>
+<body>
+<!-- Headline, copy and buttons mirror components/Hero.tsx. The video is decorative: muted, no controls, hidden from assistive tech. -->
+<section class="hero">
+  <video class="bg" autoplay muted loop playsinline preload="metadata" poster="../../public/hero/hero-poster-1080.jpg" aria-hidden="true" tabindex="-1">
+    <source media="(min-width: 900px)" src="../../public/hero/hero-loop-1080.webm" type="video/webm" />
+    <source media="(min-width: 900px)" src="../../public/hero/hero-loop-1080.mp4" type="video/mp4" />
+    <source src="../../public/hero/hero-loop-720.webm" type="video/webm" />
+    <source src="../../public/hero/hero-loop-720.mp4" type="video/mp4" />
+  </video>
+  <img class="bg still" src="../../public/hero/hero-poster-1080.jpg" alt="" />
+  <div class="inner">
+    <p class="kicker">House &amp; Trance · Jacksonville Beach, FL</p>
+    <h1>Eddie<br />Barretta</h1>
+    <p class="sub">Euphoric house and trance sets that keep the floor moving, from beach bars to late-night lounges.</p>
+    <div class="cta"><span class="a">Listen to mixes</span><span class="b">Book Eddie</span></div>
+  </div>
+</section>
+<div class="next">Standalone preview. It plays the same files the site serves from <code>public/hero/</code>.</div>
+</body>
+</html>

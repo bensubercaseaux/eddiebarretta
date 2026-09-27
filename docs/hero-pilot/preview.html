@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Eddie Barretta hero pilot: anchor stills</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root { --ink:#09080f; --fg:#efedf6; --muted:#a6a2bc; --line:#221f33; --accent:#7c2bff; --accent-bright:#9a64ff; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--ink); color:var(--fg); font-family:"Space Grotesk",system-ui,sans-serif; }
+  .label { padding:20px 24px 12px; font-size:13px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+  .label b { color:var(--accent-bright); font-weight:500; }
+  .hero { position:relative; min-height:min(86vh,780px); display:flex; align-items:center; overflow:hidden; padding:96px 24px 40px; isolation:isolate; }
+  .hero img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:72% 50%; z-index:-2; }
+  /* Scrim: ink on the headline side, ink fade at the bottom into the next section */
+  .hero::after { content:""; position:absolute; inset:0; z-index:-1;
+    background:
+      linear-gradient(90deg, rgba(9,8,15,.88) 0%, rgba(9,8,15,.55) 38%, rgba(9,8,15,0) 70%),
+      linear-gradient(0deg, rgba(9,8,15,1) 0%, rgba(9,8,15,0) 28%); }
+  .inner { width:100%; max-width:72rem; margin:0 auto; }
+  .kicker { margin:0 0 24px; font-size:14px; font-weight:500; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
+  h1 { margin:0; font-family:"Syne",sans-serif; font-weight:800; text-transform:uppercase; line-height:.92; letter-spacing:-.025em; font-size:clamp(2.5rem,10vw,6.5rem); }
+  p.sub { margin:24px 0 0; max-width:28rem; font-size:18px; line-height:1.6; color:var(--muted); }
+  .cta { margin-top:36px; display:flex; flex-wrap:wrap; gap:12px; }
+  .cta span { border-radius:999px; padding:12px 28px; font-weight:500; }
+  .cta .a { background:var(--accent); color:#fff; }
+  .cta .b { border:1px solid var(--line); }
+  @media (max-width:640px) {
+    .hero::after { background:
+      linear-gradient(0deg, rgba(9,8,15,1) 0%, rgba(9,8,15,.62) 45%, rgba(9,8,15,.35) 100%); }
+  }
+</style>
+</head>
+<body>
+<!-- One block per still. Headline, copy and buttons mirror components/Hero.tsx. -->
+<div class="label"><b>A</b> · Haze and beams · chosen 2026-09-27, 2K anchor</div>
+<section class="hero"><img src="anchor/a-haze-beams-2k.png" alt="" /><div class="inner"><p class="kicker">House &amp; Trance · Jacksonville Beach, FL</p><h1>Eddie<br />Barretta</h1><p class="sub">Euphoric house and trance sets that keep the floor moving, from beach bars to late-night lounges.</p><div class="cta"><span class="a">Listen to mixes</span><span class="b">Book Eddie</span></div></div></section>
+
+<div class="label"><b>B</b> · Beach bar at blue hour</div>
+<section class="hero"><img src="stills/b-beach-bar.jpg" alt="" /><div class="inner"><p class="kicker">House &amp; Trance · Jacksonville Beach, FL</p><h1>Eddie<br />Barretta</h1><p class="sub">Euphoric house and trance sets that keep the floor moving, from beach bars to late-night lounges.</p><div class="cta"><span class="a">Listen to mixes</span><span class="b">Book Eddie</span></div></div></section>
+
+<div class="label"><b>C</b> · Decks macro</div>
+<section class="hero"><img src="stills/c-decks-macro.jpg" alt="" /><div class="inner"><p class="kicker">House &amp; Trance · Jacksonville Beach, FL</p><h1>Eddie<br />Barretta</h1><p class="sub">Euphoric house and trance sets that keep the floor moving, from beach bars to late-night lounges.</p><div class="cta"><span class="a">Listen to mixes</span><span class="b">Book Eddie</span></div></div></section>
+
+<div class="label"><b>D</b> · Sound rings</div>
+<section class="hero"><img src="stills/d-sound-rings.jpg" alt="" /><div class="inner"><p class="kicker">House &amp; Trance · Jacksonville Beach, FL</p><h1>Eddie<br />Barretta</h1><p class="sub">Euphoric house and trance sets that keep the floor moving, from beach bars to late-night lounges.</p><div class="cta"><span class="a">Listen to mixes</span><span class="b">Book Eddie</span></div></div></section>
+</body>
+</html>
