@@ -93,6 +93,20 @@ body {
   );
 }
 
+/* Hero loop scrim: ink on the headline side, and an ink fade at the bottom so the
+   video floor dissolves into the next section. Phones get a vertical wash instead,
+   because there the headline sits on top of the beams rather than beside them. */
+.hero-scrim {
+  background:
+    linear-gradient(90deg, rgb(9 8 15 / 0.88) 0%, rgb(9 8 15 / 0.55) 38%, rgb(9 8 15 / 0) 70%),
+    linear-gradient(0deg, rgb(9 8 15 / 1) 0%, rgb(9 8 15 / 0) 28%);
+}
+@media (max-width: 640px) {
+  .hero-scrim {
+    background: linear-gradient(0deg, rgb(9 8 15 / 1) 0%, rgb(9 8 15 / 0.62) 45%, rgb(9 8 15 / 0.35) 100%);
+  }
+}
+
 .text-balance {
   text-wrap: balance;
 }
@@ -122,22 +136,6 @@ body {
 
 .animate-glow {
   animation: glow-pulse 7s ease-in-out infinite;
-}
-
-/* Hero "sound-waves" mark: concentric rings rippling out from the EB disc */
-@keyframes ripple {
-  0% {
-    transform: scale(0.45);
-    opacity: 0.7;
-  }
-  100% {
-    transform: scale(1.35);
-    opacity: 0;
-  }
-}
-
-.ripple-ring {
-  animation: ripple 4.5s ease-out infinite;
 }
 
 /* Now-playing bar slides up when a mix starts */
@@ -208,13 +206,5 @@ body {
   .animate-sound-pulse,
   .eq-bar {
     animation: none !important;
-  }
-  /* One static ring at rest instead of the ripple loop */
-  .ripple-ring {
-    animation: none !important;
-    opacity: 0.3;
-  }
-  .ripple-ring + .ripple-ring {
-    display: none;
   }
 }

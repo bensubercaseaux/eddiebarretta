@@ -1,31 +1,93 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 import { Equalizer } from "./Equalizer";
 import { site } from "@/lib/site";
 
-// "Sound-waves" hero mark: EB monogram disc with slow concentric ripple rings.
-// Reduced motion is handled in globals.css (one static ring, no animation).
-function SoundWaves() {
+// Ambient hero loop: an empty club, violet lasers through haze. Decorative only.
+//
+// Order matters for first paint. The poster is a normal image and paints with the
+// page. The video mounts after the browser goes idle, so its megabyte never competes
+// with the headline, and it fades in over the poster once it is actually playing.
+// The poster is the loop's first frame, so the swap is invisible.
+//
+// No video at all for reduced motion or Save-Data: the poster stays as a still.
+// If autoplay is refused (iOS Low Power Mode), the video never reports `playing`
+// and the poster stays too.
+//
+// How the files were made: docs/hero-pilot/README.md
+function HeroLoop() {
+  const reduce = useReducedMotion();
+  const video = useRef<HTMLVideoElement>(null);
+  const [mounted, setMounted] = useState(false);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    if (reduce !== false) return;
+    const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    if (conn?.saveData) return;
+    // Safari has no requestIdleCallback; a short timeout is close enough.
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(() => setMounted(true), { timeout: 2000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = window.setTimeout(() => setMounted(true), 300);
+    return () => window.clearTimeout(id);
+  }, [reduce]);
+
+  useEffect(() => {
+    const el = video.current;
+    if (!mounted || !el) return;
+    // React sets `muted` as a property after insertion, which is too late for some
+    // autoplay checks. Set both forms, then ask to play.
+    el.muted = true;
+    el.defaultMuted = true;
+    // Do not decode frames nobody can see.
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) el.play().catch(() => {});
+        else el.pause();
+      },
+      { threshold: 0.05 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [mounted]);
+
   return (
-    <div className="relative grid aspect-square w-full place-items-center">
-      {[0, 1.5, 3].map((delay) => (
-        <span
-          key={delay}
-          aria-hidden="true"
-          className="ripple-ring absolute inset-0 rounded-full border border-accent-bright/70"
-          style={{ animationDelay: `${delay}s` }}
-        />
-      ))}
-      <div
-        role="img"
-        aria-label="Eddie Barretta — EB mark"
-        className="grid h-[38%] w-[38%] place-items-center rounded-full border border-line bg-[radial-gradient(circle_at_35%_30%,var(--surface-2),var(--ink))] shadow-[0_0_80px_rgba(124,43,255,0.35)]"
-      >
-        <span className="font-display text-[clamp(2.5rem,4vw,4rem)] font-extrabold tracking-[-0.03em] text-accent-bright">
-          EB
-        </span>
-      </div>
+    <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+      <Image
+        src="/hero/hero-poster-1080.jpg"
+        alt=""
+        fill
+        preload
+        sizes="100vw"
+        className="object-cover object-[72%_50%]"
+      />
+      {mounted && (
+        <video
+          ref={video}
+          muted
+          loop
+          playsInline
+          preload="auto"
+          tabIndex={-1}
+          disablePictureInPicture
+          onPlaying={() => setPlaying(true)}
+          className={`absolute inset-0 h-full w-full object-cover object-[72%_50%] transition-opacity duration-700 ${
+            playing ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <source media="(min-width: 900px)" src="/hero/hero-loop-1080.webm" type="video/webm" />
+          <source media="(min-width: 900px)" src="/hero/hero-loop-1080.mp4" type="video/mp4" />
+          <source src="/hero/hero-loop-720.webm" type="video/webm" />
+          <source src="/hero/hero-loop-720.mp4" type="video/mp4" />
+        </video>
+      )}
+      {/* Keeps the headline readable and fades the floor into the next section */}
+      <div className="hero-scrim absolute inset-0" />
     </div>
   );
 }
@@ -54,24 +116,11 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative flex min-h-[86dvh] items-center overflow-hidden px-6 pb-10 pt-24"
+      className="relative isolate flex min-h-[86dvh] items-center overflow-hidden px-6 pb-10 pt-24"
     >
-      {/* Violet glow */}
-      <div
-        className="glow animate-glow pointer-events-none absolute -top-24 left-1/2 -z-10 h-[34rem] w-[34rem] -translate-x-1/2 lg:left-[72%]"
-        aria-hidden="true"
-      />
-      {/* Mobile brand watermark */}
-      <div
-        className="pointer-events-none absolute inset-0 -z-10 grid place-items-center opacity-15 lg:hidden"
-        aria-hidden="true"
-      >
-        <div className="w-[22rem] max-w-[80vw]">
-          <SoundWaves />
-        </div>
-      </div>
+      <HeroLoop />
 
-      <div className="mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+      <div className="mx-auto w-full max-w-6xl">
         <motion.div variants={container} initial="hidden" animate="show">
           <motion.div
             variants={item}
@@ -114,12 +163,6 @@ export function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* Desktop split asset */}
-        <div className="hidden lg:flex lg:justify-center">
-          <div className="relative w-[clamp(20rem,28vw,32rem)]">
-            <SoundWaves />
-          </div>
-        </div>
       </div>
     </section>
   );
