@@ -3,7 +3,7 @@
 First step of the cinematic hero pilot. Background and tooling comparison: `home/docs/cinematic-sites.md`.
 Goal: an ambient, muted loop behind the existing home hero. Not a scroll film, because about half of this site's traffic is mobile.
 
-The loop is built into the home hero on the `hero-loop` branch. It reaches the live site when that branch is merged to `main` and pushed. Everything under `docs/` is reference and is not served.
+The loop is live on eddiebarretta.com since 2026-09-27. Everything under `docs/` is reference and is not served.
 
 ## What is here
 
@@ -133,7 +133,7 @@ The 300 purchased credits are not on the invoice and cost nothing. The only invo
 
 ## In the site
 
-`components/Hero.tsx` on the `hero-loop` branch. The loop replaces the violet glow and the EB ring mark, which sat where the beams are now.
+`components/Hero.tsx`, merged to `main` on 2026-09-27. The loop replaces the violet glow and the EB ring mark, which sat where the beams are now.
 
 | Behaviour | How |
 |---|---|
@@ -144,6 +144,7 @@ The 300 purchased credits are not on the invoice and cost nothing. The only invo
 | Save-Data | Same as reduced motion |
 | Autoplay refused | The poster stays. Nothing breaks |
 | Scrolled out of view | The video pauses, and resumes when the hero is back |
+| Nav over the beams | A dark band in the scrim sits under the nav, then fades out by 200 px so the beams emerge below it |
 
 Checked in Chrome against a production build, 2026-09-27:
 
@@ -154,15 +155,28 @@ Checked in Chrome against a production build, 2026-09-27:
 | Reduced motion | Visible | Not loaded | Poster only |
 
 No console errors in any case. `npm run lint`, `tsc` and `npm run build` pass.
+The same three cases were re-run against https://eddiebarretta.com after the deploy, with the same results.
 Screenshots: `previews/site-*.jpg`, with `site-before-*.jpg` for the old hero.
 
 Not checked: Safari and a real iPhone. The MP4 files are there for browsers without WebM.
 
 `next dev` crashed with a Turbopack error ("Next.js package not found") when started from the agent's shell, before any code changed. The production build is unaffected. It was not investigated.
 
+### Nav contrast
+
+The nav is transparent until the page scrolls, so the beams pass directly behind its links. Measured as link colour against the brightest pixel behind each link, across the whole loop:
+
+| | Before the band | With the band |
+|---|---|---|
+| Worst desktop link | 1.00:1 ("Shows") | 6.11:1 ("Blog") |
+| Social icons | 1.88:1 to 1.99:1 | 5.45:1 to 5.54:1 |
+| Phone logo and menu button | 2.50:1 and 2.64:1 | 13.58:1 and 13.71:1 |
+
+The bar for small text is 4.5:1. The first version of the hero went live without the band, for about 25 minutes on 2026-09-27.
+
 ## Next
 
-1. Eddie signs off on the look.
-2. Merge `hero-loop` into `main` and push. Pushing the branch first gives a Vercel preview to show him.
-3. Check it once on a real iPhone.
-4. Decide keep or cancel on Runway before 2026-10-26. The first month was $26.25 with a promo, and Runway renews at $35.00 on 2026-10-27. The row is in `costs/services.json`.
+1. Check it once on a real iPhone and in Safari.
+2. Decide keep or cancel on Runway before 2026-10-26. The first month was $26.25 with a promo, and Runway renews at $35.00 on 2026-10-27. The row is in `costs/services.json`.
+
+To undo the hero: `git revert 91dfe97` restores the glow and the ring mark.
