@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Syne, Space_Grotesk } from "next/font/google";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { Analytics } from "@/components/Analytics";
 import { PlayerProvider } from "@/components/player/PlayerProvider";
 import { getMixes } from "@/lib/mixes-store";
 import "./globals.css";
@@ -100,7 +100,7 @@ export default async function RootLayout({
           {children}
         </PlayerProvider>
       </body>
-      {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
+      {gaId ? <Analytics gaId={gaId} /> : null}
     </html>
   );
 }
