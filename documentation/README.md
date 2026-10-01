@@ -47,7 +47,7 @@ Not part of the migration — ongoing feature docs:
   show**: forward the text to `ben.subercaseaux+booking@gmail.com` and the
   daily agent does the rest; covers edge cases and troubleshooting.
 - [text-bookings.md](text-bookings.md) — how the booking pipeline works under
-  the hood (Gmail alias → daily routine → `POST /api/shows`).
+  the hood (Gmail alias → daily routine → `POST /api/shows`; routine retired 2026-10-01).
 - [blog-posts.md](blog-posts.md) — the monthly **EDM Trends** blog post: where
   posts live (`lib/blog.ts`), the publishing steps, and the voice checklist.
 - [watch-playlist.md](watch-playlist.md) — curating the homepage **Watch** shelf

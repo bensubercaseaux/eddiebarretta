@@ -1,5 +1,11 @@
 # Booking texts → shows (automated)
 
+> **RETIRED 2026-10-01.** The daily routine ("Booking texts to shows",
+> `trig_01WZkhw7zPFjpBgSYUKbzZKB`) was disabled at Ben's request after the cloud
+> sandbox's egress policy started refusing eddiebarretta.com again. Add shows in
+> `/admin`. The `/api/shows` endpoint and `SHOWS_API_TOKEN` are untouched; unset
+> the env var to turn the API off entirely.
+
 Shows are mostly booked over text message. This pipeline turns a forwarded text
 into a show on the site with no manual data entry:
 
