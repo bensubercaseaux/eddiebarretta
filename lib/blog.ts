@@ -37,6 +37,64 @@ export type Post = {
 
 export const posts: Post[] = [
   {
+    slug: "ai-enters-the-live-dj-set",
+    title: "AI Just Moved From the Studio Into the Live DJ Set",
+    date: "2026-10-03",
+    tag: "Tech & craft",
+    excerpt: "DJ software makers spent two years chasing better automation. This fall the fight shifted to generative tools that work inside the set itself, and the biggest hardware brand in the booth is rebuilding its pitch around that shift.",
+    intro: [
+      "Every booth-tech story this year has been about raw processing power: stems, wireless decks, sync engines finally good enough to trust blind. The story breaking this fall is different. Generative AI just moved out of the production studio and into the middle of the live set, and the companies that build our gear are rewriting their entire pitch to match.",
+    ],
+    sections: [
+      {
+        heading: "The software is starting to perform with you",
+        paragraphs: [
+          "VirtualDJ's 2026 update cycle has been explicit about where it's headed. Part 3 of the rollout added two new tools this September: ShoutOut, a generative voice feature that lets a DJ create custom voiceovers or swap out lyrics in real time while a track plays, and AI Scripting, which hands DJs more direct control over how those AI tools behave during a set.",
+          "Those two features landed on top of a run of releases earlier in the year, including AI Prompt, AI Visuals, a karaoke mode, and a beatgrid tool built to flex with messy live tempo, all framed by the company as practical booth tools rather than tech demos.",
+          "That framing matters. Sync and stem separation, the tools that defined the last two years, handled the mechanics of mixing so a DJ could think about the room instead of the waveform. What's showing up now reaches further, into the content of the set itself: a voice drop, a scripted reaction, a line of lyrics that wasn't there a minute ago. It's a different kind of help, closer to a co-pilot than an engineer.",
+        ],
+      },
+      {
+        heading: "The hardware companies are selling a platform now, not a deck",
+        paragraphs: [
+          "AlphaTheta's own leadership has been saying the quiet part out loud. In a September interview, president and CEO Yoshinori Kataoka described the company's next decade as sitting at the intersection of artificial intelligence, cloud-based streaming, and tactile performance gear, not hardware specs alone. He tied that strategy to deliberate expansion into Southeast Asia, Latin America, the Middle East, and Africa, alongside an explicit push to bring in younger DJs and more women behind the decks.",
+          "A company that used to sell itself on jog-wheel feel and multi-player reliability is now talking like a software and streaming platform with a hardware front end. That's a real shift in how the biggest name in the booth wants to be understood, and it tracks with what VirtualDJ is doing on the software side: the competitive line isn't playback quality anymore, it's who owns the smartest layer sitting on top of the music.",
+        ],
+      },
+      {
+        heading: "The trade-show floor backs it up",
+        paragraphs: [
+          "DJX 2026 in Atlantic City this August gave a preview of what that strategy looks like in physical form. Alongside the new CDJ-1500X multi player and the XDJ-AN all-in-one system, AlphaTheta put the SLAB Serato Studio controller on the floor, a piece of gear built around production software rather than pure playback. The company called it its biggest DJX showing yet, with more new gear on display than in any previous year.",
+          "That's the pattern across all of it: hardware that doubles as a production rig, software that doubles as a performer, and manufacturers pitching the whole stack as one connected experience rather than separate boxes. None of it is subtle about where the money and the engineering are going next.",
+          "For a bar-circuit DJ, none of this changes the actual job. Reading a room at Lucky's on a Friday still comes down to watching bodies, not scripts. But it does change what shows up in the rig next. A generated shoutout for a bachelorette party is a fun trick once; it isn't a set. The tools worth keeping are the ones that free up attention for the crowd, the same test I apply to everything that goes into a Transcend mix.",
+        ],
+      },
+    ],
+    outro: "I'll try ShoutOut on a request-heavy night before I build a set around it, because the room still decides what works, not the software.",
+    sources: [
+      {
+        title: "VirtualDJ 2026 Part 3 Pushes AI Further Into the DJ Workflow",
+        publisher: "DJ LIFE Magazine",
+        url: "https://djlifemag.com/2026/09/virtualdj-2026-part-3-pushes-ai-further-into-the-dj-workflow/",
+      },
+      {
+        title: "AlphaTheta Expands Beyond Pioneer DJ, Embracing AI and Streaming to Redefine the DJ Experience",
+        publisher: "Soundstock",
+        url: "https://www.soundstock.com/news/2026-09-09-alphatheta-expands-beyond-pioneer-dj-embracing-ai-and-streaming-to-redefine-the-dj-experience",
+      },
+      {
+        title: "AlphaTheta & Pioneer DJ to Bring Latest Technology to DJX '26",
+        publisher: "DJ LIFE Magazine",
+        url: "https://djlifemag.com/2026/08/alphatheta-pioneer-dj-to-bring-latest-technology-to-djx-26/",
+      },
+      {
+        title: "AlphaTheta Brings New DJ Gear to DJX",
+        publisher: "Magnetic Magazine",
+        url: "https://magneticmag.com/2026/08/alphatheta-brings-new-dj-gear-to-djx/",
+      },
+    ],
+  },
+  {
     slug: "dj-booth-becomes-a-network",
     title: "The DJ Booth Is Turning Into a Wireless Network",
     date: "2026-09-05",
