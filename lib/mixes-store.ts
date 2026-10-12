@@ -36,6 +36,14 @@ const LEADING_MARKER = /^\s*(?:[•·▪‣◦*–—]|-|\d+[.)])\s+/u;
  */
 const INTRO_TRACKS_TAIL =
   /\s*(?:[,–—-]\s*)?(?:featuring|feat\.?|including|with|and)?\s*(?:but not limited to\s*)?(?:some of\s*)?(?:the following\s*)?tracks?(?:\s+below)?\s*[.:]+\s*$/i;
+/**
+ * A bare "Tracklist:" heading line at the end of the intro (optionally led by
+ * an emoji, e.g. "🎧 Tracklist:"), left over when the tracks were found by
+ * their list markers instead of a lead-in sentence. Dropped for the same reason
+ * as INTRO_TRACKS_TAIL.
+ */
+const TRACKLIST_HEADING =
+  /\s*(?:\p{Extended_Pictographic}️?\s*)?track\s*-?list(?:ing)?\s*[.:]*\s*$/iu;
 
 function toSeconds(hms: string): number {
   const parts = hms.split(":").map((n) => parseInt(n, 10));
@@ -61,6 +69,15 @@ function slugFromLink(link: string): string {
   }
 }
 
+/** True when every line of a paragraph carries a list marker (a bulleted or numbered tracklist). */
+function isMarkedList(paragraph: string): boolean {
+  const lines = paragraph
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  return lines.length > 0 && lines.every((line) => LEADING_MARKER.test(line));
+}
+
 /** Split a description blob into the lead-in prose and the track lines. */
 function splitDescription(raw: string): { intro: string; tracks: string[] } {
   const description = String(raw ?? "").trim();
@@ -71,17 +88,27 @@ function splitDescription(raw: string): { intro: string; tracks: string[] } {
   // The tracklist starts after the last paragraph ending in the "…the
   // following tracks:" lead-in. Live-set descriptions can run several prose
   // paragraphs before it (venue line, story, standalone lead-in line), so the
-  // first blank line alone is not a reliable boundary; it's only the fallback
-  // when no lead-in appears anywhere.
-  let leadIn = 0;
+  // first blank line alone is not a reliable boundary.
+  let leadIn = -1;
   for (let i = 0; i < paragraphs.length - 1; i++) {
     if (INTRO_TRACKS_TAIL.test(paragraphs[i])) leadIn = i;
+  }
+  // No lead-in sentence: the tracklist is the trailing run of paragraphs whose
+  // every line is bulleted or numbered (Lumina and Aura put several prose
+  // paragraphs, and Aura a bare "🎧 Tracklist:" line, above "• " tracks, and
+  // the first-blank-line rule numbered that prose as tracks). Only when no
+  // trailing paragraph is marked do we fall back to the first blank line.
+  if (leadIn === -1) {
+    let firstList = paragraphs.length;
+    while (firstList > 1 && isMarkedList(paragraphs[firstList - 1])) firstList--;
+    leadIn = firstList < paragraphs.length ? firstList - 1 : 0;
   }
 
   const intro = paragraphs
     .slice(0, leadIn + 1)
     .join("\n\n")
     .replace(INTRO_TRACKS_TAIL, "")
+    .replace(TRACKLIST_HEADING, "")
     .trim();
   const tracks = paragraphs
     .slice(leadIn + 1)

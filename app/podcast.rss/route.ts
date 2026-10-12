@@ -6,13 +6,15 @@
 // passes through untouched — including each <enclosure>
 // (SoundCloud's own stream URL), so audio is still served AND counted by
 // SoundCloud. Episode <link>s are pointed at our own mix pages, the cover art
-// is swapped, and the show is marked episodic.
+// is swapped, the show is marked episodic, and the show-level description,
+// subtitle (and owner email, once set) come from lib/site.ts.
 //
 // Point Apple Podcasts Connect / Amazon / YouTube at:
 //   https://eddiebarretta.com/podcast.rss
 // GUIDs are preserved, so existing episodes map 1:1 (no duplicates).
 
 import { createHash } from "node:crypto";
+import { site } from "@/lib/site";
 
 const FEED_URL =
   "https://feeds.soundcloud.com/users/soundcloud:users:211674230/sounds.rss";
@@ -72,6 +74,43 @@ function descriptionToHtml(text: string): string {
   return `<p>${blocks.join("<br /><br />")}</p>`;
 }
 
+/** Escape text for use as XML element content. */
+function escapeXml(text: string): string {
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/**
+ * Show-level text comes from lib/site.ts, not SoundCloud. The SoundCloud
+ * channel <description> is the account's profile bio, which drifted from the
+ * site (other genres, and a personal inbox as the booking contact), and
+ * directories show it as the podcast's description. Only the channel header,
+ * before the first <item>, is rewritten — episode notes pass through. Runs
+ * before the description → HTML pass, so this text gets the same treatment.
+ */
+function rewriteChannelText(xml: string): string {
+  const firstItem = xml.indexOf("<item>");
+  const head = firstItem === -1 ? xml : xml.slice(0, firstItem);
+  const tail = firstItem === -1 ? "" : xml.slice(firstItem);
+
+  const description = [site.podcastSummary, ...site.bio, site.bookingSummary].join("\n\n");
+  let out = head
+    .replace(
+      /<description>[\s\S]*?<\/description>/,
+      `<description>${escapeXml(description)}</description>`,
+    )
+    .replace(
+      /<itunes:subtitle>[\s\S]*?<\/itunes:subtitle>/,
+      `<itunes:subtitle>${escapeXml(site.podcastSummary)}</itunes:subtitle>`,
+    );
+  if (site.podcastOwnerEmail) {
+    out = out.replace(
+      /<itunes:email>[^<]*<\/itunes:email>/,
+      `<itunes:email>${escapeXml(site.podcastOwnerEmail)}</itunes:email>`,
+    );
+  }
+  return out + tail;
+}
+
 /** Wrap HTML in CDATA, guarding the one sequence that can close it early. */
 function cdata(html: string): string {
   return `<![CDATA[${html.replace(/]]>/g, "]]]]><![CDATA[>")}]]>`;
@@ -98,6 +137,8 @@ function rewriteFeed(xml: string, newest: Date | null): string {
       a += ` xmlns:podcast="https://podcastindex.org/namespace/1.0"`;
     return `<rss${a}>`;
   });
+
+  out = rewriteChannelText(out);
 
   // Descriptions → CDATA HTML (channel + every item).
   out = out.replace(

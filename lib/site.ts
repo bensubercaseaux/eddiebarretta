@@ -41,6 +41,21 @@ export const site = {
     youtube: "https://www.youtube.com/channel/UCoNhqZqV16sOxdxROqUMPHw",
   },
 
+  // One-line description of the Transcend podcast. Shared by the FAQ below and
+  // the channel text of /podcast.rss, so the feed never drifts from the site.
+  podcastSummary:
+    "Transcend is Eddie Barretta's mix series and podcast, featuring his latest house and trance DJ sets with full tracklists.",
+
+  // How to book, in one sentence. Shared by the FAQ below and /podcast.rss.
+  bookingSummary:
+    "You can book Eddie for bar nights, residencies, private events, and parties using the booking form at eddiebarretta.com/#book, or by messaging @djeddiebarretta on Instagram.",
+
+  // The <itunes:owner> email in /podcast.rss. Apple Podcasts and Spotify send
+  // ownership-verification codes here, so it must be a working inbox, and the
+  // feed is public, so whatever goes here is published. null = pass through the
+  // address on the SoundCloud account (current behavior); a string replaces it.
+  podcastOwnerEmail: null as string | null,
+
   // Where the Transcend podcast (the SoundCloud RSS feed) is distributed.
   // Listeners can subscribe on any of these; new mixes appear automatically.
   podcast: {
@@ -76,13 +91,11 @@ export const faq = [
   },
   {
     question: "How can I book Eddie Barretta to DJ my event?",
-    answer:
-      "You can book Eddie for bar nights, residencies, private events, and parties using the booking form at eddiebarretta.com/#book, or by messaging @djeddiebarretta on Instagram.",
+    answer: site.bookingSummary,
   },
   {
     question: "What is the Transcend podcast?",
-    answer:
-      "Transcend is Eddie Barretta's mix series and podcast, featuring his latest house and trance DJ sets with full tracklists.",
+    answer: site.podcastSummary,
   },
 ] as const;
 
