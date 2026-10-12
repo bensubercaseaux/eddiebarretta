@@ -6,6 +6,7 @@ import {
   InstagramLogo,
   MapPin,
   CheckCircle,
+  Phone,
 } from "@phosphor-icons/react";
 import { Reveal } from "./Reveal";
 import { site } from "@/lib/site";
@@ -75,6 +76,16 @@ export function Booking() {
               <InstagramLogo size={20} className="text-accent-bright" />
               @djeddiebarretta
             </a>
+            {site.phone && (
+              <a
+                href={`tel:${site.phone.e164}`}
+                onClick={() => track("contact_click", { method: "phone" })}
+                className="flex items-center gap-3 rounded-xl px-3 py-3 text-muted transition-colors hover:bg-surface hover:text-fg"
+              >
+                <Phone size={20} className="text-accent-bright" />
+                {site.phone.display}
+              </a>
+            )}
             <div className="flex items-center gap-3 px-3 py-3 text-muted">
               <MapPin size={20} className="text-accent-bright" />
               {site.serviceArea}

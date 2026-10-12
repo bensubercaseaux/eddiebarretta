@@ -14,6 +14,12 @@ export const site = {
   // Routing (since 2026-10-12), so the personal address is never published.
   bookingEmail: "booking@eddiebarretta.com",
 
+  // Eddie's Twilio line (calls ring through, voicemail and texts go to the
+  // booking inbox; see README "Phone line"). The only switch: null renders no
+  // phone anywhere; set { display: "(904) 555-0123", e164: "+19045550123" } to
+  // show it in the booking sections, llms.txt and the site's JSON-LD.
+  phone: null as { display: string; e164: string } | null,
+
   bioShort:
     "Euphoric house and trance sets that keep the dancefloor moving across the Jacksonville Beach scene, and host of the Transcend podcast.",
 

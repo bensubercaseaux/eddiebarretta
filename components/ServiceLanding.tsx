@@ -216,6 +216,18 @@ export async function ServiceLanding({ page }: { page: ServicePage }) {
               </a>{" "}
               on Instagram.
             </p>
+            {site.phone && (
+              <p className="mt-3 text-muted">
+                Prefer to talk? Call or text{" "}
+                <a
+                  href={`tel:${site.phone.e164}`}
+                  className="text-accent-bright underline-offset-4 hover:underline"
+                >
+                  {site.phone.display}
+                </a>
+                .
+              </p>
+            )}
             {page.bookingNote && <p className="mt-3 text-muted">{page.bookingNote}</p>}
             <p className="mt-3 flex items-center gap-2 text-sm text-faint">
               <MapPin size={15} weight="fill" className="text-accent-bright" />

@@ -45,8 +45,39 @@ Environment Variables):
 | Var | Required | Notes |
 |-----|----------|-------|
 | `RESEND_API_KEY` | yes (prod) | From resend.com/api-keys. Without it, dev logs submissions and returns success; prod returns a friendly error. |
-| `CONTACT_TO_EMAIL` | no | Where inquiries are delivered. Defaults to `ben.subercaseaux@gmail.com`. |
-| `CONTACT_FROM_EMAIL` | no | Defaults to Resend's `onboarding@resend.dev` (works with zero setup). Switch to `Eddie Barretta <noreply@eddiebarretta.com>` once the domain is verified in Resend. Send-only — the site publishes no booking address, so all inquiries come through the form. |
+| `CONTACT_TO_EMAIL` | no | Where inquiries are delivered. Defaults to `site.bookingEmail` (booking@eddiebarretta.com, which forwards to Ben's inbox via Cloudflare Email Routing). |
+| `CONTACT_FROM_EMAIL` | no | Defaults to Resend's `onboarding@resend.dev` (works with zero setup). Switch to `Eddie Barretta <noreply@eddiebarretta.com>` once the domain is verified in Resend. Send-only; the public booking inbox is booking@eddiebarretta.com. |
+
+---
+
+## Phone line (Twilio)
+
+Eddie's number is answered by `app/api/voice/*` and `app/api/sms` (helpers in
+`lib/twilio.ts`, ported from askben). A call rings `FORWARD_TO_NUMBER` with the
+line as caller ID and a whisper ("Eddie Barretta booking call from …, press 1 to
+accept"); if nobody presses 1, the caller gets the line's voicemail and the
+transcript + recording link are emailed to `booking@eddiebarretta.com`. Texts are
+emailed there too; nothing is ever texted back (the number has no 10DLC campaign).
+Every webhook checks `X-Twilio-Signature`; with the env unset, calls hear a short
+"use the booking form or email booking@" message.
+
+1. **Twilio console → the number → Configure:**
+   - Voice, "A call comes in": Webhook, `HTTP POST`, `https://eddiebarretta.com/api/voice`
+   - Messaging, "A message comes in": Webhook, `HTTP POST`, `https://eddiebarretta.com/api/sms`
+2. **Vercel → Project → Settings → Environment Variables (Production):**
+
+   | Var | Notes |
+   |-----|-------|
+   | `TWILIO_AUTH_TOKEN` | Auth token of the Twilio (sub)account that owns the number. |
+   | `TWILIO_NUMBER` | The number, E.164 (`+1904…`). |
+   | `FORWARD_TO_NUMBER` | The phone calls ring through to, E.164. Env only, never in the repo. |
+
+   Voicemail and text emails use the contact form's `RESEND_API_KEY` and
+   `CONTACT_FROM_EMAIL`; the latter must be on the verified eddiebarretta.com
+   domain, since Resend's onboarding sender only delivers to the account owner.
+3. Redeploy, call the number, then set `site.phone` in `lib/site.ts`
+   (`{ display: "(904) 555-0123", e164: "+19045550123" }`). That one field shows
+   the number in the booking section, the service pages, llms.txt and the JSON-LD.
 
 ---
 

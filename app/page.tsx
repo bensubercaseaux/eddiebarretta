@@ -62,6 +62,7 @@ function buildJsonLd(shows: Show[]) {
         image: `${ORIGIN}/hero.png`,
         description: site.bioShort,
         areaServed: site.serviceArea,
+        ...(site.phone ? { telephone: site.phone.e164 } : {}),
         location: {
           "@type": "Place",
           name: "Jacksonville Beach, FL",

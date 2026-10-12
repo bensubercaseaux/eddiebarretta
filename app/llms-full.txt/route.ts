@@ -107,7 +107,7 @@ ${site.bio.join("\n\n")}
 ## Booking
 - Booking form: ${ORIGIN}${site.bookingUrl} (preferred)
 - Booking email: ${site.bookingEmail}
-- Instagram: ${site.socials.instagram}
+${site.phone ? `- Phone (call or text): ${site.phone.display}\n` : ""}- Instagram: ${site.socials.instagram}
 - Available for: bar nights, residencies, private events, and parties
 - Service area: ${site.serviceArea}
 
