@@ -10,6 +10,10 @@ export const site = {
   // fill with spam. Root-relative so it works from subpages too.
   bookingUrl: "/#book",
 
+  // Public booking inbox. Forwards to Ben's Gmail through Cloudflare Email
+  // Routing (since 2026-10-12), so the personal address is never published.
+  bookingEmail: "booking@eddiebarretta.com",
+
   bioShort:
     "Euphoric house and trance sets that keep the dancefloor moving across the Jacksonville Beach scene, and host of the Transcend podcast.",
 
@@ -53,8 +57,8 @@ export const site = {
   // The <itunes:owner> email in /podcast.rss. Apple Podcasts and Spotify send
   // ownership-verification codes here, so it must be a working inbox, and the
   // feed is public, so whatever goes here is published. null = pass through the
-  // address on the SoundCloud account (current behavior); a string replaces it.
-  podcastOwnerEmail: null as string | null,
+  // address on the SoundCloud account; a string replaces it (the booking inbox).
+  podcastOwnerEmail: "booking@eddiebarretta.com" as string | null,
 
   // Where the Transcend podcast (the SoundCloud RSS feed) is distributed.
   // Listeners can subscribe on any of these; new mixes appear automatically.
