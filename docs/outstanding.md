@@ -6,7 +6,8 @@ Site: Next.js + Tailwind on Vercel; mixes from SoundCloud RSS (`lib/mixes-store.
 
 - **Email:** `booking@eddiebarretta.com` → Ben's inbox via Cloudflare Email Routing. DNS moved GoDaddy → Cloudflare for this (registrar is still GoDaddy). It is the podcast feed's owner email (`site.podcastOwnerEmail`) and is listed in llms.txt. The personal address is never published.
 - **Phone:** (904) 867-8008, Twilio subaccount "Eddie Barretta" under Avant Concepts. Voice webhook → `/api/voice`, messaging → `/api/sms` (README "Phone line"). The Vercel Production env has `TWILIO_AUTH_TOKEN`, `TWILIO_NUMBER` and `FORWARD_TO_NUMBER`. Calls ring Ben's cell with a press-1 whisper, otherwise voicemail. Voicemail transcripts and texts are emailed to booking@. No SMS is sent, so no 10DLC is needed. SHAKEN/STIR, Voice Integrity and CNAM are skipped: the Avant Concepts primary profile is an ISV Reseller, so they'd need a secondary business profile with an EIN.
-- [ ] Test call (answer with 1) + a voicemail, then set `site.phone` in `lib/site.ts` (renders on the booking section, service pages, JSON-LD and llms.txt).
+- [x] Voicemail tested live 2026-10-12 (transcript email arrived via booking@); `site.phone` set the same day (booking section, service pages, JSON-LD, llms.txt). Press-1 answer path is the same code as askben's; first real call confirms it.
+- `bookings@` (the sender address of site emails) also forwards to Ben's inbox, so replies to it never bounce.
 - [ ] Swap the number into Eddie's Google Business Profile in place of the personal cell (with Ben's OK).
 - [ ] Ben: SoundCloud bio still says "Tech House … Melodic Techno" and lists the personal Gmail (see umbrella `outstanding_items.md`).
 
