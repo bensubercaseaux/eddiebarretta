@@ -8,8 +8,8 @@ Site: Next.js + Tailwind on Vercel; mixes from SoundCloud RSS (`lib/mixes-store.
 - **Phone:** (904) 867-8008, Twilio subaccount "Eddie Barretta" under Avant Concepts. Voice webhook → `/api/voice`, messaging → `/api/sms` (README "Phone line"). The Vercel Production env has `TWILIO_AUTH_TOKEN`, `TWILIO_NUMBER` and `FORWARD_TO_NUMBER`. Calls ring Ben's cell with a press-1 whisper, otherwise voicemail. Voicemail transcripts and texts are emailed to booking@. No SMS is sent, so no 10DLC is needed. SHAKEN/STIR, Voice Integrity and CNAM are skipped: the Avant Concepts primary profile is an ISV Reseller, so they'd need a secondary business profile with an EIN.
 - [x] Voicemail tested live 2026-10-12 (transcript email arrived via booking@); `site.phone` set the same day (booking section, service pages, JSON-LD, llms.txt). Press-1 answer path is the same code as askben's; first real call confirms it.
 - `bookings@` (the sender address of site emails) also forwards to Ben's inbox, so replies to it never bounce.
-- [ ] Swap the number into Eddie's Google Business Profile in place of the personal cell (with Ben's OK).
-- [ ] Ben: SoundCloud bio still says "Tech House … Melodic Techno" and lists the personal Gmail (see umbrella `outstanding_items.md`).
+- [x] Google Business Profile phone → (904) 867-8008 (submitted 2026-10-12, Google review pending).
+- [x] SoundCloud bio: house & trance + booking@ (2026-10-12, Claude in Chrome; saves show up late). Optional: SoundCloud RSS "Email address displayed" still the personal Gmail (needs booking@ added to the SoundCloud account first).
 
 ## AI features to build (decided 2026-08-27; build order)
 Goal: make this the second Avant Concepts case study ("AI that books gigs and makes the archive searchable"), same architecture as Ask Ben (Next.js + Supabase/pgvector + Claude via Vercel AI Gateway).
