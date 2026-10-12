@@ -88,7 +88,7 @@ function buildJsonLd(shows: Show[]) {
           site.socials.tiktok,
           site.socials.soundcloud,
           site.socials.youtube,
-          site.googleBusiness,
+          ...(site.googleMapsUrl ? [site.googleMapsUrl] : []),
         ],
       },
       {

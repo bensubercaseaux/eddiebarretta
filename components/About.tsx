@@ -5,6 +5,18 @@ import { Reveal } from "./Reveal";
 import { site } from "@/lib/site";
 import { venues } from "@/lib/venues";
 
+// The plain, factual "who" line (answer engines quote the first clear
+// definition they find). Built from site data: residencies are the venues
+// marked "Resident DJ" in lib/venues.ts.
+const residencies = venues.filter((v) => v.relation === "Resident DJ").map((v) => v.name);
+const residencyList =
+  residencies.length > 1
+    ? `${residencies.slice(0, -1).join(", ")} and ${residencies[residencies.length - 1]}`
+    : residencies[0];
+const intro = `${site.name} is a house and trance DJ based in ${site.location}, and the host of Transcend, his mix series and podcast. He plays bars, lounges and private events across Jacksonville and Northeast Florida${
+  residencyList ? `, and has held residencies at ${residencyList}` : ""
+}.`;
+
 const facts = [
   { label: "Sound", value: "House · Trance" },
   { label: "Based in", value: "Jacksonville Beach, FL" },
@@ -55,6 +67,7 @@ export function About() {
             dancefloor.
           </h2>
           <div className="mt-7 max-w-prose space-y-4 text-lg leading-relaxed text-muted">
+            <p className="text-fg">{intro}</p>
             {site.bio.map((p) => (
               <p key={p.slice(0, 24)}>{p}</p>
             ))}

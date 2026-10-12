@@ -116,8 +116,7 @@ ${site.phone ? `- Phone (call or text): ${site.phone.display}\n` : ""}- Instagra
 - TikTok: ${site.socials.tiktok}
 - SoundCloud: ${site.socials.soundcloud}
 - YouTube: ${site.socials.youtube}
-- Google: ${site.googleBusiness}
-
+${site.googleMapsUrl ? `- Google Business Profile: ${site.googleMapsUrl}\n` : ""}
 The Transcend podcast (Eddie's house & trance mix series) is distributed on:
 - SoundCloud: ${site.podcast.soundcloud}
 - Apple Podcasts: ${site.podcast.apple}

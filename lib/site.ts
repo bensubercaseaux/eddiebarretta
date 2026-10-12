@@ -1,24 +1,27 @@
 // Central content + config. Edit here to update copy, links, and contact details.
 
+// Public booking inbox. Forwards to Ben's Gmail through Cloudflare Email
+// Routing (since 2026-10-12), so the personal address is never published.
+const BOOKING_EMAIL = "booking@eddiebarretta.com";
+
+// Eddie's Twilio line (calls ring through, voicemail and texts go to the
+// booking inbox; see README "Phone line"). The only switch: null renders no
+// phone anywhere; set { display: "(904) 555-0123", e164: "+19045550123" } to
+// show it in the booking sections, the booking FAQ, llms.txt and the JSON-LD.
+const PHONE: { display: string; e164: string } | null = { display: "(904) 867-8008", e164: "+19048678008" };
+
 export const site = {
   name: "Eddie Barretta",
   role: "House & Trance DJ",
   location: "Jacksonville Beach, FL",
   serviceArea: "Jacksonville, Jacksonville Beach & Northeast Florida",
 
-  // Booking goes through the on-site form only — no public inbox to scrape or
-  // fill with spam. Root-relative so it works from subpages too.
+  // The on-site form is the preferred way to book (it asks for date, venue and
+  // event type). Root-relative so it works from subpages too.
   bookingUrl: "/#book",
 
-  // Public booking inbox. Forwards to Ben's Gmail through Cloudflare Email
-  // Routing (since 2026-10-12), so the personal address is never published.
-  bookingEmail: "booking@eddiebarretta.com",
-
-  // Eddie's Twilio line (calls ring through, voicemail and texts go to the
-  // booking inbox; see README "Phone line"). The only switch: null renders no
-  // phone anywhere; set { display: "(904) 555-0123", e164: "+19045550123" } to
-  // show it in the booking sections, llms.txt and the site's JSON-LD.
-  phone: { display: "(904) 867-8008", e164: "+19048678008" } as { display: string; e164: string } | null,
+  bookingEmail: BOOKING_EMAIL,
+  phone: PHONE,
 
   bioShort:
     "Euphoric house and trance sets that keep the dancefloor moving across the Jacksonville Beach scene, and host of the Transcend podcast.",
@@ -56,15 +59,17 @@ export const site = {
   podcastSummary:
     "Transcend is Eddie Barretta's mix series and podcast, featuring his latest house and trance DJ sets with full tracklists.",
 
-  // How to book, in one sentence. Shared by the FAQ below and /podcast.rss.
-  bookingSummary:
-    "You can book Eddie for bar nights, residencies, private events, and parties using the booking form at eddiebarretta.com/#book, or by messaging @djeddiebarretta on Instagram.",
+  // How to book, in one sentence. Shared by the FAQ below (visible and
+  // FAQPage JSON-LD) and /podcast.rss. Form first; phone only while PHONE is set.
+  bookingSummary: `You can book Eddie for bar nights, residencies, private events, and parties using the booking form at eddiebarretta.com/#book (the quickest way), ${
+    PHONE ? `by calling or texting ${PHONE.display}, ` : ""
+  }by emailing ${BOOKING_EMAIL}, or by messaging @djeddiebarretta on Instagram.`,
 
   // The <itunes:owner> email in /podcast.rss. Apple Podcasts and Spotify send
   // ownership-verification codes here, so it must be a working inbox, and the
   // feed is public, so whatever goes here is published. null = pass through the
   // address on the SoundCloud account; a string replaces it (the booking inbox).
-  podcastOwnerEmail: "booking@eddiebarretta.com" as string | null,
+  podcastOwnerEmail: BOOKING_EMAIL as string | null,
 
   // Where the Transcend podcast (the SoundCloud RSS feed) is distributed.
   // Listeners can subscribe on any of these; new mixes appear automatically.
@@ -79,10 +84,11 @@ export const site = {
     soundcloud: "https://soundcloud.com/eddie-barretta",
   },
 
-  // Google Business Profile / Knowledge Panel. Ties the site to the verified
-  // Google listing — important for local SEO and entity reconciliation.
-  googleBusiness:
-    "https://www.google.com/search?kgmid=/g/11yzw30vry&q=Eddie+Barretta",
+  // The Google Business Profile's Google Maps URL (the profile's own share link,
+  // maps.google.com/?cid=… or maps.app.goo.gl/…), listed in sameAs and llms.txt
+  // to tie the site to the verified listing. null renders nothing. Not a
+  // google.com/search?kgmid=… URL: that is a search results page, not a profile.
+  googleMapsUrl: "https://maps.google.com/?cid=10134799322354659552" as string | null,
 } as const;
 
 // Single source for the home-page FAQ: renders in the visible <Faq /> section

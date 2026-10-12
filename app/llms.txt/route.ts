@@ -53,8 +53,7 @@ ${site.phone ? `- Phone (call or text): ${site.phone.display}\n` : ""}- Instagra
 - TikTok: ${site.socials.tiktok}
 - SoundCloud: ${site.socials.soundcloud}
 - YouTube: ${site.socials.youtube}
-- Google: ${site.googleBusiness}
-
+${site.googleMapsUrl ? `- Google Business Profile: ${site.googleMapsUrl}\n` : ""}
 ## Blog — EDM Trends (monthly)
 ${posts
   .map(
