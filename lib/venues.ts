@@ -15,9 +15,9 @@ export type Venue = {
   relationText: string;
   /**
    * When Eddie played here, as display text: "2023–2025", "2024", "since 2025".
-   * Shown in the home page's residency list. Unset on every venue so far:
-   * only Ben can supply the years. Never infer them from mix upload dates or
-   * the shows list.
+   * Shown in the venue page's opening line and the home page's residency
+   * list. Unset on every venue so far: only Ben can supply the years. Never
+   * infer them from mix upload dates or the shows list.
    */
   years?: string;
   /** 1–2 factual sentences describing the venue. */
@@ -176,6 +176,25 @@ export function listNames(names: string[]): string {
   return names.length > 1
     ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`
     : (names[0] ?? "");
+}
+
+/**
+ * The venue page's first sentence, the line an answer engine can lift for "who
+ * DJs at <venue>": "Eddie Barretta played house at SIP Cocktail Bar,
+ * Jacksonville, as its resident DJ." Tense follows `relationText`: the
+ * residencies are past ("held"), featured and guest sets are "has played".
+ * The years are added only when `years` is set.
+ */
+export function venueAnswer(v: Venue): string {
+  const at = `house at ${v.name}, ${v.locality}`;
+  const role =
+    v.relation === "Resident DJ"
+      ? "as its resident DJ"
+      : v.relation === "Featured set"
+        ? "as a featured DJ"
+        : "as a guest DJ";
+  const verb = v.relation === "Resident DJ" ? "played" : "has played";
+  return `Eddie Barretta ${verb} ${at}, ${role}${v.years ? ` (${v.years})` : ""}.`;
 }
 
 /** Full display address, e.g. "323 E Bay St, Jacksonville, FL 32202". */

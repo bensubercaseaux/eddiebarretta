@@ -5,7 +5,7 @@ import { ArrowUpRight, MapPin, Play } from "@phosphor-icons/react/dist/ssr";
 import { Nav } from "@/components/Nav";
 import { Breadcrumbs, crumbsToJsonLd, type Crumb } from "@/components/Breadcrumbs";
 import { Footer } from "@/components/Footer";
-import { venues, getVenue, venueAddress, type Venue } from "@/lib/venues";
+import { venues, getVenue, venueAddress, venueAnswer, type Venue } from "@/lib/venues";
 import { getMixes } from "@/lib/mixes-store";
 import { site } from "@/lib/site";
 import { servicePages } from "@/lib/services";
@@ -116,7 +116,11 @@ export default async function VenuePage({
             </p>
           </div>
 
-          <p className="mt-8 text-lg leading-relaxed text-muted">{v.summary}</p>
+          {/* The page's first sentence: who plays here. Answer engines quote the
+              opening lines, and the venue description used to come first. */}
+          <p className="mt-8 text-lg font-medium leading-relaxed text-fg">{venueAnswer(v)}</p>
+
+          <p className="mt-4 text-lg leading-relaxed text-muted">{v.summary}</p>
 
           <div className="mt-6 rounded-card border border-line bg-surface/40 p-5">
             <h2 className="font-display text-lg font-bold">
