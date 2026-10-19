@@ -29,7 +29,8 @@ export function AnswerBlock() {
     <div className="mt-10 max-w-xl rounded-card border border-line bg-ink/70 p-5 text-sm leading-relaxed text-muted backdrop-blur-sm md:text-[15px]">
       <p>
         <span className="font-medium text-fg">{site.name}</span> is a house and trance DJ
-        based in {site.location}, playing the Jacksonville area since {site.jacksonvilleSince}.
+        based in {site.location}. He first DJed in Atlanta, for about two years in his early
+        20s, and has played the Jacksonville area since {site.jacksonvilleSince}.
         He plays bars, lounges and rooftops across Jacksonville and Northeast Florida, and
         plays house at private events such as birthdays and pool parties.
         {played && ` He ${played}.`}
