@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { site } from "./lib/site";
 
 const nextConfig: NextConfig = {
   images: {
@@ -12,8 +13,13 @@ const nextConfig: NextConfig = {
     ],
   },
   // /home is an old URL Google still crawls (Search Console "Not found (404)", 2026-09-15).
+  // /review is the short link for asking clients for a Google review; temporary,
+  // so browsers don't cache it if the profile ever changes.
   async redirects() {
-    return [{ source: "/home", destination: "/", permanent: true }];
+    return [
+      { source: "/home", destination: "/", permanent: true },
+      { source: "/review", destination: site.googleReviewUrl, permanent: false },
+    ];
   },
 };
 

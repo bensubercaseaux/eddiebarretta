@@ -7,6 +7,7 @@ import {
   MapPin,
   CheckCircle,
   Phone,
+  Star,
 } from "@phosphor-icons/react";
 import { Reveal } from "./Reveal";
 import { site } from "@/lib/site";
@@ -90,6 +91,17 @@ export function Booking() {
               <MapPin size={20} className="text-accent-bright" />
               {site.serviceArea}
             </div>
+            {site.googleMapsUrl && (
+              <a
+                href={site.googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 rounded-xl px-3 py-3 text-muted transition-colors hover:bg-surface hover:text-fg"
+              >
+                <Star size={20} className="text-accent-bright" />
+                Reviews on Google
+              </a>
+            )}
           </div>
         </Reveal>
 

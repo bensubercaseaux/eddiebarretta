@@ -106,6 +106,13 @@ export const site = {
   // to tie the site to the verified listing. null renders nothing. Not a
   // google.com/search?kgmid=… URL: that is a search results page, not a profile.
   googleMapsUrl: "https://maps.google.com/?cid=10134799322354659552" as string | null,
+
+  // Google's "write a review" form for the same profile (place ID
+  // ChIJ87WczXrvNIYR4LDRhkkKpow, from the Places API 2026-10-19). /review
+  // redirects here (next.config.ts), so eddiebarretta.com/review is the link to
+  // send clients after a gig.
+  googleReviewUrl:
+    "https://search.google.com/local/writereview?placeid=ChIJ87WczXrvNIYR4LDRhkkKpow",
 } as const;
 
 // Single source for the home-page FAQ: renders in the visible <Faq /> section
