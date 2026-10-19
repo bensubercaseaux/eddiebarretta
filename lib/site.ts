@@ -14,6 +14,11 @@ export const site = {
   name: "Eddie Barretta",
   role: "House & Trance DJ",
   location: "Jacksonville Beach, FL",
+  // Ben, 2026-10-18: "2 years djing in Jacksonville". A year, not a count, so
+  // the sentence doesn't go stale. Venue-level dates stay in lib/venues.ts.
+  // Before that, about two years in Atlanta in his early 20s (Ben, same day);
+  // no year given, so the copy says "early 20s", never a computed date.
+  jacksonvilleSince: 2024,
   serviceArea: "Jacksonville, Jacksonville Beach & Northeast Florida",
 
   // The on-site form is the preferred way to book (it asks for date, venue and

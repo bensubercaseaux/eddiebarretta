@@ -1,5 +1,6 @@
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
+import { AnswerBlock } from "@/components/AnswerBlock";
 import { About } from "@/components/About";
 import { Music } from "@/components/Music";
 import { Watch } from "@/components/Watch";
@@ -168,7 +169,9 @@ export default async function Home() {
       />
       <Nav />
       <main>
-        <Hero />
+        <Hero>
+          <AnswerBlock />
+        </Hero>
         <About />
         <Music />
         <Watch />
