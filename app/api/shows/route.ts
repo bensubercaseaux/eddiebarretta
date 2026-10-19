@@ -1,10 +1,10 @@
 // Token-authenticated shows API for automation (e.g. the daily booking-texts
 // agent). GET lists every show (public + private) so callers can dedupe before
-// writing; POST adds one show. Humans use /admin — this exists for callers that
-// can't hold the admin session cookie.
+// writing; POST adds one show; PATCH corrects one by id. Humans use /admin —
+// this exists for callers that can't hold the admin session cookie.
 
 import { isAuthorized } from "@/lib/api-auth";
-import { addShow, getAllShows, isStoreConfigured } from "@/lib/shows-store";
+import { addShow, getAllShows, isStoreConfigured, updateShow } from "@/lib/shows-store";
 import type { ShowInput } from "@/lib/shows";
 
 /** Validate an incoming show payload; returns the error message if invalid. */
@@ -81,4 +81,37 @@ export async function POST(req: Request) {
 
   await addShow(input);
   return Response.json({ ok: true, added: input }, { status: 201 });
+}
+
+// Body: { id, ...fields to change }. Fields left out keep their stored value;
+// the merged show goes through the same validation as POST.
+export async function PATCH(req: Request) {
+  if (!isAuthorized(req)) {
+    return Response.json({ error: "unauthorized" }, { status: 401 });
+  }
+  if (!isStoreConfigured()) {
+    return Response.json({ error: "shows store not configured" }, { status: 503 });
+  }
+
+  let body: Record<string, unknown>;
+  try {
+    body = (await req.json()) ?? {};
+  } catch {
+    return Response.json({ error: "body must be JSON" }, { status: 400 });
+  }
+
+  const id = typeof body.id === "string" ? body.id : "";
+  const current = (await getAllShows()).find((s) => s.id === id);
+  if (!current) {
+    return Response.json({ error: `no show with id "${id}"` }, { status: 404 });
+  }
+
+  // parseShowInput reads only the show fields, so the id riding along is ignored.
+  const parsed = parseShowInput({ ...current, ...body });
+  if (parsed.error !== undefined) {
+    return Response.json({ error: parsed.error }, { status: 400 });
+  }
+
+  await updateShow(id, parsed.input);
+  return Response.json({ ok: true, updated: { id, ...parsed.input } });
 }
