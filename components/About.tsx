@@ -3,16 +3,14 @@ import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./Reveal";
 import { site } from "@/lib/site";
-import { venues } from "@/lib/venues";
+import { listNames, venues } from "@/lib/venues";
 
 // The plain, factual "who" line (answer engines quote the first clear
 // definition they find). Built from site data: residencies are the venues
 // marked "Resident DJ" in lib/venues.ts.
-const residencies = venues.filter((v) => v.relation === "Resident DJ").map((v) => v.name);
-const residencyList =
-  residencies.length > 1
-    ? `${residencies.slice(0, -1).join(", ")} and ${residencies[residencies.length - 1]}`
-    : residencies[0];
+const residencyList = listNames(
+  venues.filter((v) => v.relation === "Resident DJ").map((v) => v.name),
+);
 const intro = `${site.name} is a house and trance DJ based in ${site.location}, and the host of Transcend, his mix series and podcast. He plays bars, lounges and private events across Jacksonville and Northeast Florida${
   residencyList ? `, and has held residencies at ${residencyList}` : ""
 }.`;

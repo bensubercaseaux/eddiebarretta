@@ -13,6 +13,13 @@ export type Venue = {
   relation: "Resident DJ" | "Featured set" | "Guest set";
   /** One line on Eddie's connection to the venue. */
   relationText: string;
+  /**
+   * When Eddie played here, as display text: "2023–2025", "2024", "since 2025".
+   * Shown in the home page's residency list. Unset on every venue so far:
+   * only Ben can supply the years. Never infer them from mix upload dates or
+   * the shows list.
+   */
+  years?: string;
   /** 1–2 factual sentences describing the venue. */
   summary: string;
   street?: string;
@@ -162,6 +169,13 @@ export const venues: Venue[] = [
 
 export function getVenue(slug: string): Venue | null {
   return venues.find((v) => v.slug === slug) ?? null;
+}
+
+/** "A", "A and B", "A, B and C" — the site's list style (no serial comma). */
+export function listNames(names: string[]): string {
+  return names.length > 1
+    ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`
+    : (names[0] ?? "");
 }
 
 /** Full display address, e.g. "323 E Bay St, Jacksonville, FL 32202". */

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 import { Equalizer } from "./Equalizer";
@@ -92,7 +92,9 @@ function HeroLoop() {
   );
 }
 
-export function Hero() {
+// `children` (the factual answer block from page.tsx) renders after the animated
+// headline, outside the motion container, so it never starts at opacity 0.
+export function Hero({ children }: { children?: ReactNode }) {
   const reduce = useReducedMotion();
 
   const container: Variants = {
@@ -163,6 +165,7 @@ export function Hero() {
           </motion.div>
         </motion.div>
 
+        {children}
       </div>
     </section>
   );
