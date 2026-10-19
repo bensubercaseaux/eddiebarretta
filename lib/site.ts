@@ -28,6 +28,18 @@ export const site = {
   bookingEmail: BOOKING_EMAIL,
   phone: PHONE,
 
+  // When the line is answered — the same hours as the Google Business Profile
+  // (set 2026-10-19; Ben: "weekdays 6pm EST to Midnight and all day on
+  // weekends"). Eastern time. Feeds the booking ContactPoint's hoursAvailable
+  // and llms.txt; change both places together with the profile.
+  lineHours: {
+    summary: "weekdays 6 PM to midnight, all day on weekends (Eastern)",
+    spec: [
+      { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "18:00", closes: "00:00" },
+      { days: ["Saturday", "Sunday"], opens: "00:00", closes: "23:59" },
+    ],
+  },
+
   bioShort:
     "Euphoric house and trance sets that keep the dancefloor moving across the Jacksonville Beach scene, and host of the Transcend podcast.",
 
