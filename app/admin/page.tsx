@@ -30,6 +30,11 @@ function ShowRow({ show }: { show: Show }) {
             </span>
           ) : (
             <span className="rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-[11px] uppercase tracking-wide text-amber-300">
+              Hidden
+            </span>
+          )}
+          {show.privateEvent && (
+            <span className="rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-[11px] uppercase tracking-wide text-accent-bright">
               Private
             </span>
           )}

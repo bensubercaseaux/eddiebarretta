@@ -48,7 +48,12 @@ const NAV_SECTIONS = [
 ];
 
 function buildJsonLd(shows: Show[]) {
-  const { upcoming } = splitShows(new Date(), shows);
+  // Private parties are listed on the page but aren't events anyone can attend,
+  // so they stay out of the Event markup.
+  const { upcoming } = splitShows(
+    new Date(),
+    shows.filter((s) => !s.privateEvent),
+  );
 
   return {
     "@context": "https://schema.org",

@@ -8,8 +8,13 @@ export type Show = {
   name: string;
   venue: string;
   city: string;
-  /** Private shows are hidden from the public site (admin-only). */
+  /** false = hidden from the public site entirely (admin-only). */
   isPublic: boolean;
+  /**
+   * A private party (closed to the public). Still listed on the site, with a
+   * "Private" tag, but never announced as an Event in the JSON-LD.
+   */
+  privateEvent?: boolean;
   /** Optional ticket / event link */
   url?: string;
 };

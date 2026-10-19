@@ -10,7 +10,14 @@ export function ShowCard({ show }: { show: Show }) {
         <span className="text-xs uppercase tracking-wide text-accent-bright">{month}</span>
       </div>
       <div className="min-w-0">
-        <p className="truncate font-medium text-fg">{show.name}</p>
+        <div className="flex items-center gap-2">
+          <p className="truncate font-medium text-fg">{show.name}</p>
+          {show.privateEvent && (
+            <span className="shrink-0 rounded-full border border-line px-2 py-0.5 text-[11px] uppercase tracking-wide text-faint">
+              Private
+            </span>
+          )}
+        </div>
         <p className="truncate text-sm text-muted">
           {show.venue} · {show.city}
         </p>

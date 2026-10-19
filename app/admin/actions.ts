@@ -23,6 +23,7 @@ function parseShow(formData: FormData): { show?: ShowInput; error?: string } {
   const venue = String(formData.get("venue") ?? "").trim();
   const city = String(formData.get("city") ?? "").trim();
   const isPublic = formData.get("isPublic") != null;
+  const privateEvent = formData.get("privateEvent") != null;
 
   if (!date || !time || !name || !venue || !city) {
     return { error: "Date, time, name, venue, and city are all required." };
@@ -30,7 +31,17 @@ function parseShow(formData: FormData): { show?: ShowInput; error?: string } {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return { error: "Date must be in YYYY-MM-DD format." };
   }
-  return { show: { date, time, name, venue, city, isPublic } };
+  return {
+    show: {
+      date,
+      time,
+      name,
+      venue,
+      city,
+      isPublic,
+      ...(privateEvent ? { privateEvent } : {}),
+    },
+  };
 }
 
 // --- Auth -----------------------------------------------------------------

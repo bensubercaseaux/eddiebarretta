@@ -34,8 +34,10 @@ function parseShowInput(
       name: (o.name as string).trim(),
       venue: (o.venue as string).trim(),
       city: (o.city as string).trim(),
-      // Automation defaults to visible; pass false for private gigs.
+      // Automation defaults to visible; pass false to hide a gig entirely.
       isPublic: typeof o.isPublic === "boolean" ? o.isPublic : true,
+      // A private party: listed with a "Private" tag, kept out of Event JSON-LD.
+      ...(o.privateEvent === true ? { privateEvent: true } : {}),
       ...(url ? { url } : {}),
     },
   };

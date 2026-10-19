@@ -108,7 +108,23 @@ export function ShowForm({
         <span className="text-sm text-fg">
           Public{" "}
           <span className="text-faint">
-            — show this gig on the website (uncheck to keep it private)
+            — show this gig on the website (uncheck to hide it completely)
+          </span>
+        </span>
+      </label>
+
+      <label className="flex items-center gap-3 rounded-xl border border-line bg-ink px-4 py-3">
+        <input
+          type="checkbox"
+          name="privateEvent"
+          defaultChecked={initial?.privateEvent ?? false}
+          className="size-4 accent-accent"
+        />
+        <span className="text-sm text-fg">
+          Private party{" "}
+          <span className="text-faint">
+            — listed with a &ldquo;Private&rdquo; tag, never announced as a
+            public event
           </span>
         </span>
       </label>

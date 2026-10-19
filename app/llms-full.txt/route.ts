@@ -29,7 +29,10 @@ export async function GET() {
   const showsSection = upcoming.length
     ? upcoming
         .map(
-          (s) => `- ${s.date}, ${s.time} — ${s.name} at ${s.venue}, ${s.city}`,
+          (s) =>
+            `- ${s.date}, ${s.time} — ${s.name} at ${s.venue}, ${s.city}${
+              s.privateEvent ? " (private event, not open to the public)" : ""
+            }`,
         )
         .join("\n")
     : `No public shows are currently announced. Booking inquiries: ${ORIGIN}${site.bookingUrl}`;
