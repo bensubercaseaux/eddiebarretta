@@ -3,7 +3,7 @@
 # Usage: ./encode.sh /path/to/take1-4k.mp4
 # Needs ffmpeg with libx264 and libvpx-vp9, plus Python with Pillow and numpy.
 # On 2026-09-27 ffmpeg came from Remotion's bundle, because none was installed:
-#   FF=~/Websites/home/avantconcepts/marketing-videos/node_modules/@remotion/compositor-darwin-arm64
+#   FF=~/IdeaProjects/home/avantconcepts/marketing-videos/node_modules/@remotion/compositor-darwin-arm64
 #   export DYLD_LIBRARY_PATH=$FF; export PATH=$FF:$PATH
 set -e
 SRC="$1"; HERE="${0:A:h}"; OUT="${HERE:h:h:h}/public/hero"; TMP="$(mktemp -d)"

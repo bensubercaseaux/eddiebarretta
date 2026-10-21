@@ -7,4 +7,4 @@ Do not hand-edit these files: change the source tokens and re-run
 
 House & trance DJ site. Near-black ground, violet accent, geometric display type. Dark is the only mode.
 
-11 tokens parsed. Pushed to Claude Design with the `DesignSync` tool; see `~/Websites/home/docs/claude-design-handoff.md`.
+11 tokens parsed. Pushed to Claude Design with the `DesignSync` tool; see `~/IdeaProjects/home/docs/claude-design-handoff.md`.
